@@ -61,7 +61,7 @@ class userClass:
                 self.header = user["header"]
                 self.token = user["header"]["x-token"]
                 user_mode_id = user["mode_id"]
-                modes = mode_collection.find_one({"mode_id":user_mode_id})
+                modes = mode_collection.find({"mode_id":user_mode_id})
                 for mode in modes:
                     print(mode)
                     preference = {"channel":mode["acting_mode"]["read_preference"]["channel"],"prob":mode["acting_mode"]["read_preference"]["prob"]}
