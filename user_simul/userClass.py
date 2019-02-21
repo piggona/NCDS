@@ -7,6 +7,7 @@ import os
 import json
 import time
 import random
+import copy
 
 import requests
 import urllib
@@ -210,12 +211,86 @@ class userClass:
         '''
         self.click_operation(article)
         self.stay_operation(article)
+    
+    def proportion_sum(self,items):
+        '''
+        得到items中各项目的数量
+        input:list<string> ['1','2','1',2','1']
+        output:{'1':3,'2':2}
+        '''
+        item_set = set(items)
+        proportion_sum = {}
+        for item in item_set:
+            proportion_sum[item] = items.count(item)
+        return proportion_sum
+
+    def break_recommend(self,recommend_queue):
+        '''
+        获取recommend_queue的推荐channel队列
+        '''
+        queue = []
+        for article in recommend_queue:
+            queue.append(article["scene_id"])
+        return queue
+
+    def read_operation(self,recommend_queue,scene_id,amount):
+        '''
+        模拟进行读文章操作（点击&停留）
+        '''
+        for rec in recommend_queue:
+            if amount == 0:
+                break
+            else:
+                if rec["scene_id"] == scene_id:
+                    self.click_stay_operation(rec)
+                    amount -= 1
+            
+
 
     def user_read(self):
         '''
-        进行用户读操作
+        进行用户读文章操作
         '''
+        # 得到用户期望阅读的列表
+        path = os.getcwd()
+        with open(path+"/config/user_config.json", "r") as r:
+            user_config = json.load(r)
+        browse_amount = user_config["user_read_amount"]
         user_read = self.get_user_read()
+        browse_prop = self.proportion_sum(user_read)
+        browse = copy.deepcopy(browse_prop)
+
+        # 模拟阅读
+        recommend_prop = {}
+        recommend_amount = 0
+        while browse:
+            recommend_queue = self.get_recommend()
+            queue = self.break_recommend(recommend_queue)
+            recommend = self.proportion_sum(queue)
+            # 获得新推荐后的recommend_prop
+            for key,value in recommend.items():
+                recommend_prop[key] = recommend_prop[key] + value
+            # 对文章进行曝光操作
+            self.expose_operation(recommend_queue)
+            
+            # 将用户期望阅读与推荐文章进行比对相减
+            for key,value in browse.items():
+                if key in recommend:
+                    if browse[key] <= recommend[key]:
+                        self.read_operation(recommend_queue,key,browse[key])
+                        browse.popitem(key)
+                    else:
+                        self.read_operation(recommend_queue,key,recommend[key])
+                        browse[key] = browse[key] - recommend[key]
+            recommend_amount += 1
+        recommend_amount = recommend_amount * 10
+
+        # 将此次的数据存入 user_behavior
+        client = pymongo.MongoClient(host="localhost",port=27017)
+        db = client.NCDS
+        collection = db["user_behavior"]
+        behavior = {"user_id":self.user_id,"mode_id":self.mode_id,"recommend":{"amount":recommend_amount,"proportion":recommend_prop},"browse":{"amount":browse_amount,"proportion":browse_prop},"time":int(time.time)}
+        collection.insert_one(behavior)
 
 
 if __name__ == "__main__":
