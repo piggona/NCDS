@@ -278,14 +278,17 @@ class userClass:
             self.expose_operation(recommend_queue)
             
             # 将用户期望阅读与推荐文章进行比对相减
+            pop_keys = []
             for key,value in browse.items():
                 if key in recommend:
                     if browse[key] <= recommend[key]:
                         self.read_operation(recommend_queue,key,browse[key])
-                        browse.pop(key)
+                        pop_keys.append(key)
                     else:
                         self.read_operation(recommend_queue,key,recommend[key])
                         browse[key] = browse[key] - recommend[key]
+            for key in pop_keys:
+                browse.pop(key)
             recommend_amount += len(recommend_queue)
 
         # 将此次的数据存入 user_behavior
