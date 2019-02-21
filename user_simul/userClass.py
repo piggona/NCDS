@@ -63,7 +63,6 @@ class userClass:
                 user_mode_id = user["mode_id"]
                 modes = mode_collection.find({"mode_id":user_mode_id})
                 for mode in modes:
-                    print(mode)
                     preference = {"channel":mode["acting_mode"]["read_preference"]["channel"],"prob":mode["acting_mode"]["read_preference"]["prob"]}
                     self.read_preference = preference
                     self.user_id = user_id
@@ -83,7 +82,7 @@ class userClass:
         
         response = requests.get(url=rec_url,params=data,headers=self.header,verify=False)
         data = response.json()
-        return response
+        return data
 
 if __name__ == "__main__":
     pass
