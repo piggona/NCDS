@@ -55,14 +55,17 @@ class userClass:
                 self.user_id = user_conf["uid"]
                 self.mode_id = user_mode_id
         else:
-            user = user_collection.find_one({"user_id":user_id})
-            self.device = user["header"]["os"]
-            self.header = user["header"]
-            self.token = user["header"]["x-token"]
-            user_mode_id = user["mode_id"]
-            self.read_preference = mode_collection.find_one({"mode_id":user_mode_id})["acting_mode"]["read_preference"]
-            self.user_id = user_id
-            self.mode_id = user_mode_id
+            users = user_collection.find({"user_id":user_id})
+            for user in users:
+                self.device = user["header"]["os"]
+                self.header = user["header"]
+                self.token = user["header"]["x-token"]
+                user_mode_id = user["mode_id"]
+                modes = mode_collection.find_one({"mode_id":user_mode_id})
+                for mode in modes:
+                    self.read_preference = mode["acting_mode"]["read_preference"]
+                    self.user_id = user_id
+                    self.mode_id = user_mode_id
     
 
     def get_recommend(self):
@@ -77,6 +80,7 @@ class userClass:
         }
         
         response = requests.get(url=rec_url,params=data,headers=self.header,verify=False)
+        data = response.json()
         return response
 
 if __name__ == "__main__":
