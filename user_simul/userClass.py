@@ -74,6 +74,7 @@ class userClass:
         with open(path+"/config/sys_config.json") as r:
             sys_config = json.load(r)
         rec_url = sys_config["api_url"] + sys_config["news_path"]
+        print(rec_url)
         data = {
             "type": "1",
             "refresh": "1",
