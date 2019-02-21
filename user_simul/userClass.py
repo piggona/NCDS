@@ -282,7 +282,7 @@ class userClass:
                 if key in recommend:
                     if browse[key] <= recommend[key]:
                         self.read_operation(recommend_queue,key,browse[key])
-                        browse.popitem(key)
+                        browse.pop(key)
                     else:
                         self.read_operation(recommend_queue,key,recommend[key])
                         browse[key] = browse[key] - recommend[key]
