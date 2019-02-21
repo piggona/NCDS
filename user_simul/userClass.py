@@ -93,8 +93,7 @@ class userClass:
         data = response.json()
         article_queue = []
         for article in data["data"]["list"]:
-            print(article)
-            if article.get("article_id") != None:
+            if article.get("article_id") is not None:
                 content = {"id": article.get("article_id"), "trace_id": article.get("trace_id"),
                         "trace_info": article.get("trace_info"), "scene_id": str(article.get("scene_id"))}
                 article_queue.append(content)
@@ -128,7 +127,8 @@ class userClass:
             sys_config = json.load(r)
         expose_url = sys_config["api_url"] + \
             sys_config["user_act_path"] + "{expose}"
-
+        
+        print(article_queue)
         for article in article_queue:
             article_id = article["article_id"]
             trace_info = article["trace_info"]
