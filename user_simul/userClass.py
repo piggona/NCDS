@@ -94,7 +94,7 @@ class userClass:
         article_queue = []
         for article in data["data"]["list"]:
             if article.get("article_id") is not None:
-                content = {"id": article.get("article_id"), "trace_id": article.get("trace_id"),
+                content = {"article_id": article.get("article_id"), "trace_id": article.get("trace_id"),
                         "trace_info": article.get("trace_info"), "scene_id": str(article.get("scene_id"))}
                 article_queue.append(content)
         r.close()
