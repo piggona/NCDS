@@ -268,9 +268,11 @@ class userClass:
             queue = self.break_recommend(recommend_queue)
             recommend = self.proportion_sum(queue)
             # 获得新推荐后的recommend_prop
-            print(recommend)
             for key,value in recommend.items():
-                recommend_prop[key] = recommend_prop[key] + value
+                if key in recommend_prop:
+                    recommend_prop[key] = recommend_prop[key] + value
+                else:
+                    recommend_prop[key] = value
             # 对文章进行曝光操作
             self.expose_operation(recommend_queue)
             
