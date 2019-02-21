@@ -22,6 +22,9 @@ requests.packages.urllib3.disable_warnings(InsecureRequestWarning)
 
 class userClass:
     def __init__(self,user_id):
+        '''
+        1. 判断是否为导入用户。 2. 新建用户？ 
+        '''
         client = pymongo.MongoClient(host="localhost",port=27017)
         db = client.mifeng_user
         mode_collection = db["user_acting_mode"]
@@ -63,5 +66,16 @@ class userClass:
         path = os.getcwd()
         with open(path+"/config/sys_config.json") as r:
             sys_config = json.load(r)
-        url = sys_config["api_url"] + sys_config["news_path"]
+        rec_url = sys_config["api_url"] + sys_config["news_path"]
+        data = {
+            "type": "1",
+            "refresh": "1",
+            "tab": sys_config["test_scene"]
+        }
+        
+        response = requests.get(url=rec_url,params=data,headers=self.header,verify=False)
+        return response
+
+if __name__ == "__main__":
+    pass
         

@@ -9,6 +9,6 @@ def add_user_mode(mode_id,acting_mode):
     collection.insert_one(user_mode)
 
 if __name__ == "__main__":
-    mode_id = 1
-    acting_mode = {"device":{"device_type":["ios","android"],"prob":[50,50]},"read_preference":{"channel":["1001","1002","1003","1004","1005","1006","1007"],"prob":[10,40,40,10,0,0,0]}}
+    mode_id = 2
+    acting_mode = {"device":{"device_type":["ios","android"],"prob":[70,30]},"read_preference":{"channel":["1001","1002","1003","1004","1005","1006","1007"],"prob":[10,40,0,0,0,50,0]}}
     add_user_mode(mode_id,acting_mode)
