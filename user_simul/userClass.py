@@ -23,7 +23,8 @@ requests.packages.urllib3.disable_warnings(InsecureRequestWarning)
 class userClass:
     def __init__(self,user_id):
         '''
-        1. 判断是否为导入用户。 2. 新建用户？ 
+        1. 判断是否为导入用户。 
+        2. 新建用户？ 根据config中mode的概率获取user_mode，使用user_mode得到user_profile存储到mongodb中 : 通过user_id恢复用户对象
         '''
         client = pymongo.MongoClient(host="localhost",port=27017)
         db = client.mifeng_user
