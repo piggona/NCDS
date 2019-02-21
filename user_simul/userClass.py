@@ -27,7 +27,7 @@ class userClass:
         2. 新建用户？ 根据config中mode的概率获取user_mode，使用user_mode得到user_profile存储到mongodb中 : 通过user_id恢复用户对象
         '''
         client = pymongo.MongoClient(host="localhost",port=27017)
-        db = client.mifeng_user
+        db = client.NCDS
         mode_collection = db["user_acting_mode"]
         user_collection = db["user_profile"]
 
