@@ -146,7 +146,7 @@ def ra_header(device, token):
         "os-version": get_os_version(device),
         'x-token': token,
         "device-model": device_model,
-        "app-version": "2.1.2",
+        "app-version": "3.1.1",
         "conn": '1',
         "carrier": '1',
         "device-id": get_imei(device),
