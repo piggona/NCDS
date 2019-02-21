@@ -81,8 +81,20 @@ class userClass:
         }
         
         response = requests.get(url=rec_url,params=data,headers=self.header,verify=False)
-        data = response.json()
+        print(response)
+        data = json.loads(response)
         return data
+    
+    def get_user_read(self):
+        path = os.getcwd()
+        with open(path+"/config/user_config.json") as r:
+            user_config = json.load(r)
+        read_amount = user_config["user_read_amount"]
+        user_read = []
+        for i in range(1,read_amount):
+            user_read.append(random_index(self.read_preference["prob"]))
+            
+        
 
 if __name__ == "__main__":
     pass
