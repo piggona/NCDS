@@ -81,8 +81,7 @@ class userClass:
         }
         
         response = requests.get(url=rec_url,params=data,headers=self.header,verify=False)
-        print(response)
-        data = json.loads(response)
+        data = response.json()
         return data
     
     def get_user_read(self):
