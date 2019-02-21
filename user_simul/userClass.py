@@ -128,7 +128,6 @@ class userClass:
         expose_url = sys_config["api_url"] + \
             sys_config["user_act_path"] + "{expose}"
         
-        print(article_queue)
         for article in article_queue:
             article_id = article["article_id"]
             trace_info = article["trace_info"]
@@ -143,7 +142,7 @@ class userClass:
                 "bhv_value": "1",
                 "scene_id": sys_config["test_scene"]    # 用户所在场景
             }
-            req = requests.post(url=url, data=data,
+            req = requests.post(url=expose_url, data=data,
                                 headers=self.header, verify=False)
             print("曝光完成:", req.json())
 
