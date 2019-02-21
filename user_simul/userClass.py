@@ -81,7 +81,7 @@ class userClass:
         }
         
         response = requests.get(url=rec_url,params=data,headers=self.header,verify=False)
-        data = response[1].json()
+        data = response.json()
         return data
     
     def get_user_read(self):
@@ -92,6 +92,7 @@ class userClass:
         user_read = []
         for i in range(1,read_amount):
             user_read.append(random_index(self.read_preference["prob"]))
+        return user_read
             
         
 
