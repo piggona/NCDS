@@ -295,7 +295,7 @@ class userClass:
         client = pymongo.MongoClient(host="localhost",port=27017)
         db = client.NCDS
         collection = db["user_behavior"]
-        behavior = {"user_id":self.user_id,"mode_id":self.mode_id,"recommend":{"amount":recommend_amount,"proportion":recommend_prop},"browse":{"amount":browse_amount,"proportion":browse_prop},"time":int(time.time)}
+        behavior = {"user_id":self.user_id,"mode_id":self.mode_id,"recommend":{"amount":recommend_amount,"proportion":recommend_prop},"browse":{"amount":browse_amount,"proportion":browse_prop},"time":int(time.time())}
         collection.insert_one(behavior)
 
 
