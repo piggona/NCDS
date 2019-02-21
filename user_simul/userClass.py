@@ -94,8 +94,8 @@ class userClass:
         article_queue = []
         for article in data["data"]["list"]:
             print(article.get("article_id"))
-            content = {"id": article["article_id"], "trace_id": article["trace_id"],
-                       "trace_info": article["trace_info"], "scene_id": str(article["scene_id"])}
+            content = {"id": article.get("article_id"), "trace_id": article.get("trace_id"),
+                       "trace_info": article.get("trace_info"), "scene_id": str(article.get("scene_id"))}
             article_queue.append(content)
         r.close()
         return article_queue
