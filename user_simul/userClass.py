@@ -64,4 +64,4 @@ class userClass:
         with open(path+"/config/sys_config.json") as r:
             sys_config = json.load(r)
         url = sys_config["api_url"] + sys_config["news_path"]
-         
+        

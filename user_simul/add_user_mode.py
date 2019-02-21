@@ -11,3 +11,4 @@ def add_user_mode(mode_id,acting_mode):
 if __name__ == "__main__":
     mode_id = 1
     acting_mode = {"device":{"device_type":["ios","android"],"prob":[50,50]},"read_preference":{"channel":["1001","1002","1003","1004","1005","1006","1007"],"prob":[10,40,40,10,0,0,0]}}
+    add_user_mode(mode_id,acting_mode)
