@@ -93,6 +93,7 @@ class userClass:
         data = response.json()
         article_queue = []
         for article in data["data"]["list"]:
+            print(article)
             content = {"article_id": article["article_id"], "trace_id": article["trace_id"],
                        "trace_info": article["trace_info"], "scene_id": str(article["scene_id"])}
             article_queue.append(content)
