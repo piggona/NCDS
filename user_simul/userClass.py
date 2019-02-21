@@ -93,7 +93,6 @@ class userClass:
         data = response.json()
         article_queue = []
         for article in data["data"]["list"]:
-            print(article.get("article_id"))
             content = {"id": article.get("article_id"), "trace_id": article.get("trace_id"),
                        "trace_info": article.get("trace_info"), "scene_id": str(article.get("scene_id"))}
             article_queue.append(content)
@@ -269,6 +268,7 @@ class userClass:
             queue = self.break_recommend(recommend_queue)
             recommend = self.proportion_sum(queue)
             # 获得新推荐后的recommend_prop
+            print(recommend)
             for key,value in recommend.items():
                 recommend_prop[key] = recommend_prop[key] + value
             # 对文章进行曝光操作
