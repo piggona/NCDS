@@ -39,6 +39,7 @@ class userClass:
                 user_config = json.load(r)
             user_prob_mode = user_config["user_prob_mode"]
             user_mode_id = random_index(user_prob_mode)
+            print(user_mode_id)
             user_mode = mode_collection.find_one({"mode_id":user_mode_id})
 
             device_prob = user_mode["acting_mode"]["device"]
