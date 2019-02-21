@@ -94,9 +94,10 @@ class userClass:
         article_queue = []
         for article in data["data"]["list"]:
             print(article)
-            content = {"id": article.get("article_id"), "trace_id": article.get("trace_id"),
-                       "trace_info": article.get("trace_info"), "scene_id": str(article.get("scene_id"))}
-            article_queue.append(content)
+            if article.get("article_id") != None:
+                content = {"id": article.get("article_id"), "trace_id": article.get("trace_id"),
+                        "trace_info": article.get("trace_info"), "scene_id": str(article.get("scene_id"))}
+                article_queue.append(content)
         r.close()
         return article_queue
 
@@ -286,8 +287,7 @@ class userClass:
                     else:
                         self.read_operation(recommend_queue,key,recommend[key])
                         browse[key] = browse[key] - recommend[key]
-            recommend_amount += 1
-        recommend_amount = recommend_amount * 10
+            recommend_amount += len(recommend_queue)
 
         # 将此次的数据存入 user_behavior
         client = pymongo.MongoClient(host="localhost",port=27017)
