@@ -91,12 +91,15 @@ class userClass:
                                 headers=self.header, verify=False)
         data = response.json()
         article_queue = []
-        for article in data["data"]["list"]:
-            if article.get("article_id") is not None:
-                content = {"article_id": article.get("article_id"), "trace_id": article.get("trace_id"),
-                        "trace_info": article.get("trace_info"), "scene_id": str(article.get("scene_id"))}
-                article_queue.append(content)
-        r.close()
+        try :
+            for article in data["data"]["list"]:
+                if article.get("article_id") is not None:
+                    content = {"article_id": article.get("article_id"), "trace_id": article.get("trace_id"),
+                            "trace_info": article.get("trace_info"), "scene_id": str(article.get("scene_id"))}
+                    article_queue.append(content)
+            r.close()
+        except:
+            print(data)
         return article_queue
 
     def get_user_read(self):
