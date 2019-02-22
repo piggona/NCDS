@@ -40,8 +40,7 @@ class userClass:
             with open(path+"/config/user_config.json") as r:
                 user_config = json.load(r)
             user_prob_mode = user_config["user_prob_mode"]
-            user_mode_id = random_index(user_prob_mode)
-            print(user_mode_id)
+            user_mode_id = random_index(user_prob_mode)+1
             user_modes = mode_collection.find({"mode_id": user_mode_id})
 
             for user_mode in user_modes:

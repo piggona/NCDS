@@ -19,3 +19,26 @@ def random_index(rate):
         if randnum <= start:
             break
     return index
+
+if __name__ == "__main__":
+	rate = [45,30,25]
+	count = 100
+	while count > 0:
+		result = random_index(rate)
+		if result == 0:
+			print("get 0")
+			break
+		count -= 1
+	count = 100
+	while count > 0:
+		result = random_index(rate)
+		if result == 1:
+			print("get 1")
+			break
+		count -= 1
+	while count > 0:
+		result = random_index(rate)
+		if result == 2:
+			print("get 2")
+			break
+		count -= 1
