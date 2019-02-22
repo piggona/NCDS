@@ -263,10 +263,12 @@ class userClass:
         # 模拟阅读
         recommend_prop = {}
         recommend_amount = 0
+        detail_recommend = []
         while browse:
             recommend_queue = self.get_recommend()
             queue = self.break_recommend(recommend_queue)
             recommend = self.proportion_sum(queue)
+            detail_recommend.append(recommend)
             # 获得新推荐后的recommend_prop
             for key,value in recommend.items():
                 if key in recommend_prop:
@@ -294,7 +296,7 @@ class userClass:
         client = pymongo.MongoClient(host="localhost",port=27017)
         db = client.NCDS
         collection = db["user_behavior"]
-        behavior = {"user_id":self.user_id,"mode_id":self.mode_id,"recommend":{"amount":recommend_amount,"proportion":recommend_prop},"browse":{"amount":browse_amount,"proportion":browse_prop},"time":int(time.time())}
+        behavior = {"user_id":self.user_id,"mode_id":self.mode_id,"recommend":{"amount":recommend_amount,"proportion":recommend_prop},"browse":{"amount":browse_amount,"proportion":browse_prop},"detail_recommend":detail_recommend,"time":int(time.time())}
         collection.insert_one(behavior)
 
 
