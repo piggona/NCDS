@@ -141,7 +141,7 @@ def ra_header(device, token):
     headers = {
         "res": res,
         "pkg": get_pkg(device),
-        "channel": "shujia",
+        "channel": "shujia_test_haohao",
         "os": device,
         "os-version": get_os_version(device),
         'x-token': token,
