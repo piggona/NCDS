@@ -143,7 +143,6 @@ class userClass:
             }
             req = requests.post(url=expose_url, data=data,
                                 headers=self.header, verify=False)
-            print("曝光完成:", req.json())
 
     def click_operation(self, article):
         '''
@@ -171,7 +170,6 @@ class userClass:
         }
         req = requests.post(url=click_url, data=data,
                             headers=self.header, verify=False)
-        print("点击完成", req.json())
 
     def stay_operation(self, article):
         '''
@@ -201,7 +199,6 @@ class userClass:
         }
         req = requests.post(url=stay_url, data=data,
                             headers=self.header, verify=False)
-        print("停留完成%s " % req.json())
 
     def click_stay_operation(self, article):
         '''

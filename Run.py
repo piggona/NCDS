@@ -10,3 +10,4 @@ if __name__ == "__main__":
     while True:
         user_simulator(5)
         time.sleep(10)
+        print("休眠10s")
