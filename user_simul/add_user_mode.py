@@ -1,3 +1,7 @@
+# date:2019/2/22
+# -*- coding: utf-8 -*-
+# auth：haohao
+
 import pymongo
 
 def add_user_mode(mode_id,acting_mode):

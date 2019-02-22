@@ -23,7 +23,7 @@ requests.packages.urllib3.disable_warnings(InsecureRequestWarning)
 
 
 class userClass:
-    def __init__(self, user_id):
+    def __init__(self, user_id,random_id):
         '''
         1. 判断是否为导入用户。 
         2. 新建用户？ 根据config中mode的概率获取user_mode，使用user_mode得到user_profile存储到mongodb中 : 通过user_id恢复用户对象
@@ -51,7 +51,7 @@ class userClass:
                 self.token = user_conf["token"]
                 self.header = ra_header(self.device, user_conf["token"])
                 user_profile = {
-                    "user_id": user_conf["uid"], "mode_id": user_mode_id, "header": self.header}
+                    "user_id": user_conf["uid"], "mode_id": user_mode_id, "header": self.header,"random_id":random_id}
                 user_collection.insert_one(user_profile)
 
                 self.read_preference = user_mode["acting_mode"]["read_preference"]

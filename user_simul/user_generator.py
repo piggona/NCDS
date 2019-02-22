@@ -1,6 +1,6 @@
 # date:2019/2/22
 # -*- coding: utf-8 -*-
-# auth：Yan,haohao
+# auth：haohao
 
 
 import os
@@ -11,10 +11,10 @@ import pymongo
 
 from user_simul.userClass import *
 
-def get_user(amount):
+def get_user(amount,offset):
     count = amount
     while count > 0:
-        userClass(0)
+        userClass(0,offset+count)
         count -= 1
     print("成功创建%d个用户",amount)
 
@@ -26,7 +26,7 @@ def user_generator(threads):
     amount = user_amount // threads
     pool = multiprocessing.Pool(processes= threads)
     for i in range(0,threads):
-        pool.apply_async(get_user,(amount,))
+        pool.apply_async(get_user,(amount,i*amount,))
         print("正在创建%d个用户",amount)
     pool.close()
     pool.join()
