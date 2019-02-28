@@ -11,3 +11,4 @@ if __name__ == "__main__":
         user_simulator(5)
         time.sleep(10)
         print("休眠10s")
+        print(int(time.time()))

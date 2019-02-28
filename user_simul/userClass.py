@@ -16,6 +16,7 @@ import pymongo
 from user_simul.utils.prob_util import *
 from user_simul.utils.new_user import *
 from user_simul.utils.get_header import *
+from user_simul.utils.get_proxy import *
 
 from requests.packages.urllib3.exceptions import InsecureRequestWarning
 # 禁用安全请求警告
@@ -32,6 +33,7 @@ class userClass:
         db = client.NCDS
         mode_collection = db["user_acting_mode"]
         user_collection = db["user_profile"]
+        self.user_ip = get_proxy_val()
 
         is_user = user_collection.find({"user_id": user_id}).count()
 
@@ -47,7 +49,7 @@ class userClass:
                 device_prob = user_mode["acting_mode"]["device"]
                 self.device = device_prob["device_type"][random_index(
                     device_prob["prob"])]
-                user_conf = new_user()["data"]
+                user_conf = new_user(self.device)["data"]
                 self.token = user_conf["token"]
                 self.header = ra_header(self.device, user_conf["token"])
                 user_profile = {
@@ -87,20 +89,30 @@ class userClass:
             "refresh": "1",
             "tab": sys_config["test_scene"]
         }
-        response = requests.get(url=rec_url, params=data,
-                                headers=self.header, verify=False)
-        data = response.json()
-        article_queue = []
-        try :
-            for article in data["data"]["list"]:
-                if article.get("article_id") is not None:
-                    content = {"article_id": article.get("article_id"), "trace_id": article.get("trace_id"),
-                            "trace_info": article.get("trace_info"), "scene_id": str(article.get("scene_id"))}
-                    article_queue.append(content)
-            r.close()
-        except:
-            print(data)
-        return article_queue
+        try:
+            response = requests.get(url=rec_url, params=data,
+                                    headers=self.header, verify=False,allow_redirects=False,proxies=self.user_ip)
+            if response.status_code == 302:
+                return []
+            elif response.status_code == 200:
+                data = response.json()
+                article_queue = []
+                try :
+                    for article in data["data"]["list"]:
+                        if article.get("article_id") is not None:
+                            content = {"article_id": article.get("article_id"), "trace_id": article.get("trace_id"),
+                                    "trace_info": article.get("trace_info"), "scene_id": str(article.get("scene_id"))}
+                            article_queue.append(content)
+                    r.close()
+                except:
+                    print(data)
+                return article_queue
+            else:
+                print("请求错误" + str(response.status_code))
+                return []
+        except ConnectionError:
+            print('Error occured')
+            return []
 
     def get_user_read(self):
         '''
@@ -144,8 +156,32 @@ class userClass:
                 "bhv_value": "1",
                 "scene_id": sys_config["test_scene"]    # 用户所在场景
             }
-            req = requests.post(url=expose_url, data=data,
-                                headers=self.header, verify=False)
+            try:
+                req = requests.post(url=expose_url, data=data,
+                                headers=self.header, verify=False, )
+                response = requests.get(url=rec_url, params=data,
+                                        headers=self.header, verify=False,allow_redirects=False,proxies=self.user_ip)
+                if response.status_code == 302:
+                    return []
+                elif response.status_code == 200:
+                    data = response.json()
+                    article_queue = []
+                    try :
+                        for article in data["data"]["list"]:
+                            if article.get("article_id") is not None:
+                                content = {"article_id": article.get("article_id"), "trace_id": article.get("trace_id"),
+                                        "trace_info": article.get("trace_info"), "scene_id": str(article.get("scene_id"))}
+                                article_queue.append(content)
+                        r.close()
+                    except:
+                        print(data)
+                    return article_queue
+                else:
+                    print("请求错误" + str(response.status_code))
+                    return []
+            except ConnectionError:
+                print('Error occured')
+                return []
 
     def click_operation(self, article):
         '''
