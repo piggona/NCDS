@@ -31,10 +31,10 @@ def handle_response(res):
     client = pymongo.MongoClient(host="localhost",port=27017)
     db = client.baiduContent
     collection = db["baidu_news"]
-    result = {"requestId":"","time":int(time.time()),"data":{}}
-    result["requestId"] = res["requestId"]
     items = res["items"]
     for item in items:
+        result = {"requestId":"","time":int(time.time()),"data":{}}
+        result["requestId"] = res["requestId"]
         data_str = item["data"]
         data = json.loads(data_str)
         result["data"] = data
