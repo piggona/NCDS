@@ -19,7 +19,7 @@ def spider_op():
     while True:
         print(requestId)
         try:
-            response = requests.post(url = "http://api.ydtad.com/ydt-server/cu/list",json=get_request(requestId),verify=False,allow_redirects=False,proxies=get_proxy_val())
+            response = requests.post(url = "http://api.ydtad.com/ydt-server/cu/list",json=get_request(requestId),verify=False,allow_redirects=False,proxies=get_proxy_val(),timeout=1)
             if response.status_code == 200:
                 handle_response(response.json())
                 print("200")
