@@ -38,7 +38,7 @@ def get_start_ctr():
     cursor = conn.cursor()
     for user_id in user_ids:
         user_ctr_item = {"user_id":user_id,"user_data":{"first_ctr":"","first_click":"","total_ctr":"","raw_data":""}}
-        first_query = "SELECT item_id,bhv_type FROM aliyun_behavior_info WHERE user_id = {} ORDER BY bhv_time ASC LIMIT 100".format(str(user_id))
+        first_query = "SELECT item_id,bhv_type FROM aliyun_behavior_info WHERE user_id = {} ORDER BY bhv_time ASC LIMIT 100".format("'"+str(user_id)+"'")
         cursor.execute(first_query)
         user_items = cursor.fetchmany(100)
         user_ctr_item["user_data"]["raw_data"] = user_items
