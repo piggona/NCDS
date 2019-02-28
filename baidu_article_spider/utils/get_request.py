@@ -6,6 +6,7 @@ import os
 import requests
 import random
 import time
+import re
 
 from baidu_article_spider.utils.get_proxy import *
 
@@ -158,11 +159,13 @@ def get_device():
     return device
 
 def get_network():
-    network = {"ipv4":get_proxy(),"connectionType":100,"operatorType":99}
+    pattern = re.compile(".*?:")
+    network = {"ipv4":pattern.match(get_proxy())[:-1],"connectionType":100,"operatorType":99}
     return network
 
 def get_contentParams(page,catIds):
     contentParams = {"pageSize":20,"pageIndex":page,"adCount":0,"catIds":catIds,"contentType":0}
+    return contentParams
 
 def get_request(requestId):
     catIds = [1001,1002,1005,1006,1007,1008,1009,1011,1012,1013,1015,1016,1017,1018,1019,1020,1021,1026,1029,1027,1031]
