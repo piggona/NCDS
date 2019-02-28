@@ -41,6 +41,5 @@ def get_start_ctr():
 
 
 if __name__ == "__main__":
-    user_list = fetch_new_user()
-    print(len(user_list))
+    get_start_ctr()
 
