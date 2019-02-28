@@ -37,6 +37,7 @@ def get_start_ctr():
     conn = pymysql.connect(host='127.0.0.1',port=3306,user="jinyuanhao",db="infomation",passwd="Sjk0213%$")
     cursor = conn.cursor()
     for user_id in user_ids:
+        print(user_id)
         user_ctr_item = {"user_id":user_id,"user_data":{"first_ctr":"","first_click":"","total_ctr":"","raw_data":""}}
         first_query = "SELECT item_id,bhv_type FROM aliyun_behavior_info WHERE user_id = {} ORDER BY bhv_time ASC LIMIT 100".format("'"+str(user_id)+"'")
         cursor.execute(first_query)
@@ -71,6 +72,8 @@ def ctr_analysis():
     '''
     计算所有user_list ctr信息的统计量，包括均值，上分位数，标准差等
     要判断新用户（新用户未浏览即流失，新用户停留->停留时间）
+    评估新闻源的质量
+    判断新闻是否按ctr的高低进行推荐
     '''
     pass
 
