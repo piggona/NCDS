@@ -46,7 +46,7 @@ def spider_generator():
     pool = multiprocessing.Pool(processes= 5)
     for i in range(0,5):
         pool.apply_async(spider)
-        print("正在进行第%d个进程",amount)
+        print("正在进行第%d个进程",i+1)
     pool.close()
     pool.join()
     print("进程结束")
