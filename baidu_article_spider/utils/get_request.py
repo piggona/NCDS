@@ -106,8 +106,8 @@ def get_res_os(device):
             "V1816A": {"vendor":"VIVO","screenWidth":"1080","screenHeight":"2340"},
             "ONEPLUS A6000": {"vendor":"ONEPLUS","screenWidth":"1080","screenHeight":"2280"},
         }
-        device_model, res = get_k_v(iphone=android)
-    return res, device_model
+        device_model, res = get_k_v(android)
+    return device_model,res
 
 
 def get_os_version(device):
