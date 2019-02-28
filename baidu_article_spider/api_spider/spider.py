@@ -28,7 +28,8 @@ def spider_op():
             requestId += 1
         except ConnectionError:
             print('Error occured')
-            return []
+        except:
+            print("出错")
 
 def handle_response(res):
     client = pymongo.MongoClient(host="localhost",port=27017)
