@@ -47,8 +47,8 @@ def handle_response(res):
             collection.insert_one(result)
 
 def spider_generator():
-    pool = multiprocessing.Pool(processes= 5)
-    for i in range(0,5):
+    pool = multiprocessing.Pool(processes= 10)
+    for i in range(0,10):
         pool.apply_async(spider_op)
         print("正在进行第{}个进程".format(i+1))
     pool.close()
