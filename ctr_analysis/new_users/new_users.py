@@ -25,5 +25,5 @@ def fetch_new_user():
 
 if __name__ == "__main__":
     user_list = fetch_new_user()
-    print(user_list)
+    print(len(user_list))
 
