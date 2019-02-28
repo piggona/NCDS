@@ -17,7 +17,7 @@ def spider():
     try:
         response = requests.post(url = "http://api.ydtad.com/ydt-server/cu/list",json=get_request(requestId),verify=False,allow_redirects=False,proxies=get_proxy_val())
         if response.status_code == 200:
-            print(response)
+            print(response.json())
         else:
             print("出现错误")
         requestId += 1
