@@ -42,7 +42,8 @@ def handle_response(res):
         data = json.loads(data_str)
         result["data"] = data
         result["doc_id"] = data["id"]
-        collection.insert_one(result)
+        if collection.find({"doc_id":data["id"]}).count() == 0:
+            collection.insert_one(result)
 
 def spider_generator():
     pool = multiprocessing.Pool(processes= 5)
