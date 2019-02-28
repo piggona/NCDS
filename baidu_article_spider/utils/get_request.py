@@ -162,6 +162,7 @@ def get_network():
     pattern = re.compile(".*?:")
     proxy = get_proxy()
     ipv4 = pattern.match(proxy)
+    print(ipv4)
     network = {"ipv4":ipv4[:-1],"connectionType":100,"operatorType":99}
     return network
 
