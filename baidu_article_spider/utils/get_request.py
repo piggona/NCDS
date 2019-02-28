@@ -89,22 +89,22 @@ def get_res_os(device):
         device_model, res = get_k_v(iphone)
     else:
         android = {
-            "MHA-ALOO": {"vendor":"HUAWEI","screenWidth":"1080","screenHeight":"1808"},
-            "EVR-AL00": {"vendor":"HUAWEI","screenWidth":"1080","screenHeight":"2244"},
-            "vivo X21A": {"vendor":"VIVO","screenWidth":"1080","screenHeight":"2280"},
-            "vivo Y85A": {"vendor":"HUAWEI","screenWidth":"1080","screenHeight":"1808"},
-            "MIX 2": {"vendor":"XIAOMI","screenWidth":"1080","screenHeight":"2160"},
-            "MI 6": {"vendor":"XIAOMI","screenWidth":"1080","screenHeight":"1920"},
-            "vivo X20A": {"vendor":"VIVO","screenWidth":"1080","screenHeight":"2160"},
-            "Redmi Note 4X": {"vendor":"XIAOMI","screenWidth":"1080","screenHeight":"1920"},
-            "HTC 2Q4R400": {"vendor":"HTC","screenWidth":"1440","screenHeight":"2880"},
-            "SM-N9006": {"vendor":"SAMSUNG","screenWidth":"1080","screenHeight":"1920"},
-            "MX5": {"vendor":"MEIZU","screenWidth":"1080","screenHeight":"1920"},
-            "SM-N9009": {"vendor":"SAMSUNG","screenWidth":"1080","screenHeight":"1920"},
-            "R8207":  {"vendor":"OPPO","screenWidth":"720","screenHeight":"1280"},
-            "MI 8": {"vendor":"XIAOMI","screenWidth":"1080","screenHeight":"2248"},
-            "V1816A": {"vendor":"VIVO","screenWidth":"1080","screenHeight":"2340"},
-            "ONEPLUS A6000": {"vendor":"ONEPLUS","screenWidth":"1080","screenHeight":"2280"},
+            "MHA-ALOO": {"vendor":"HUAWEI","screenWidth":1080,"screenHeight":1808},
+            "EVR-AL00": {"vendor":"HUAWEI","screenWidth":1080,"screenHeight":2244},
+            "vivo X21A": {"vendor":"VIVO","screenWidth":1080,"screenHeight":2280},
+            "vivo Y85A": {"vendor":"HUAWEI","screenWidth":1080,"screenHeight":1808},
+            "MIX 2": {"vendor":"XIAOMI","screenWidth":1080,"screenHeight":2160},
+            "MI 6": {"vendor":"XIAOMI","screenWidth":1080,"screenHeight":1920},
+            "vivo X20A": {"vendor":"VIVO","screenWidth":1080,"screenHeight":2160},
+            "Redmi Note 4X": {"vendor":"XIAOMI","screenWidth":1080,"screenHeight":1920},
+            "HTC 2Q4R400": {"vendor":"HTC","screenWidth":1440,"screenHeight":2880},
+            "SM-N9006": {"vendor":"SAMSUNG","screenWidth":1080,"screenHeight":1920},
+            "MX5": {"vendor":"MEIZU","screenWidth":1080,"screenHeight":1920},
+            "SM-N9009": {"vendor":"SAMSUNG","screenWidth":1080,"screenHeight":1920},
+            "R8207":  {"vendor":"OPPO","screenWidth":720,"screenHeight":1280},
+            "MI 8": {"vendor":"XIAOMI","screenWidth":1080,"screenHeight":2248},
+            "V1816A": {"vendor":"VIVO","screenWidth":1080,"screenHeight":2340},
+            "ONEPLUS A6000": {"vendor":"ONEPLUS","screenWidth":1080,"screenHeight":2280},
         }
         device_model, res = get_k_v(android)
     return device_model,res
