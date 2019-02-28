@@ -36,11 +36,12 @@ def handle_response(res):
     collection = db["baidu_news"]
     items = res["items"]
     for item in items:
-        result = {"requestId":"","time":int(time.time()),"data":{}}
+        result = {"requestId":"","time":int(time.time()),"data":{},"doc_id":""}
         result["requestId"] = res["requestId"]
         data_str = item["data"]
         data = json.loads(data_str)
         result["data"] = data
+        result["doc_id"] = data["id"]
         collection.insert_one(result)
 
 def spider_generator():
