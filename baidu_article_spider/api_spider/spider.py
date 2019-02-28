@@ -16,19 +16,18 @@ requestId = 100001
 
 def spider():
     global requestId
-    while True:
-        print(requestId)
-        try:
-            response = requests.post(url = "http://api.ydtad.com/ydt-server/cu/list",json=get_request(requestId),verify=False,allow_redirects=False,proxies=get_proxy_val())
-            if response.status_code == 200:
-                handle_response(response.json())
-                print("200")
-            else:
-                print("出现错误")
-            requestId += 1
-        except ConnectionError:
-            print('Error occured')
-            return []
+    
+    try:
+        response = requests.post(url = "http://api.ydtad.com/ydt-server/cu/list",json=get_request(requestId),verify=False,allow_redirects=False,proxies=get_proxy_val())
+        if response.status_code == 200:
+            handle_response(response.json())
+            print("200")
+        else:
+            print("出现错误")
+        requestId += 1
+    except ConnectionError:
+        print('Error occured')
+        return []
 
 def handle_response(res):
     client = pymongo.MongoClient(host="localhost",port=27017)
