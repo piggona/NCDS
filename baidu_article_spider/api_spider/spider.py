@@ -14,21 +14,21 @@ from baidu_article_spider.utils.get_proxy import *
 
 requestId = 100001
 
-def spider():
+def spider_op():
     global requestId
     while True:
         print(requestId)
-        # try:
-        response = requests.post(url = "http://api.ydtad.com/ydt-server/cu/list",json=get_request(requestId),verify=False,allow_redirects=False,proxies=get_proxy_val())
-        if response.status_code == 200:
-            handle_response(response.json())
-            print("200")
-        else:
-            print("出现错误")
-        requestId += 1
-        # except ConnectionError:
-        #     print('Error occured')
-        #     return []
+        try:
+            response = requests.post(url = "http://api.ydtad.com/ydt-server/cu/list",json=get_request(requestId),verify=False,allow_redirects=False,proxies=get_proxy_val())
+            if response.status_code == 200:
+                handle_response(response.json())
+                print("200")
+            else:
+                print("出现错误")
+            requestId += 1
+        except ConnectionError:
+            print('Error occured')
+            return []
 
 def handle_response(res):
     client = pymongo.MongoClient(host="localhost",port=27017)
@@ -46,7 +46,7 @@ def handle_response(res):
 def spider_generator():
     pool = multiprocessing.Pool(processes= 5)
     for i in range(0,5):
-        pool.apply_async(spider)
+        pool.apply_async(spider_op)
         print("正在进行第{}个进程".format(i+1))
     pool.close()
     pool.join()
