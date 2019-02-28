@@ -17,6 +17,7 @@ requestId = 100001
 def spider():
     global requestId
     while True:
+        print(requestId)
         try:
             response = requests.post(url = "http://api.ydtad.com/ydt-server/cu/list",json=get_request(requestId),verify=False,allow_redirects=False,proxies=get_proxy_val())
             if response.status_code == 200:
@@ -46,7 +47,7 @@ def spider_generator():
     pool = multiprocessing.Pool(processes= 5)
     for i in range(0,5):
         pool.apply_async(spider)
-        print("正在进行第%d个进程",i+1)
+        print("正在进行第{}个进程".format(i+1))
     pool.close()
     pool.join()
     print("进程结束")
