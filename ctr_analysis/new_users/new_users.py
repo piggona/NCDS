@@ -58,7 +58,10 @@ def get_start_ctr():
                 if click_count == 0:
                     user_ctr_item["user_data"]["first_click"] = expose_count
                 click_count += 1
-        user_ctr_item["user_data"]["total_ctr"] = click_count / expose_count
+        if expose_count == 0:
+            user_ctr_item["user_data"]["total_ctr"] = 0
+        else:
+            user_ctr_item["user_data"]["total_ctr"] = click_count / expose_count
         collection.insert_one(user_ctr_item)
     conn.commit()
     cursor.close()
