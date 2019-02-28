@@ -13,6 +13,7 @@ from baidu_article_spider.utils.get_proxy import *
 requestId = 100001
 
 def spider():
+    global requestId
     try:
         response = requests.post(url = "http://api.ydtad.com/ydt-server/cu/list",json=get_request(requestId),verify=False,allow_redirects=False,proxies=get_proxy_val())
         if response.status_code == 200:
