@@ -160,7 +160,9 @@ def get_device():
 
 def get_network():
     pattern = re.compile(".*?:")
-    network = {"ipv4":pattern.match(get_proxy())[:-1],"connectionType":100,"operatorType":99}
+    proxy = get_proxy()
+    ipv4 = pattern.match(proxy)
+    network = {"ipv4":ipv4[:-1],"connectionType":100,"operatorType":99}
     return network
 
 def get_contentParams(page,catIds):
