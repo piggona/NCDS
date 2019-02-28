@@ -148,7 +148,7 @@ def ra_header(device, token):
 
 
 def get_device():
-    device = {"imei":get_imei("android"),"mac":get_mac(),"androidId":"Android"+random.randint(0,10000),"model":"","vendor":"","screenWidth":"","screenHeight":"","osType":1,"osVersion":get_os_version("android"),"deviceType":1}
+    device = {"imei":get_imei("android"),"mac":get_mac(),"androidId":"Android"+str(random.randint(0,10000)),"model":"","vendor":"","screenWidth":"","screenHeight":"","osType":1,"osVersion":get_os_version("android"),"deviceType":1}
     device_model,info = get_res_os("android")
     device["model"] = device_model
     device["vendor"] = info["vendor"]
