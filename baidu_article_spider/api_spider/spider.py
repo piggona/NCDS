@@ -15,7 +15,7 @@ requestId = 100001
 def spider():
     global requestId
     try:
-        response = requests.post(url = "http://api.ydtad.com/ydt-server/cu/list",json=get_request(requestId),verify=False,allow_redirects=False,proxies=get_proxy_val())
+        response = requests.post(url = "http://api.ydtad.com/ydt-server/cu/list",json=get_request(requestId),verify=False,allow_redirects=False)
         if response.status_code == 200:
             print(response.json())
         else:
