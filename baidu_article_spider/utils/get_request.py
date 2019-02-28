@@ -163,7 +163,7 @@ def get_network():
     proxy = get_proxy()
     ipv4 = pattern.match(proxy)
     print(ipv4)
-    network = {"ipv4":ipv4[:-1],"connectionType":100,"operatorType":99}
+    network = {"ipv4":ipv4.group(0)[:-1],"connectionType":100,"operatorType":99}
     return network
 
 def get_contentParams(page,catIds):
