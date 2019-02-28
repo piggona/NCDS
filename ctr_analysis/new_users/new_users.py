@@ -9,7 +9,7 @@ import pymongo
 import pymysql
 
 def fetch_new_user():
-    conn = pymysql.connect(host='127.0.0.1',port=3306,user="jinyuanhao",passwd="Sjk0213%$",charset='utf-8')
+    conn = pymysql.connect(host='127.0.0.1',port=3306,user="jinyuanhao",passwd="Sjk0213%$")
     cursor = conn.cursor()
     cursor.execute("SELECT user_id from aliyun_user_info Where register_time > 1551241093")
     row = cursor.fetchall()
