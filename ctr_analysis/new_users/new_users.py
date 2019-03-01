@@ -44,7 +44,9 @@ def get_start_ctr(start_time,user_time_range):
     csv_path = ctr_config["usr_csv_path"]
     data_scan_amount = ctr_config["data_scan_amount"]
     r.close()
-    csv_doc_name = "usr_ctr_"+str(int(time.time()))+".csv"
+    os.mkdir(csv_path+str(int(time.time())))
+    csv_path = csv_path+str(int(time.time()))+"/"
+    csv_doc_name = "usr_ctr_raw.csv"
     csvfile = open(csv_path+csv_doc_name,"w",newline='')
     writer = csv.writer(csvfile,quoting=csv.QUOTE_ALL)
     csv_head = ["user_id","first_ctr","first_click","total_ctr"]
@@ -127,18 +129,19 @@ def ctr_analysis(csv_path):
     对这个用户群体进行追踪分析（可选可触发）
     对这些新用户所点击的内容进行分析（内容频道的分布）
     '''
+    print(csv_path)
     df = pd.read_csv(csv_path)
     describe = df.describe()
     print("describe:")
     print(describe[["first_ctr","first_click","total_ctr"]])
-    print("describe list:")
-    print(type(describe))
     print("group_by first_ctr:")
     first_ctr_group = df.groupby('first_ctr').count()
     print(first_ctr_group[["user_id"]])
     print("group_by total_ctr:")
     total_ctr_mesh_df = df.apply(lambda x:0.01*(x//0.01))
-    print(total_ctr_mesh_df.groupby('total_ctr').count())
+    total_ctr_group = total_ctr_mesh_df.groupby('total_ctr').count()
+    print(total_ctr_group[["user_id"]])
+
 
 
 def article_ctr_analysis():
