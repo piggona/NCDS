@@ -87,6 +87,8 @@ def get_start_ctr(start_time,user_time_range):
                     click_count += 1
         if expose_count == 0:
             user_ctr_item["user_data"]["total_ctr"] = 0
+            user_ctr_item["user_data"]["first_ctr"] = 0
+            user_ctr_item["user_data"]["first_click"] = 0
         else:
             if click_count == 0:
                 user_ctr_item["user_data"]["first_ctr"] = 0
@@ -122,7 +124,7 @@ def ctr_run():
 
 def ctr_analysis(csv_path):
     df = pd.read_csv(csv_path)
-    print(df)
+    print(df.describe())
 
 
 
