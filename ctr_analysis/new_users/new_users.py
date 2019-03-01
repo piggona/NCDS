@@ -128,7 +128,7 @@ def ctr_analysis(csv_path):
     df = pd.read_csv(csv_path)
     describe = df.describe()
     print("describe:")
-    print(describe["first_ctr","first_click","total_ctr"])
+    print(describe[("first_ctr","first_click","total_ctr")])
     print("group_by first_ctr:")
     print(df.groupby('first_ctr').count())
 
