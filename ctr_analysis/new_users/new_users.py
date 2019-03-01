@@ -116,6 +116,8 @@ def ctr_analysis():
         start_time == int(time.time())
     get_start_ctr(start_time,user_time_range)
 
+    
+
 
 
 
