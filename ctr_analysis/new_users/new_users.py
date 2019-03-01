@@ -32,7 +32,7 @@ def get_start_ctr():
     client = pymongo.MongoClient(host="localhost",port=27017)
     db = client.ctrAnalytics
     collection = db["start_ctr"]
-
+    print("is_running")
     user_ids = fetch_new_user()
     conn = pymysql.connect(host='127.0.0.1',port=3306,user="jinyuanhao",db="infomation",passwd="Sjk0213%$")
     cursor = conn.cursor()
