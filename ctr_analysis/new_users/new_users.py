@@ -15,7 +15,7 @@ import pymysql
 def fetch_new_user(start_time,user_time_range):
     conn = pymysql.connect(host='127.0.0.1',port=3306,user="jinyuanhao",db="infomation",passwd="Sjk0213%$")
     cursor = conn.cursor()
-    user_query = "SELECT user_id from aliyun_user_info Where register_time > "+str(start_time - user_time_range)
+    user_query = "SELECT user_id from aliyun_user_info Where register_time > "+str(int(start_time)-int(user_time_range))
     print("user_query:{}".format(user_query))
     cursor.execute(user_query)
     users = cursor.fetchall()
@@ -116,7 +116,7 @@ def ctr_analysis():
         start_time == int(time.time())
     get_start_ctr(start_time,user_time_range)
 
-    
+
 
 
 
