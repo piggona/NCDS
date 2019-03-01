@@ -16,10 +16,10 @@ def fetch_new_user(start_time,user_time_range):
     conn = pymysql.connect(host='127.0.0.1',port=3306,user="jinyuanhao",db="infomation",passwd="Sjk0213%$")
     cursor = conn.cursor()
     user_query = "SELECT user_id from aliyun_user_info Where register_time > "+str(start_time-user_time_range)
-    print("user_query:{}".format(user_query))
+    # print("user_query:{}".format(user_query))
     cursor.execute(user_query)
     users = cursor.fetchall()
-    print("users:{}".format(users))
+    # print("users:{}".format(users))
     user_list = []
     for user in users:
         user_list.append(user[0])
@@ -99,26 +99,25 @@ def get_start_ctr(start_time,user_time_range):
     conn.close()
     csvfile.close()
 
-def ctr_analysis():
+def ctr_run():
     '''
     user_time_range内所有用户
     计算所有user_list ctr信息的统计量，包括均值，上分位数，标准差等
     要判断新用户（新用户未浏览即流失，新用户停留->停留时间）类型的分布
     对这个用户群体进行追踪分析（可选可触发）
-    评估各个渠道新闻源的质量（使用ctr进行判断）
     '''
     path = os.getcwd()
     with open(path+"/config/ctr_config.json","r") as r:
         ctr_config = json.load(r)
     user_time_range = ctr_config["user_time_range"]
+    r.close()
     start_time = ctr_config["user_start_time"]
     if start_time == "now":
         start_time = int(time.time())
     get_start_ctr(start_time,user_time_range)
 
-
-
-
+def ctr_analysis():
+    pass
 
 
 def article_ctr_analysis():
