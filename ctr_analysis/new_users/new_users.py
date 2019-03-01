@@ -45,7 +45,7 @@ def get_start_ctr(start_time,user_time_range):
     r.close()
     csv_doc_name = "usr_ctr_"+str(int(time.time()))+".csv"
     csvfile = open(csv_path+csv_doc_name,"w",newline='')
-    writer = csv.writer(csvfile,delimiter='\t',quoting=csv.QUOTE_ALL)
+    writer = csv.writer(csvfile,quoting=csv.QUOTE_ALL)
     csv_head = ["user_id","first_ctr","first_click","total_ctr"]
     writer.writerow(csv_head)
 
@@ -121,8 +121,7 @@ def ctr_run():
     
 
 def ctr_analysis(csv_path):
-    names = ["first_ctr","first_click","total_ctr"]
-    df = pd.read_table(csv_path,names=names)
+    df = pd.read_csv(csv_path)
     print(df)
 
 
