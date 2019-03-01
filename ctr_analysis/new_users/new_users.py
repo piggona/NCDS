@@ -42,6 +42,7 @@ def get_start_ctr(start_time,user_time_range):
     with open(path+'/config/ctr_config.json','r') as r:
         ctr_config = json.load(r)
     csv_path = ctr_config["usr_csv_path"]
+    data_scan_amount = ctr_config["data_scan_amount"]
     r.close()
     csv_doc_name = "usr_ctr_"+str(int(time.time()))+".csv"
     csvfile = open(csv_path+csv_doc_name,"w",newline='')
@@ -62,9 +63,9 @@ def get_start_ctr(start_time,user_time_range):
     for user_id in user_ids:
         # print(user_id)
         user_ctr_item = {"user_id":user_id,"user_data":{"first_ctr":"","first_click":"","total_ctr":"","raw_data":""}}
-        first_query = "SELECT item_id,bhv_type FROM aliyun_behavior_info WHERE user_id = {} ORDER BY bhv_time ASC LIMIT 100".format("'"+str(user_id)+"'")
+        first_query = "SELECT item_id,bhv_type FROM aliyun_behavior_info WHERE user_id = {0} ORDER BY bhv_time ASC LIMIT {1}".format("'"+str(user_id)+"'",str(data_scan_amount))
         cursor.execute(first_query)
-        user_items = cursor.fetchmany(100)
+        user_items = cursor.fetchmany(data_scan_amount)
         user_ctr_item["user_data"]["raw_data"] = user_items
         expose_count = 0
         click_count = 0
@@ -134,7 +135,10 @@ def ctr_analysis(csv_path):
     print("group_by first_ctr:")
     print(df.groupby('first_ctr').count())
     print("group_by total_ctr:")
-    print(df.groupby('total_ctr').count())
+    total_ctr = df.groupby('total_ctr').count()
+    print(total_ctr)
+    print("group_by total_ctr describe:")
+    print(total_ctr.describe())
 
 
 
