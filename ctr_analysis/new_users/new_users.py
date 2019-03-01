@@ -125,11 +125,12 @@ def ctr_analysis(csv_path):
     计算所有user_list ctr信息的统计量，包括均值，上分位数，标准差等
     要判断新用户（新用户未浏览即流失，新用户停留->停留时间）类型的分布
     对这个用户群体进行追踪分析（可选可触发）
+    对这些新用户所点击的内容进行分析
     '''
     df = pd.read_csv(csv_path)
     describe = df.describe()
     print("describe:")
-    print(describe)
+    print(describe[["first_ctr","first_click","total_ctr"]])
     print("describe list:")
     print(type(describe))
     print("group_by first_ctr:")
@@ -137,9 +138,8 @@ def ctr_analysis(csv_path):
     print("group_by total_ctr:")
     total_ctr = df.groupby('total_ctr').count()
     print(total_ctr)
-    print("group_by total_ctr describe:")
-    print(total_ctr.describe())
-
+    mesh_df = df.apply(lambda x:0.001*(x//0.001))
+    print(mesh_df.groupby('total_ctr').count())
 
 
 def article_ctr_analysis():
