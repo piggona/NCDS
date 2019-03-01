@@ -106,9 +106,6 @@ def get_start_ctr(start_time,user_time_range):
 def ctr_run():
     '''
     user_time_range内所有用户
-    计算所有user_list ctr信息的统计量，包括均值，上分位数，标准差等
-    要判断新用户（新用户未浏览即流失，新用户停留->停留时间）类型的分布
-    对这个用户群体进行追踪分析（可选可触发）
     '''
     path = os.getcwd()
     with open(path+"/config/ctr_config.json","r") as r:
@@ -123,9 +120,17 @@ def ctr_run():
     
 
 def ctr_analysis(csv_path):
+    '''
+    计算所有user_list ctr信息的统计量，包括均值，上分位数，标准差等
+    要判断新用户（新用户未浏览即流失，新用户停留->停留时间）类型的分布
+    对这个用户群体进行追踪分析（可选可触发）
+    '''
     df = pd.read_csv(csv_path)
     describe = df.describe()
-    print(describe["first_ctr"])
+    print("describe:")
+    print(describe["first_ctr","first_click","total_ctr"])
+    print("group_by first_ctr:")
+    print(df.groupby('first_ctr').count())
 
 
 
