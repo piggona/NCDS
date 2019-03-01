@@ -4,6 +4,7 @@
 
 import os
 import time
+import json
 
 import pymongo
 import pymysql
@@ -78,25 +79,32 @@ def ctr_analysis():
     user_time_range内所有用户
     计算所有user_list ctr信息的统计量，包括均值，上分位数，标准差等
     要判断新用户（新用户未浏览即流失，新用户停留->停留时间）类型的分布
+    对这个用户群体进行追踪分析（可选可触发）
     评估各个渠道新闻源的质量（使用ctr进行判断）
-    判断新闻是否按ctr的高低进行推荐
     '''
-    pass
+    path = os.getcwd()
+    with open(path+"/config/ctr_config.json","r") as r:
+        ctr_config = json.load(r)
+    user_time_range = ctr_config["user_time_range"]
+    get_start_ctr(user_time_range)
 
 def article_ctr_analysis():
     '''
     article_time_range时间跨度内
-    计算文章的ctr,click/expose
-
+    计算文章(item_id)不同时间段(create_time+range)内的article_ctr,click/expose
+    计算文章被曝光次数expose:
+    1. 文章(item_id)对应时间段的expose生命周期折线
+    2. 在相同时间段节点，各个文章的article_ctr->expose图像
     '''
     pass
 
 def data_flow_analysis():
     '''
+    各个新闻源文章的ctr与其曝光比率的分布
     '''
     pass
 
 
 if __name__ == "__main__":
-    get_start_ctr()
+    get_start_ctr(259200)
 
