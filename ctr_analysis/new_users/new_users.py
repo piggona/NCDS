@@ -34,6 +34,7 @@ def get_start_ctr():
     collection = db["start_ctr"]
     print("is_running")
     user_ids = fetch_new_user()
+    print("user_ids{}".format(user_ids))
     conn = pymysql.connect(host='127.0.0.1',port=3306,user="jinyuanhao",db="infomation",passwd="Sjk0213%$")
     cursor = conn.cursor()
     for user_id in user_ids:
