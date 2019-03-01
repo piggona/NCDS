@@ -11,7 +11,7 @@ import pymysql
 def fetch_new_user():
     conn = pymysql.connect(host='127.0.0.1',port=3306,user="jinyuanhao",db="infomation",passwd="Sjk0213%$")
     cursor = conn.cursor()
-    user_query = "SELECT user_id from aliyun_user_info Where register_time >"+str(int(time.time()) - 86400)
+    user_query = "SELECT user_id from aliyun_user_info Where register_time >"+str(1551403893 - 86400)
     cursor.execute(user_query)
     users = cursor.fetchall()
     user_list = []
@@ -34,7 +34,7 @@ def get_start_ctr():
     collection = db["start_ctr"]
     print("is_running")
     user_ids = fetch_new_user()
-    print("user_ids{}".format(user_ids))
+    print("user_ids:{}".format(user_ids))
     conn = pymysql.connect(host='127.0.0.1',port=3306,user="jinyuanhao",db="infomation",passwd="Sjk0213%$")
     cursor = conn.cursor()
     for user_id in user_ids:
