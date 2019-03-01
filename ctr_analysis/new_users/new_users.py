@@ -134,12 +134,11 @@ def ctr_analysis(csv_path):
     print("describe list:")
     print(type(describe))
     print("group_by first_ctr:")
-    print(df.groupby('first_ctr').count())
+    first_ctr_group = df.groupby('first_ctr').count()
+    print(first_ctr_group[["user_id"]])
     print("group_by total_ctr:")
-    total_ctr = df.groupby('total_ctr').count()
-    print(total_ctr)
-    mesh_df = df.apply(lambda x:0.01*(x//0.01))
-    print(mesh_df.groupby('total_ctr').count())
+    total_ctr_mesh_df = df.apply(lambda x:0.01*(x//0.01))
+    print(total_ctr_mesh_df.groupby('total_ctr').count())
 
 
 def article_ctr_analysis():
