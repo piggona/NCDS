@@ -15,6 +15,7 @@ def fetch_new_user():
     print("user_query:{}".format(user_query))
     cursor.execute(user_query)
     users = cursor.fetchall()
+    print("users:{}".format(users))
     user_list = []
     for user in users:
         user_list.append(user[0])
