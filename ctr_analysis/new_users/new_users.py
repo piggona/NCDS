@@ -11,6 +11,7 @@ import codecs
 
 import pymongo
 import pymysql
+import pandas as pd
 
 def fetch_new_user(start_time,user_time_range):
     conn = pymysql.connect(host='127.0.0.1',port=3306,user="jinyuanhao",db="infomation",passwd="Sjk0213%$")
@@ -98,6 +99,7 @@ def get_start_ctr(start_time,user_time_range):
     cursor.close()
     conn.close()
     csvfile.close()
+    return csv_path+csv_doc_name
 
 def ctr_run():
     '''
@@ -114,10 +116,15 @@ def ctr_run():
     start_time = ctr_config["user_start_time"]
     if start_time == "now":
         start_time = int(time.time())
-    get_start_ctr(start_time,user_time_range)
+    csv_path = get_start_ctr(start_time,user_time_range)
+    ctr_analysis(csv_path)
+    
 
-def ctr_analysis():
-    pass
+def ctr_analysis(csv_path):
+    names = ["first_ctr","first_click","total_ctr"]
+    df = pd.read_table(csv_path,names=names)
+    print(df)
+
 
 
 def article_ctr_analysis():
