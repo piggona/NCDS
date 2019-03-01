@@ -53,12 +53,15 @@ def get_start_ctr():
                     user_ctr_item["user_data"]["first_ctr"] = 0
                     first_ctr = 1
             if user_item[1] == "click":
-                if first_ctr == 0:
-                    user_ctr_item["user_data"]["first_ctr"] = 1 / expose_count
-                    first_ctr = 1
-                if click_count == 0:
-                    user_ctr_item["user_data"]["first_click"] = expose_count
-                click_count += 1
+                if expose_count == 0:
+                    user_ctr_item["user_data"]["first_ctr"] = 0.333
+                else:
+                    if first_ctr == 0:
+                        user_ctr_item["user_data"]["first_ctr"] = 1 / expose_count
+                        first_ctr = 1
+                    if click_count == 0:
+                        user_ctr_item["user_data"]["first_click"] = expose_count
+                    click_count += 1
         if expose_count == 0:
             user_ctr_item["user_data"]["total_ctr"] = 0
         else:
