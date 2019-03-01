@@ -141,6 +141,10 @@ def ctr_analysis(csv_path):
     total_ctr_mesh_df = df.apply(lambda x:0.01*(x//0.01))
     total_ctr_group = total_ctr_mesh_df.groupby('total_ctr').count()
     print(total_ctr_group[["user_id"]])
+    describe.to_csv(path_or_buf=csv_path+"ctr_describe.csv")
+    first_ctr_group.to_csv(path_or_buf=csv_path+"first_ctr_group.csv")
+    total_ctr_group.to_csv(path_or_buf=csv_path+"total_ctr_group.csv")
+
 
 
 
