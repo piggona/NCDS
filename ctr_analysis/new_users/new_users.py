@@ -12,6 +12,7 @@ def fetch_new_user():
     conn = pymysql.connect(host='127.0.0.1',port=3306,user="jinyuanhao",db="infomation",passwd="Sjk0213%$")
     cursor = conn.cursor()
     user_query = "SELECT user_id from aliyun_user_info Where register_time >"+str(1551317493)
+    print("user_query:{}".format(user_query))
     cursor.execute(user_query)
     users = cursor.fetchall()
     user_list = []
@@ -32,7 +33,6 @@ def get_start_ctr():
     client = pymongo.MongoClient(host="localhost",port=27017)
     db = client.ctrAnalytics
     collection = db["start_ctr"]
-    print("is_running")
     user_ids = fetch_new_user()
     print("user_ids:{}".format(user_ids))
     conn = pymysql.connect(host='127.0.0.1',port=3306,user="jinyuanhao",db="infomation",passwd="Sjk0213%$")
