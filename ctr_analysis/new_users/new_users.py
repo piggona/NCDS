@@ -104,7 +104,7 @@ def get_start_ctr(start_time,user_time_range):
     cursor.close()
     conn.close()
     csvfile.close()
-    return csv_path+csv_doc_name
+    return csv_path
 
 def ctr_run():
     '''
@@ -129,8 +129,8 @@ def ctr_analysis(csv_path):
     对这个用户群体进行追踪分析（可选可触发）
     对这些新用户所点击的内容进行分析（内容频道的分布）
     '''
-    print(csv_path)
-    df = pd.read_csv(csv_path)
+    print(csv_path+"usr_ctr_raw.csv")
+    df = pd.read_csv(csv_path+"usr_ctr_raw.csv")
     describe = df.describe()
     print("describe:")
     print(describe[["first_ctr","first_click","total_ctr"]])
