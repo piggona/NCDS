@@ -88,11 +88,11 @@ def get_start_ctr(start_time,user_time_range):
         if expose_count == 0:
             user_ctr_item["user_data"]["total_ctr"] = 0
             user_ctr_item["user_data"]["first_ctr"] = 0
-            user_ctr_item["user_data"]["first_click"] = 0
+            user_ctr_item["user_data"]["first_click"] = 20
         else:
             if click_count == 0:
                 user_ctr_item["user_data"]["first_ctr"] = 0
-                user_ctr_item["user_data"]["first_click"] = 0
+                user_ctr_item["user_data"]["first_click"] = 20
             user_ctr_item["user_data"]["total_ctr"] = click_count / expose_count
         csv_row = [user_ctr_item["user_id"],user_ctr_item["user_data"]["first_ctr"],user_ctr_item["user_data"]["first_click"],user_ctr_item["user_data"]["total_ctr"]]
         writer.writerow(csv_row)
@@ -124,7 +124,8 @@ def ctr_run():
 
 def ctr_analysis(csv_path):
     df = pd.read_csv(csv_path)
-    print(df.describe())
+    describe = df.describe()
+    print(describe["first_ctr"])
 
 
 
