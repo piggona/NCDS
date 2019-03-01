@@ -8,10 +8,10 @@ import time
 import pymongo
 import pymysql
 
-def fetch_new_user():
+def fetch_new_user(user_time_range):
     conn = pymysql.connect(host='127.0.0.1',port=3306,user="jinyuanhao",db="infomation",passwd="Sjk0213%$")
     cursor = conn.cursor()
-    user_query = "SELECT user_id from aliyun_user_info Where register_time >"+str(1551317493)
+    user_query = "SELECT user_id from aliyun_user_info Where register_time > "+str(int(time.time()) - user_time_range)
     print("user_query:{}".format(user_query))
     cursor.execute(user_query)
     users = cursor.fetchall()
@@ -24,7 +24,7 @@ def fetch_new_user():
     conn.close()
     return user_list
 
-def get_start_ctr():
+def get_start_ctr(user_time_range):
     '''
     得到每个user_list用户的ctr信息,存储到mongodb中
     计算用户首刷ctr
@@ -34,7 +34,7 @@ def get_start_ctr():
     client = pymongo.MongoClient(host="localhost",port=27017)
     db = client.ctrAnalytics
     collection = db["start_ctr"]
-    user_ids = fetch_new_user()
+    user_ids = fetch_new_user(user_time_range)
     print("user_ids:{}".format(user_ids))
     conn = pymysql.connect(host='127.0.0.1',port=3306,user="jinyuanhao",db="infomation",passwd="Sjk0213%$")
     cursor = conn.cursor()
@@ -75,10 +75,24 @@ def get_start_ctr():
 
 def ctr_analysis():
     '''
+    user_time_range内所有用户
     计算所有user_list ctr信息的统计量，包括均值，上分位数，标准差等
-    要判断新用户（新用户未浏览即流失，新用户停留->停留时间）
-    评估新闻源的质量
+    要判断新用户（新用户未浏览即流失，新用户停留->停留时间）类型的分布
+    评估各个渠道新闻源的质量（使用ctr进行判断）
     判断新闻是否按ctr的高低进行推荐
+    '''
+    pass
+
+def article_ctr_analysis():
+    '''
+    article_time_range时间跨度内
+    计算文章的ctr,click/expose
+
+    '''
+    pass
+
+def data_flow_analysis():
+    '''
     '''
     pass
 
