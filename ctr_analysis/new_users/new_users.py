@@ -91,11 +91,11 @@ def get_start_ctr(start_time,user_time_range):
         if expose_count == 0:
             user_ctr_item["user_data"]["total_ctr"] = 0
             user_ctr_item["user_data"]["first_ctr"] = 0
-            user_ctr_item["user_data"]["first_click"] = 20
+            user_ctr_item["user_data"]["first_click"] = 101
         else:
             if click_count == 0:
                 user_ctr_item["user_data"]["first_ctr"] = 0
-                user_ctr_item["user_data"]["first_click"] = 20
+                user_ctr_item["user_data"]["first_click"] = 101
             user_ctr_item["user_data"]["total_ctr"] = click_count / expose_count
         csv_row = [user_ctr_item["user_id"],user_ctr_item["user_data"]["first_ctr"],user_ctr_item["user_data"]["first_click"],user_ctr_item["user_data"]["total_ctr"]]
         writer.writerow(csv_row)
@@ -121,7 +121,6 @@ def ctr_run():
     csv_path = get_start_ctr(start_time,user_time_range)
     ctr_analysis(csv_path)
     
-
 def ctr_analysis(csv_path):
     '''
     计算所有user_list ctr信息的统计量，包括均值，上分位数，标准差等
@@ -141,12 +140,12 @@ def ctr_analysis(csv_path):
     total_ctr_mesh_df = df.apply(lambda x:0.01*(x//0.01))
     total_ctr_group = total_ctr_mesh_df.groupby('total_ctr').count()
     print(total_ctr_group[["user_id"]])
+    first_click_group = df.groupby('first_click').count()
+    print(first_click_group[["user_id"]])
     describe.to_csv(path_or_buf=csv_path+"ctr_describe.csv")
-    first_ctr_group.to_csv(path_or_buf=csv_path+"first_ctr_group.csv")
-    total_ctr_group.to_csv(path_or_buf=csv_path+"total_ctr_group.csv")
-
-
-
+    first_ctr_group[["user_id"]].to_csv(path_or_buf=csv_path+"first_ctr_group.csv")
+    total_ctr_group[["user_id"]].to_csv(path_or_buf=csv_path+"total_ctr_group.csv")
+    first_click_group[["user_id"]].to_csv(path_or_buf=csv_path+"first_click_group.csv")
 
 def article_ctr_analysis():
     '''
