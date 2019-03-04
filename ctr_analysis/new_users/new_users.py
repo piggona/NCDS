@@ -91,7 +91,7 @@ def get_start_ctr(start_time,user_time_range):
             user_ctr_item["user_data"]["exposes_before_first_click"] = 101
         else:
             if click_count == 0:
-                user_ctr_item["user_data"]["first_click"] = 101
+                user_ctr_item["user_data"]["exposes_before_first_click"] = 101
             user_ctr_item["user_data"]["total_ctr"] = click_count / expose_count
         
         # 存入mongodb
@@ -147,6 +147,7 @@ def ctr_analysis(csv_path):
         describe_list.append("first"+str(check)+"expose_count")
     print(csv_path+"usr_ctr_raw.csv")
     df = pd.read_csv(csv_path+"usr_ctr_raw.csv")
+    df.fillna(0)
     describe = df.describe()
     print("describe:")
     print(describe[describe_list])
