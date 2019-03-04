@@ -101,12 +101,11 @@ def get_start_ctr(start_time,user_time_range):
         
         # 生成csv文件
         csv_head = ["user_id","exposes_before_first_click","total_ctr"]
+        csv_row = [user_ctr_item["user_id"]]
         for check in check_list:
             csv_head.append("first"+str(check)+"expose_count")
+            csv_row.append(user_ctr_item["user_data"]["first"+str(check)+"expose_count"])
         writer.writerow(csv_head)
-        csv_row = [user_ctr_item["user_id"]]
-        for key,value in user_ctr_item["user_data"].items():
-            csv_row.append(value)
         writer.writerow(csv_row)
         
     conn.commit()
