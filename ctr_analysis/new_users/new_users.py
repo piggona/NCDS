@@ -77,6 +77,8 @@ def get_start_ctr(start_time,user_time_range):
         expose_count = 0
         click_count = 0
         first_ctr = 0
+        for check in check_list:
+            user_ctr_item["user_data"]["first"+str(check)+"expose_count"] = 0
         for user_item in user_items:
             if user_item[1] == "expose":
                 expose_count += 1
@@ -103,8 +105,8 @@ def get_start_ctr(start_time,user_time_range):
             csv_head.append("first"+str(check)+"expose_count")
         writer.writerow(csv_head)
         csv_row = [user_ctr_item["user_id"]]
-        for item in user_ctr_item["user_data"]:
-            csv_row.append(item)
+        for key,value in user_ctr_item["user_data"].items():
+            csv_row.append(value)
         writer.writerow(csv_row)
         
     conn.commit()
