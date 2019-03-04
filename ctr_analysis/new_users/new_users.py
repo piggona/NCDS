@@ -138,7 +138,6 @@ def ctr_analysis(csv_path):
     path = os.getcwd()
     with open(path+'/config/ctr_config.json','r') as r:
         ctr_config = json.load(r)
-    csv_path = ctr_config["usr_csv_path"]
     ctr_analysis_interval = ctr_config["ctr_analysis_interval"]
     ctr_analysis_top = ctr_config["ctr_analysis_top"]
 
