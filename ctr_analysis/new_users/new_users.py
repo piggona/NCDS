@@ -42,6 +42,9 @@ def get_start_ctr(start_time,user_time_range):
     with open(path+'/config/ctr_config.json','r') as r:
         ctr_config = json.load(r)
     csv_path = ctr_config["usr_csv_path"]
+    ctr_analysis_interval = ctr_config["ctr_analysis_interval"]
+    ctr_analysis_top = ctr_config["ctr_analysis_top"]
+
     data_scan_amount = ctr_config["data_scan_amount"]
     r.close()
     os.mkdir(csv_path+str(int(time.time())))
@@ -49,7 +52,8 @@ def get_start_ctr(start_time,user_time_range):
     csv_doc_name = "usr_ctr_raw.csv"
     csvfile = open(csv_path+csv_doc_name,"w",newline='')
     writer = csv.writer(csvfile,quoting=csv.QUOTE_ALL)
-    csv_head = ["user_id","first_ctr","first_click","total_ctr"]
+    # 需要将自定义的头加上
+    csv_head = ["user_id","exposes_before_first_click","total_ctr"]
     writer.writerow(csv_head)
 
     #配置写入mongoDB
@@ -62,9 +66,10 @@ def get_start_ctr(start_time,user_time_range):
     # print("user_ids:{}".format(user_ids))
     conn = pymysql.connect(host='127.0.0.1',port=3306,user="jinyuanhao",db="infomation",passwd="Sjk0213%$")
     cursor = conn.cursor()
+    check_list = range(ctr_analysis_interval,ctr_analysis_top+1,ctr_analysis_interval)
     for user_id in user_ids:
         # print(user_id)
-        user_ctr_item = {"user_id":user_id,"user_data":{"first_ctr":"","first_click":"","total_ctr":"","raw_data":""}}
+        user_ctr_item = {"user_id":user_id,"user_data":{"exposes_before_first_click":"","total_ctr":"","raw_data":""}}
         first_query = "SELECT item_id,bhv_type FROM aliyun_behavior_info WHERE user_id = {0} ORDER BY bhv_time ASC LIMIT {1}".format("'"+str(user_id)+"'",str(data_scan_amount))
         cursor.execute(first_query)
         user_items = cursor.fetchmany(data_scan_amount)
@@ -75,31 +80,33 @@ def get_start_ctr(start_time,user_time_range):
         for user_item in user_items:
             if user_item[1] == "expose":
                 expose_count += 1
-                if (expose_count == 10) and (first_ctr == 0):
-                    user_ctr_item["user_data"]["first_ctr"] = 0
-                    first_ctr = 1
+                if expose_count in check_list:
+                    user_ctr_item["user_data"]["first"+str(expose_count)+"expose_count"] = click_count / expose_count
             if user_item[1] == "click":
-                if expose_count == 0:
-                    user_ctr_item["user_data"]["first_ctr"] = 0.333
-                else:
-                    if first_ctr == 0:
-                        user_ctr_item["user_data"]["first_ctr"] = 1 / expose_count
-                        first_ctr = 1
-                    if click_count == 0:
-                        user_ctr_item["user_data"]["first_click"] = expose_count
-                    click_count += 1
+                if click_count == 0:
+                    user_ctr_item["user_data"]["exposes_before_first_click"] = expose_count
+                click_count += 1
         if expose_count == 0:
             user_ctr_item["user_data"]["total_ctr"] = 0
-            user_ctr_item["user_data"]["first_ctr"] = 0
-            user_ctr_item["user_data"]["first_click"] = 101
+            user_ctr_item["user_data"]["exposes_before_first_click"] = 101
         else:
             if click_count == 0:
-                user_ctr_item["user_data"]["first_ctr"] = 0
                 user_ctr_item["user_data"]["first_click"] = 101
             user_ctr_item["user_data"]["total_ctr"] = click_count / expose_count
-        csv_row = [user_ctr_item["user_id"],user_ctr_item["user_data"]["first_ctr"],user_ctr_item["user_data"]["first_click"],user_ctr_item["user_data"]["total_ctr"]]
-        writer.writerow(csv_row)
+        
+        # 存入mongodb
         collection.insert_one(user_ctr_item)
+        
+        # 生成csv文件
+        csv_head = ["user_id","exposes_before_first_click","total_ctr"]
+        for check in check_list:
+            csv_head.append("first"+str(check)+"expose_count")
+        writer.writerow(csv_head)
+        csv_row = [user_ctr_item["user_id"]]
+        for item in user_ctr_item["user_data"]:
+            csv_row.append(item)
+        writer.writerow(csv_row)
+        
     conn.commit()
     cursor.close()
     conn.close()
@@ -128,24 +135,36 @@ def ctr_analysis(csv_path):
     对这个用户群体进行追踪分析（可选可触发）
     对这些新用户所点击的内容进行分析（内容频道的分布）
     '''
+    path = os.getcwd()
+    with open(path+'/config/ctr_config.json','r') as r:
+        ctr_config = json.load(r)
+    csv_path = ctr_config["usr_csv_path"]
+    ctr_analysis_interval = ctr_config["ctr_analysis_interval"]
+    ctr_analysis_top = ctr_config["ctr_analysis_top"]
+
+    check_list = range(ctr_analysis_interval,ctr_analysis_top+1,ctr_analysis_interval)
+    describe_list = ["exposes_before_first_click","total_ctr"]
+    for check in check_list:
+        describe_list.append("first"+str(check)+"expose_count")
     print(csv_path+"usr_ctr_raw.csv")
     df = pd.read_csv(csv_path+"usr_ctr_raw.csv")
     describe = df.describe()
     print("describe:")
-    print(describe[["first_ctr","first_click","total_ctr"]])
-    print("group_by first_ctr:")
-    first_ctr_group = df.groupby('first_ctr').count()
-    print(first_ctr_group[["user_id"]])
+    print(describe[describe_list])
     print("group_by total_ctr:")
     total_ctr_mesh_df = df.apply(lambda x:0.01*(x//0.01))
     total_ctr_group = total_ctr_mesh_df.groupby('total_ctr').count()
     print(total_ctr_group[["user_id"]])
     first_click_group = df.groupby('first_click').count()
-    print(first_click_group[["user_id"]])
-    describe.to_csv(path_or_buf=csv_path+"ctr_describe.csv")
-    first_ctr_group[["user_id"]].to_csv(path_or_buf=csv_path+"first_ctr_group.csv")
+
+    for check in check_list:
+        check_ctr = df.groupby("first"+str(check)+"expose_count").count()
+        check_ctr[["user_id"]].to_csv(path_or_buf=csv_path+"first"+str(check)+"expose_count_group.csv")
+
+
+    describe[describe_list].to_csv(path_or_buf=csv_path+"describe_all.csv")
     total_ctr_group[["user_id"]].to_csv(path_or_buf=csv_path+"total_ctr_group.csv")
-    first_click_group[["user_id"]].to_csv(path_or_buf=csv_path+"first_click_group.csv")
+    first_click_group[["user_id"]].to_csv(path_or_buf=csv_path+"exposes_before_first_click_group.csv")
 
 def article_ctr_analysis():
     '''
