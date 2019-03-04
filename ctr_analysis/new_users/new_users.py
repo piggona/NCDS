@@ -54,6 +54,9 @@ def get_start_ctr(start_time,user_time_range):
     writer = csv.writer(csvfile,quoting=csv.QUOTE_ALL)
     # 需要将自定义的头加上
     csv_head = ["user_id","exposes_before_first_click","total_ctr"]
+    check_list = range(ctr_analysis_interval,ctr_analysis_top+1,ctr_analysis_interval)
+    for check in check_list:
+        csv_head.append("first"+str(check)+"expose_count")
     writer.writerow(csv_head)
 
     #配置写入mongoDB
@@ -66,7 +69,7 @@ def get_start_ctr(start_time,user_time_range):
     # print("user_ids:{}".format(user_ids))
     conn = pymysql.connect(host='127.0.0.1',port=3306,user="jinyuanhao",db="infomation",passwd="Sjk0213%$")
     cursor = conn.cursor()
-    check_list = range(ctr_analysis_interval,ctr_analysis_top+1,ctr_analysis_interval)
+    
     for user_id in user_ids:
         # print(user_id)
         user_ctr_item = {"user_id":user_id,"user_data":{"exposes_before_first_click":"","total_ctr":"","raw_data":""}}
@@ -100,14 +103,11 @@ def get_start_ctr(start_time,user_time_range):
         collection.insert_one(user_ctr_item)
         
         # 生成csv文件
-        csv_head = ["user_id","exposes_before_first_click","total_ctr"]
         csv_row = [user_ctr_item["user_id"],user_ctr_item["user_data"]["exposes_before_first_click"],user_ctr_item["user_data"]["total_ctr"]]
         for check in check_list:
-            csv_head.append("first"+str(check)+"expose_count")
             csv_row.append(user_ctr_item["user_data"]["first"+str(check)+"expose_count"])
         writer.writerow(csv_row)
 
-    writer.writerow(csv_head) 
     conn.commit()
     cursor.close()
     conn.close()
@@ -151,6 +151,7 @@ def ctr_analysis(csv_path):
     df.fillna(0)
     describe = df.describe()
     print("describe:")
+    print(describe_list)
     print(describe[describe_list])
     print("group_by total_ctr:")
     total_ctr_mesh_df = df.apply(lambda x:0.01*(x//0.01))
