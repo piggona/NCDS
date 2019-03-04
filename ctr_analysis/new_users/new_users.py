@@ -157,7 +157,10 @@ def ctr_analysis(csv_path):
     total_ctr_mesh_df = df.apply(lambda x:0.01*(x//0.01))
     total_ctr_group = total_ctr_mesh_df.groupby('total_ctr').count()
     print(total_ctr_group[["user_id"]])
-    first_click_group = df.groupby('first_click').count()
+    print("group_by exposes_before_first_click")
+    first_click_group = df.groupby('exposes_before_first_click_group').count()
+    print(first_click_group[["user_id"]])
+
 
     for check in check_list:
         check_ctr = df.groupby("first"+str(check)+"expose_count").count()
