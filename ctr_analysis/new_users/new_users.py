@@ -235,7 +235,6 @@ def article_ctr_analysis():
         click_amount = 0
         expose_amount = 0
         for ctr_obj in ctr_objs:
-            print(ctr_obj)
             if ctr_obj[1] == "expose":
                 expose_amount = ctr_obj[0]
             if ctr_obj[1] == "click":
