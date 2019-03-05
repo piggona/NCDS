@@ -176,12 +176,66 @@ def article_ctr_analysis():
     计算文章被曝光次数expose:
     1. 文章(item_id)对应时间段的expose生命周期折线
     2. 在相同时间段节点，各个文章的article_ctr->expose图像
-    解决方案：
-    2. 取user_time_range-2的时间区间内的用户文章（用户文章需要去user_behavior表中寻找新用户，并取出那些新用户所被曝光的文章）
-    2. 计算这些文章在小时间段（article_time_interval)内的ctr波动（该文章的总ctr，点击和曝光都是累计的），计算文章曝光次数的波动
+    静态解决方案：
+    1. 抽样：取user_time_range的时间区间内的用户文章（用户文章需要调用mongodb->start_ctr表寻找新用户，并取出那些新用户所被曝光的文章）
+    2. 计算expose比率：计算这些文章在总共expose中的比率,根据expose比率将文章分类
+    3. ctr计算：计算这些文章的ctr（计算整体的ctr,对所有用户）
+    4. 文章分组：根据计算出来的ctr对文章分组。
+    5. 比较expose各组元素与ctr各组元素的匹配度、
+    实时方案：
+    实时对文章分组，分expose组与ctr组，计算expose各组数量与ctr各组数量的回归是否契合
+    主要问题点：
+    1. 实时性
+    2. 动态对各组中元素做调整，根据expose与ctr的变化改变各分组的元素
     '''
+    # 初始化
+    client = pymongo.MongoClient(host="localhost")
+    db = client.ctrAnalytics
+
+    conn = pymysql.connect(host='127.0.0.1',port=3306,user="jinyuanhao",db="infomation",passwd="Sjk0213%$")
+    cursor = conn.cursor()
+
+    # 抽样
+    collection = db["start_ctr"]
+    user_datas = collection.find()
     
-    pass
+    article_list = []
+    article_distribute = {}
+    
+    for user_data in user_datas:
+        raw_datas = user_data["raw_data"]
+        for raw_data in raw_datas:
+            if raw_data[1] == "expose":
+                article_list.append(raw_data[0])
+    expose_amount = len(article_list)
+    article_set = set(article_list)
+    for article in article_set:
+        article_distribute[str(article)] = article_list.count(article)/expose_amount
+    # expose比率
+    article_amount = len(article_set)
+    print(article_distribute)
+    # article比率
+    article_ctr_distribute = {}
+    for article in article_set:
+        first_query = "SELECT count(*) as op_amount,bhv_type FROM aliyun_behavior_info WHERE item_id = '{}' GROUP BY bhv_type".format(article)
+        cursor.execute(first_query)
+        ctr_objs = cursor.fetchall()
+        click_amount = 0
+        expose_amount = 0
+        for ctr_obj in ctr_objs:
+            if ctr_obj["bhv_type"] == "expose":
+                expose_amount = ctr_obj["op_amount"]
+            if ctr_obj["bhv_type"] == "click":
+                click_amount = ctr_obj["op_amount"]
+        if expose_amount == 0:
+            article_ctr_distribute[str(article)] = 0
+        else:
+            article_ctr_distribute[str(article)] = click_amount/expose_amount
+    print(article_ctr_distribute)
+    
+    conn.commit()
+    cursor.close()
+    conn.close()        
 
 def data_flow_analysis():
     '''
