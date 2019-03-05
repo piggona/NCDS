@@ -229,10 +229,14 @@ def article_ctr_analysis():
             article_count_group["upper100"].append(str(article))
     # expose比率
     article_amount = len(article_set)
+    print("总曝光数：")
     print(expose_amount)
+    print("各区间数量：")
     print(article_count_group_count)
     # article比率
     article_ctr_distribute = {}
+    article_ctr_group = {"zero":[],"0to3":[],"3to6":[],"6to10":[],"upper10":[]}
+    article_ctr_group_count = {"zero":0,"0to3":0,"3to6":0,"6to10":0,"upper10":0}
     for article in article_set:
         first_query = "SELECT count(*) as op_amount,bhv_type FROM aliyun_behavior_info WHERE item_id = '{}' GROUP BY bhv_type".format(article)
         cursor.execute(first_query)
@@ -245,11 +249,28 @@ def article_ctr_analysis():
             if ctr_obj[1] == "click":
                 click_amount = ctr_obj[0]
         if expose_amount == 0:
-            article_ctr_distribute[str(article)] = 0
+            ctr = 0.0
+            article_ctr_distribute[str(article)] = 0.0
         else:
-            article_ctr_distribute[str(article)] = click_amount/expose_amount
+            ctr = click_amount/expose_amount
+            article_ctr_distribute[str(article)] = ctr
+        if str(ctr) == "0.0":
+            article_ctr_group["zero"].append(str(article))
+            article_ctr_group_count["zero"] += 1
+        elif ctr <= 0.03:
+            article_ctr_group["0to3"].append(str(article))
+            article_ctr_group_count["0to3"] += 1
+        elif ctr <= 0.06:
+            article_ctr_group["3to6"].append(str(article))
+            article_ctr_group_count["3to6"] += 1
+        elif ctr <= 0.1:
+            article_ctr_group["6to10"].append(str(article))
+            article_ctr_group_count["6to10"] += 1
+        else:
+            article_ctr_group["upper10"].append(str(article))
+            article_ctr_group_count["upper10"] += 1
     print("article_ctr_distribute:")
-    print(article_ctr_distribute)
+    print(article_ctr_group_count)
     
     conn.commit()
     cursor.close()
