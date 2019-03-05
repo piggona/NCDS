@@ -201,6 +201,7 @@ def article_ctr_analysis():
     
     article_list = []
     article_distribute = {}
+    article_count = {}
     
     for user_data in user_datas:
         raw_datas = user_data["user_data"]["raw_data"]
@@ -211,9 +212,10 @@ def article_ctr_analysis():
     article_set = set(article_list)
     for article in article_set:
         article_distribute[str(article)] = article_list.count(article)/expose_amount
+        article_count[str(article)] = article_list.count(article)
     # expose比率
     article_amount = len(article_set)
-    print(article_distribute)
+    print(article_count)
     # article比率
     article_ctr_distribute = {}
     for article in article_set:
@@ -223,6 +225,7 @@ def article_ctr_analysis():
         click_amount = 0
         expose_amount = 0
         for ctr_obj in ctr_objs:
+            print(ctr_obj)
             if ctr_obj["bhv_type"] == "expose":
                 expose_amount = ctr_obj["op_amount"]
             if ctr_obj["bhv_type"] == "click":
