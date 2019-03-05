@@ -202,7 +202,8 @@ def article_ctr_analysis():
     article_list = []
     article_distribute = {}
     article_count = {}
-    article_count_group = {"less10":0,"10to50":0,"50to100":0,"upper100":0}
+    article_count_group = {"less10":[],"10to50":[],"50to100":[],"upper100":[]}
+    article_count_group_count = {"less10":0,"10to50":0,"50to100":0,"upper100":0}
     
     for user_data in user_datas:
         raw_datas = user_data["user_data"]["raw_data"]
@@ -215,17 +216,21 @@ def article_ctr_analysis():
         article_distribute[str(article)] = article_list.count(article)/expose_amount
         article_count[str(article)] = article_list.count(article)
         if article_list.count(article) <= 10:
-            article_count_group["less10"] += 1
+            article_count_group_count["less10"] += 1
+            article_count_group["less10"].append(str(article))
         elif article_list.count(article) <= 50:
-            article_count_group["10to50"] += 1
+            article_count_group_count["10to50"] += 1
+            article_count_group["10to50"].append(str(article))
         elif article_list.count(article) <= 100:
-            article_count_group["50to100"] += 1
+            article_count_group_count["50to100"] += 1
+            article_count_group["50to100"].append(str(article))
         else:
-            article_count_group["upper100"] += 1
+            article_count_group_count["upper100"] += 1
+            article_count_group["upper100"].append(str(article))
     # expose比率
     article_amount = len(article_set)
     print(expose_amount)
-    print(article_count_group)
+    print(article_count_group_count)
     # article比率
     article_ctr_distribute = {}
     for article in article_set:
