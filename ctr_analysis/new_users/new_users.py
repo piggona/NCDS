@@ -30,7 +30,7 @@ def fetch_new_user(start_time,user_time_range):
     return user_list
 
 
-def get_start_ctr(start_time,user_time_range):
+def get_new_user_ctr(start_time,user_time_range):
     '''
     得到每个user_list用户的ctr信息,存储到mongodb中
     计算用户首刷ctr
@@ -126,7 +126,7 @@ def ctr_run():
     start_time = ctr_config["user_start_time"]
     if start_time == "now":
         start_time = int(time.time())
-    csv_path = get_start_ctr(start_time,user_time_range)
+    csv_path = get_new_user_ctr(start_time,user_time_range)
     ctr_analysis(csv_path)
     
 def ctr_analysis(csv_path):
@@ -151,7 +151,6 @@ def ctr_analysis(csv_path):
     df.fillna(0)
     describe = df.describe()
     print("describe:")
-    print(describe_list)
     print(describe[describe_list])
     print("group_by total_ctr:")
     total_ctr_mesh_df = df.apply(lambda x:0.01*(x//0.01))
@@ -161,11 +160,9 @@ def ctr_analysis(csv_path):
     first_click_group = df.groupby('exposes_before_first_click').count()
     print(first_click_group[["user_id"]])
 
-
     for check in check_list:
         check_ctr = df.groupby("first"+str(check)+"expose_count").count()
         check_ctr[["user_id"]].to_csv(path_or_buf=csv_path+"first"+str(check)+"expose_count_group.csv")
-
 
     describe[describe_list].to_csv(path_or_buf=csv_path+"describe_all.csv")
     total_ctr_group[["user_id"]].to_csv(path_or_buf=csv_path+"total_ctr_group.csv")
@@ -173,21 +170,31 @@ def ctr_analysis(csv_path):
 
 def article_ctr_analysis():
     '''
+    想知道高ctr的文章是否推荐给了新用户
     article_time_range时间跨度内
     计算文章(item_id)不同时间段(create_time+range)内的article_ctr,click/expose
     计算文章被曝光次数expose:
     1. 文章(item_id)对应时间段的expose生命周期折线
     2. 在相同时间段节点，各个文章的article_ctr->expose图像
+    解决方案：
+    2. 取user_time_range-2的时间区间内的用户文章（用户文章需要去user_behavior表中寻找新用户，并取出那些新用户所被曝光的文章）
+    2. 计算这些文章在小时间段（article_time_interval)内的ctr波动（该文章的总ctr，点击和曝光都是累计的），计算文章曝光次数的波动
     '''
+
     pass
 
 def data_flow_analysis():
     '''
     各个新闻源文章的ctr与其曝光比率的分布
+    分为对全体用户的ctr及其曝光比率的分布，及对新用户的分布
+    1. aliyun_article_info:先找到article_time_range时间段内所有的文章记录，统计各个新闻源的数量分布，按新闻源做文章分类
+    2. aliyun_behavior_info:各类新闻源article组中，循环文章id，将得到的expose与click累加
+    3. aliyun_behavior_info:得到各新闻源的ctr分布
+    4. aliyun_behavior_info:计算各新闻源的expose分布
     '''
     pass
 
 
 if __name__ == "__main__":
-    get_start_ctr(int(time.time()),259200)
+    get_new_user_ctr(int(time.time()),259200)
 
