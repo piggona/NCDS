@@ -202,6 +202,7 @@ def article_ctr_analysis():
     article_list = []
     article_distribute = {}
     article_count = {}
+    article_count_group = {"less10":0,"10to50":0,"50to100":0,"upper100":0}
     
     for user_data in user_datas:
         raw_datas = user_data["user_data"]["raw_data"]
@@ -213,9 +214,18 @@ def article_ctr_analysis():
     for article in article_set:
         article_distribute[str(article)] = article_list.count(article)/expose_amount
         article_count[str(article)] = article_list.count(article)
+        if article_list.count(article) <= 10:
+            article_count_group["less10"] += 1
+        elif article_list.count(article) <= 50:
+            article_count_group["10to50"] += 1
+        elif article_list.count(article) <= 100:
+            article_count_group["50to100"] += 1
+        else:
+            article_count_group["upper100"] += 1
     # expose比率
     article_amount = len(article_set)
-    print(article_count)
+    print(expose_amount)
+    print(article_count_group)
     # article比率
     article_ctr_distribute = {}
     for article in article_set:
@@ -226,14 +236,15 @@ def article_ctr_analysis():
         expose_amount = 0
         for ctr_obj in ctr_objs:
             print(ctr_obj)
-            if ctr_obj["bhv_type"] == "expose":
-                expose_amount = ctr_obj["op_amount"]
-            if ctr_obj["bhv_type"] == "click":
-                click_amount = ctr_obj["op_amount"]
+            if ctr_obj[1] == "expose":
+                expose_amount = ctr_obj[0]
+            if ctr_obj[1] == "click":
+                click_amount = ctr_obj[0]
         if expose_amount == 0:
             article_ctr_distribute[str(article)] = 0
         else:
             article_ctr_distribute[str(article)] = click_amount/expose_amount
+    print("article_ctr_distribute:")
     print(article_ctr_distribute)
     
     conn.commit()
