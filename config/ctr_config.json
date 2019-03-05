@@ -1,9 +1,9 @@
 {
     "data_scan_amount": 100,
     "user_start_time": "now",
-    "user_time_range": 432000,
+    "user_time_range": 172800,
     "article_start_time": "now",
-    "article_time_range": 432000,
+    "article_time_range": 172800,
     "usr_csv_path": "/root/ctr_files/usr_csv/",
     "ctr_analysis_interval": 3,
     "ctr_analysis_top": 30

@@ -180,7 +180,7 @@ def article_ctr_analysis():
     2. 取user_time_range-2的时间区间内的用户文章（用户文章需要去user_behavior表中寻找新用户，并取出那些新用户所被曝光的文章）
     2. 计算这些文章在小时间段（article_time_interval)内的ctr波动（该文章的总ctr，点击和曝光都是累计的），计算文章曝光次数的波动
     '''
-
+    
     pass
 
 def data_flow_analysis():
