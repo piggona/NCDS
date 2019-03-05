@@ -203,6 +203,7 @@ def article_ctr_analysis():
     article_distribute = {}
     
     for user_data in user_datas:
+        print(user_data)
         raw_datas = user_data["raw_data"]
         for raw_data in raw_datas:
             if raw_data[1] == "expose":
