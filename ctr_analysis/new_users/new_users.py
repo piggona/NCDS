@@ -47,7 +47,7 @@ def get_old_user_ctr(start_time,user_time_range):
     click_count = 0
     expose_count = 0
     for user_id in fetch_old_user(start_time,user_time_range):
-        query = "SELECT count(*) as bhv_count,bhv_type FROM aliyun_behavior_info WHERE user_id = '{}' GROUP BY bhv_type".format(str(user_id))
+        query = "SELECT count(DISTINCT item_id,bhv_type) as bhv_count,bhv_type FROM aliyun_behavior_info WHERE user_id = '{}' GROUP BY bhv_type".format(str(user_id))
         cursor.execute(query)
         user_items = cursor.fetchall()
         for user_item in user_items:
@@ -102,7 +102,7 @@ def get_new_user_ctr(start_time,user_time_range):
     
     for user_id in fetch_new_user(start_time,user_time_range):
         user_ctr_item = {"user_id":user_id,"user_data":{"exposes_before_first_click":"","total_ctr":"","raw_data":""}}
-        first_query = "SELECT DISTINCT item_id,bhv_type FROM (SELECT item_id,bhv_type FROM aliyun_behavior_info WHERE user_id = '{0}' ORDER BY bhv_time ASC LIMIT {1}) as item_bhv".format(str(user_id),str(data_scan_amount))
+        first_query = "SELECT DISTINCT item_id,bhv_type FROM (SELECT item_id,bhv_type FROM aliyun_behavior_info WHERE user_id = '{0}' ORDER BY bhv_time ASC) as item_bhv".format(str(user_id))
         cursor.execute(first_query)
         user_items = cursor.fetchmany(data_scan_amount)
         user_ctr_item["user_data"]["raw_data"] = user_items
