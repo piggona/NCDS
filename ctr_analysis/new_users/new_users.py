@@ -367,7 +367,7 @@ def get_article_distribution():
     article_count_group = {"less10":[],"10to50":[],"50to100":[],"upper100":[]}
     article_count_group_count = {"less10":0,"10to50":0,"50to100":0,"upper100":0}
     article_ctr_group = {"zero":[],"0to3":[],"3to6":[],"6to10":[],"upper10":[],"no_expose":[]}
-    article_ctr_group_count = {"zero":0,"0to3":0,"3to6":0,"6to10":0,"upper10":0,"no_expose":[]}
+    article_ctr_group_count = {"zero":0,"0to3":0,"3to6":0,"6to10":0,"upper10":0,"no_expose":0}
 
     for item_id in generate_available_articles():
         ctr,expose_count = get_expose_and_ctr(item_id)
