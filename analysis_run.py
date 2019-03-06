@@ -9,6 +9,7 @@ from ctr_analysis.new_users.new_users import *
 
 def Run():
     print(int(time.time()))
+    ctr_run()
     article_ctr_analysis()
 
 if __name__ == "__main__":
