@@ -355,8 +355,9 @@ def get_expose_and_ctr(article_id):
         if stat[1] == "expose":
             expose_count = stat[1]
     if expose_count == 0:
-        ctr = 0
-    ctr = click_count / expose_count
+        ctr = -1
+    else:
+        ctr = click_count / expose_count
     conn.commit()
     cursor.close()
     conn.close()
@@ -365,8 +366,8 @@ def get_expose_and_ctr(article_id):
 def get_article_distribution():
     article_count_group = {"less10":[],"10to50":[],"50to100":[],"upper100":[]}
     article_count_group_count = {"less10":0,"10to50":0,"50to100":0,"upper100":0}
-    article_ctr_group = {"zero":[],"0to3":[],"3to6":[],"6to10":[],"upper10":[]}
-    article_ctr_group_count = {"zero":0,"0to3":0,"3to6":0,"6to10":0,"upper10":0}
+    article_ctr_group = {"zero":[],"0to3":[],"3to6":[],"6to10":[],"upper10":[],"no_expose":[]}
+    article_ctr_group_count = {"zero":0,"0to3":0,"3to6":0,"6to10":0,"upper10":0,"no_expose":[]}
 
     for item_id in generate_available_articles():
         ctr,expose_count = get_expose_and_ctr(item_id)
@@ -383,7 +384,10 @@ def get_article_distribution():
             article_count_group_count["upper100"] += 1
             article_count_group["upper100"].append(str(item_id))
         
-        if str(ctr) == "0.0":
+        if ctr == -1:
+            article_ctr_group["no_expose"].append(str(item_id))
+            article_ctr_group_count["no_expose"] += 1
+        elif str(ctr) == 0:
             article_ctr_group["zero"].append(str(item_id))
             article_ctr_group_count["zero"] += 1
         elif ctr <= 0.03:
