@@ -231,7 +231,9 @@ def article_ctr_analysis():
     article_amount = len(article_set)
     print("总曝光数：")
     print(expose_amount)
-    print("各区间数量：")
+    print("总取样文章数：")
+    print(len(article_set))
+    print("各’新用户曝光数‘区间内取样文章数量：")
     print(article_count_group_count)
     # article比率
     article_ctr_distribute = {}
@@ -269,8 +271,15 @@ def article_ctr_analysis():
         else:
             article_ctr_group["upper10"].append(str(article))
             article_ctr_group_count["upper10"] += 1
-    print("article_ctr_distribute:")
+    print("各’ctr区间（百分数）-ctr是取样文章的总体ctr‘的取样文章数:")
     print(article_ctr_group_count)
+
+    # 计算匹配数量
+    for ctr_key,ctr_list in article_ctr_group.items():
+        for count_key,count_list in article_count_group.items():
+            result_list = list(set(ctr_list).intersection(set(count_list)))
+            print("ctr区间 {0} , 对应的expose区间 {1} 的文章匹配度是：{2}".format(ctr_key,count_key,len(result_list)/len(ctr_list)))
+
     
     conn.commit()
     cursor.close()
