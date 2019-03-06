@@ -348,7 +348,7 @@ def get_expose_and_ctr(article_id):
     cursor.execute(query)
     items = cursor.fetchall()
     click_count = 0
-    expose_count =0
+    expose_count = 0
     for stat in items:
         if stat[0] == "click":
             click_count = stat[1]
@@ -387,7 +387,7 @@ def get_article_distribution():
         if ctr == -1:
             article_ctr_group["no_expose"].append(str(item_id))
             article_ctr_group_count["no_expose"] += 1
-        elif str(ctr) == 0:
+        elif ctr == 0:
             article_ctr_group["zero"].append(str(item_id))
             article_ctr_group_count["zero"] += 1
         elif ctr <= 0.03:
