@@ -82,7 +82,6 @@ def get_new_user_ctr(start_time,user_time_range):
     cursor = conn.cursor()
     
     for user_id in fetch_new_user(start_time,user_time_range):
-        print(user_id)
         user_ctr_item = {"user_id":user_id,"user_data":{"exposes_before_first_click":"","total_ctr":"","raw_data":""}}
         first_query = "SELECT DISTINCT item_id,bhv_type FROM (SELECT item_id,bhv_type FROM aliyun_behavior_info WHERE user_id = '{0}' ORDER BY bhv_time ASC LIMIT {1}) as item_bhv".format(str(user_id),str(data_scan_amount))
         cursor.execute(first_query)
