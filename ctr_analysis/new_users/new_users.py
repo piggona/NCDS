@@ -335,6 +335,7 @@ def generate_available_articles():
     cursor.execute(query)
     items = cursor.fetchall()
     for article in items:
+        print(article[0])
         yield article[0]
     conn.commit()
     cursor.close()
