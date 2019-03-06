@@ -407,6 +407,15 @@ def get_article_distribution():
     print("文章曝光数量 数量分布：")
     print(article_count_group_count)
 
+    # 计算匹配数量
+    print("匹配度：")
+    for ctr_key,ctr_list in article_ctr_group.items():
+        print("对ctr区间 {0}".format(ctr_key))
+        for count_key,count_list in article_count_group.items():
+            result_list = list(set(ctr_list).intersection(set(count_list)))
+            print("ctr区间 {0} , 对应的expose区间 {1} 的文章匹配度是：{2}".format(ctr_key,count_key,len(result_list)/len(ctr_list)))
+
+
 
 
 if __name__ == "__main__":
