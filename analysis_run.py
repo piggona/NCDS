@@ -9,8 +9,9 @@ from ctr_analysis.new_users.new_users import *
 
 def Run():
     print(int(time.time()))
-    ctr_run()
-    article_ctr_analysis()
+    # ctr_run()
+    # article_ctr_analysis()
+    get_article_distribution()
 
 if __name__ == "__main__":
     Run()

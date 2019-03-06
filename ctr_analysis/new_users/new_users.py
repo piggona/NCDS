@@ -56,10 +56,11 @@ def get_old_user_ctr(start_time,user_time_range):
             if user_item[1] == "click":
                 click_count += user_item[0]
     old_user_ctr = click_count/expose_count
-    print("老用户ctr")
+    print("老用户ctr：")
     print(old_user_ctr)
-
-
+    conn.commit()
+    cursor.close()
+    conn.close()
 
 def get_new_user_ctr(start_time,user_time_range):
     '''
@@ -325,6 +326,79 @@ def data_flow_analysis():
     4. aliyun_behavior_info:计算各新闻源的expose分布
     '''
     pass
+
+def generate_available_articles():
+    conn = pymysql.connect(host='127.0.0.1',port=3306,user="jinyuanhao",db="infomation",passwd="Sjk0213%$")
+    cursor = conn.cursor()
+
+    query = "SELECT item_id FROM aliyun_article_info WHERE expire_time > '{}'".format(str(int(time.time())))
+    cursor.execute(query)
+    items = cursor.fetchall()
+    for article in items:
+        yield article[0]
+    conn.commit()
+    cursor.close()
+    conn.close()
+
+def get_expose_and_ctr(article_id):
+    conn = pymysql.connect(host='127.0.0.1',port=3306,user="jinyuanhao",db="infomation",passwd="Sjk0213%$")
+    cursor = conn.cursor()
+
+    query = "SELECT bhv_type,count(*) FROM aliyun_behavior_info WHERE item_id = '{}' GROUP BY bhv_type".format(article_id)
+    cursor.execute(query)
+    items = cursor.fetchall()
+    for stat in items:
+        if stat[0] == "click":
+            click_count = stat[1]
+        if stat[1] == "expose":
+            expose_count = stat[1]
+    ctr = click_count / expose_count
+    conn.commit()
+    cursor.close()
+    conn.close()
+    return ctr,expose_count
+
+def get_article_distribution():
+    article_count_group = {"less10":[],"10to50":[],"50to100":[],"upper100":[]}
+    article_count_group_count = {"less10":0,"10to50":0,"50to100":0,"upper100":0}
+    article_ctr_group = {"zero":[],"0to3":[],"3to6":[],"6to10":[],"upper10":[]}
+    article_ctr_group_count = {"zero":0,"0to3":0,"3to6":0,"6to10":0,"upper10":0}
+
+    for item_id in generate_available_articles():
+        ctr,expose_count = get_expose_and_ctr(item_id)
+        if expose_count <= 10:
+            article_count_group_count["less10"] += 1
+            article_count_group["less10"].append(str(item_id))
+        elif expose_count <= 50:
+            article_count_group_count["10to50"] += 1
+            article_count_group["10to50"].append(str(item_id))
+        elif expose_count <= 100:
+            article_count_group_count["50to100"] += 1
+            article_count_group["50to100"].append(str(item_id))
+        else:
+            article_count_group_count["upper100"] += 1
+            article_count_group["upper100"].append(str(item_id))
+        
+        if str(ctr) == "0.0":
+            article_ctr_group["zero"].append(str(item_id))
+            article_ctr_group_count["zero"] += 1
+        elif ctr <= 0.03:
+            article_ctr_group["0to3"].append(str(item_id))
+            article_ctr_group_count["0to3"] += 1
+        elif ctr <= 0.06:
+            article_ctr_group["3to6"].append(str(item_id))
+            article_ctr_group_count["3to6"] += 1
+        elif ctr <= 0.1:
+            article_ctr_group["6to10"].append(str(item_id))
+            article_ctr_group_count["6to10"] += 1
+        else:
+            article_ctr_group["upper10"].append(str(item_id))
+            article_ctr_group_count["upper10"] += 1
+    print("文章ctr 数量分布：")
+    print(article_ctr_group_count)
+    print("文章曝光数量 数量分布：")
+    print(article_count_group_count)
+
 
 
 if __name__ == "__main__":
