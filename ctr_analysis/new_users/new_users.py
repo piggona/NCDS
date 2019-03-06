@@ -352,6 +352,7 @@ def get_expose_and_ctr(article_id):
     for stat in items:
         if stat[0] == "click":
             click_count = stat[1]
+            print("click")
         if stat[1] == "expose":
             expose_count = stat[1]
     if expose_count == 0:
