@@ -347,11 +347,15 @@ def get_expose_and_ctr(article_id):
     query = "SELECT bhv_type,count(*) FROM aliyun_behavior_info WHERE item_id = '{}' GROUP BY bhv_type".format(article_id)
     cursor.execute(query)
     items = cursor.fetchall()
+    click_count = 0
+    expose_count =0
     for stat in items:
         if stat[0] == "click":
             click_count = stat[1]
         if stat[1] == "expose":
             expose_count = stat[1]
+    if expose_count == 0:
+        ctr = 0
     ctr = click_count / expose_count
     conn.commit()
     cursor.close()
