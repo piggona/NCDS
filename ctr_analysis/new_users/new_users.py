@@ -41,6 +41,25 @@ def fetch_old_user(start_time,user_time_range):
     cursor.close()
     conn.close()
 
+def get_old_user_ctr(start_time,user_time_range):
+    conn = pymysql.connect(host='127.0.0.1',port=3306,user="jinyuanhao",db="infomation",passwd="Sjk0213%$")
+    cursor = conn.cursor()
+    click_count = 0
+    expose_count = 0
+    for user_id in fetch_old_user(start_time,user_time_range):
+        query = "SELECT count(*) as bhv_count,bhv_type FROM aliyun_behavior_info WHERE user_id = '{}' GROUP BY bhv_type".format(str(user_id))
+        cursor.execute(query)
+        user_items = cursor.fetchall()
+        for user_item in user_items:
+            if user_item[1] == "expose":
+                expose_count += user_item[0]
+            if user_item[1] == "click":
+                click_count += user_item[0]
+    old_user_ctr = click_count/expose_count
+    print("老用户ctr")
+    print(old_user_ctr)
+
+
 
 def get_new_user_ctr(start_time,user_time_range):
     '''
@@ -137,6 +156,7 @@ def ctr_run():
     if start_time == "now":
         start_time = int(time.time())
     csv_path = get_new_user_ctr(start_time,user_time_range)
+    get_old_user_ctr(start_time,user_time_range)
     ctr_analysis(csv_path)
     
 def ctr_analysis(csv_path):
