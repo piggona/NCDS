@@ -6,5 +6,6 @@
     "article_time_range": 172800,
     "usr_csv_path": "/root/ctr_files/usr_csv/",
     "ctr_analysis_interval": 3,
-    "ctr_analysis_top": 12
+    "ctr_analysis_top": 12,
+    "cite_id":[1,2,3,4]
 }

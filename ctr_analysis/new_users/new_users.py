@@ -317,7 +317,23 @@ def article_ctr_analysis():
     cursor.close()
     conn.close()        
 
-def data_flow_analysis():
+def get_resource_article(start_time,end_time,site_id):
+    '''
+    根据新闻源及时间，返回文章
+    '''
+    conn = pymysql.connect(host='127.0.0.1',port=3306,user="jinyuanhao",db="infomation",passwd="Sjk0213%$")
+    cursor = conn.cursor()
+
+    query = "SELECT id FROM article_resource WHERE (expire_time < '{0}' AND expire_time > '{1}' AND site_id = '{2}')".format(start_time,end_time,site_id)
+    cursor.execute(query)
+    items = cursor.fetchall()
+    for article in items:
+        yield article[0]
+    conn.commit()
+    cursor.close()
+    conn.close()
+    
+def data_flow_analysis(start_time,end_time):
     '''
     各个新闻源文章的ctr与其曝光比率的分布
     各个作者的ctr与其曝光比率的分布
@@ -326,8 +342,37 @@ def data_flow_analysis():
     2. aliyun_behavior_info:各类新闻源article组中，循环文章id，将得到的expose与click累加
     3. aliyun_behavior_info:得到各新闻源的ctr分布
     4. aliyun_behavior_info:计算各新闻源的expose分布
+    新闻源解决方案：
+    1. 遍历几个新闻源，得到新闻源文章（研究刚刚过期的新闻）列表
+    2. 得到所有这些文章的ctr，及总曝光数
     '''
-    pass
+    conn = pymysql.connect(host='127.0.0.1',port=3306,user="jinyuanhao",db="infomation",passwd="Sjk0213%$")
+    cursor = conn.cursor()
+
+    path = os.getcwd()
+    with open(path+"/config/ctr_config.json","r") as r:
+        ctr_config = json.load(r)
+    site_list = ctr_config["cite_id"]
+    site_detail = {"ctr":0,"expose_count":0}
+    site_result = {}
+    for site in site_list:
+        site_result[str(site)] = site_detail
+
+    for site_id in site_list:
+        expose_count = 0
+        click_count = 0
+        for article in get_resource_article(start_time,end_time,site_id):
+            query = "SELECT bhv_type,count(*) as bhv_count FROM aliyun_behavior_info WHERE item_id = '{}' GROUP BY bhv_type".format(article)
+            cursor.execute(query)
+            items = cursor.fetchall()
+            for item in items:
+                if item[0] == "expose":
+                    expose_count += item[1]
+                elif item[1] == "click":
+                    click_count += item[1]
+        site_result[str(site_id)]["ctr"] = click_count / expose_count
+        site_result[str(site_id)]["expose_count"] = expose_count
+    print(site_result)
 
 def generate_available_articles():
     conn = pymysql.connect(host='127.0.0.1',port=3306,user="jinyuanhao",db="infomation",passwd="Sjk0213%$")

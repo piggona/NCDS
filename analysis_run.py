@@ -9,7 +9,10 @@ from ctr_analysis.new_users.new_users import *
 
 def Run():
     print(int(time.time()))
-    ctr_run()
+    start_time = int(time.time()) - 172800
+    end_time = int(time.time())
+    data_flow_analysis(start_time,end_time)
+    # ctr_run()
     # article_ctr_analysis()
     # get_article_distribution()
 
