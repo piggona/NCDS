@@ -319,6 +319,7 @@ def article_ctr_analysis():
 def data_flow_analysis():
     '''
     各个新闻源文章的ctr与其曝光比率的分布
+    各个作者的ctr与其曝光比率的分布
     分为对全体用户的ctr及其曝光比率的分布，及对新用户的分布
     1. aliyun_article_info:先找到article_time_range时间段内所有的文章记录，统计各个新闻源的数量分布，按新闻源做文章分类
     2. aliyun_behavior_info:各类新闻源article组中，循环文章id，将得到的expose与click累加
