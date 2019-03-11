@@ -13,6 +13,23 @@ import pymongo
 import pymysql
 import pandas as pd
 
+def ctr_run():
+    '''
+    user_time_range内所有用户
+    '''
+    path = os.getcwd()
+    with open(path+"/config/ctr_config.json","r") as r:
+        ctr_config = json.load(r)
+    user_time_range = ctr_config["user_time_range"]
+    r.close()
+    start_time = ctr_config["user_start_time"]
+    if start_time == "now":
+        start_time = int(time.time())
+    csv_path = get_new_user_ctr(start_time,user_time_range)
+    get_old_user_ctr(start_time,user_time_range)
+    ctr_analysis(csv_path)
+    get_article_distribution()
+
 def fetch_new_user(start_time,user_time_range):
     conn = pymysql.connect(host='127.0.0.1',port=3306,user="jinyuanhao",db="infomation",passwd="Sjk0213%$")
     cursor = conn.cursor()
@@ -143,22 +160,6 @@ def get_new_user_ctr(start_time,user_time_range):
     conn.close()
     csvfile.close()
     return csv_path
-
-def ctr_run():
-    '''
-    user_time_range内所有用户
-    '''
-    path = os.getcwd()
-    with open(path+"/config/ctr_config.json","r") as r:
-        ctr_config = json.load(r)
-    user_time_range = ctr_config["user_time_range"]
-    r.close()
-    start_time = ctr_config["user_start_time"]
-    if start_time == "now":
-        start_time = int(time.time())
-    csv_path = get_new_user_ctr(start_time,user_time_range)
-    get_old_user_ctr(start_time,user_time_range)
-    ctr_analysis(csv_path)
     
 def ctr_analysis(csv_path):
     '''
@@ -415,9 +416,6 @@ def get_article_distribution():
         for count_key,count_list in article_count_group.items():
             result_list = list(set(ctr_list).intersection(set(count_list)))
             print("ctr区间 {0} , 对应的expose区间 {1} 的文章匹配度是：{2}".format(ctr_key,count_key,len(result_list)/len(ctr_list)))
-
-
-
 
 if __name__ == "__main__":
     get_new_user_ctr(int(time.time()),259200)
