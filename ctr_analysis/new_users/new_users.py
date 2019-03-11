@@ -324,11 +324,10 @@ def get_resource_article(start_time,end_time,site_id):
     conn = pymysql.connect(host='127.0.0.1',port=3306,user="jinyuanhao",db="infomation",passwd="Sjk0213%$")
     cursor = conn.cursor()
 
-    query = "SELECT id FROM article_resource WHERE (expire_time < '{0}' AND expire_time > '{1}' AND site_id = '{2}')".format(start_time,end_time,site_id)
+    query = "SELECT id FROM article_resource WHERE (expire_time < '{0}' AND expire_time > '{1}' AND site_id = '{2}')".format(end_time,start_time,site_id)
     cursor.execute(query)
     items = cursor.fetchall()
     for article in items:
-        print(article[0])
         yield article[0]
     conn.commit()
     cursor.close()
@@ -362,10 +361,8 @@ def data_flow_analysis(start_time,end_time):
     for site_id in site_list:
         expose_count = 0
         click_count = 0
-        print("come")
         for article in get_resource_article(start_time,end_time,site_id):
             query = "SELECT bhv_type,count(*) as bhv_count FROM aliyun_behavior_info WHERE item_id = '{}' GROUP BY bhv_type".format(article)
-            print(query)
             cursor.execute(query)
             items = cursor.fetchall()
             for item in items:
