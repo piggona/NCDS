@@ -371,16 +371,15 @@ def data_flow_analysis(start_time,end_time):
                     expose_count += item[1]
                 elif item[0] == "click":
                     click_count += item[1]
-        del expose_count
-        del click_count
-        gc.collect()
-        
         if expose_count == 0:
             site_result[str(site_id)]["ctr"] = 0
             site_result[str(site_id)]["expose_count"] = expose_count
         else:
             site_result[str(site_id)]["ctr"] = click_count / expose_count
             site_result[str(site_id)]["expose_count"] = expose_count
+        del expose_count
+        del click_count
+        gc.collect()
     print(site_result)
 
 def generate_available_articles():
