@@ -363,6 +363,7 @@ def data_flow_analysis(start_time,end_time):
         click_count = 0
         for article in get_resource_article(start_time,end_time,site_id):
             query = "SELECT bhv_type,count(*) as bhv_count FROM aliyun_behavior_info WHERE item_id = '{}' GROUP BY bhv_type".format(article)
+            print(query)
             cursor.execute(query)
             items = cursor.fetchall()
             for item in items:
