@@ -9,6 +9,7 @@ import json
 import csv
 import sys
 import codecs
+import copy
 
 import pymongo
 import pymysql
@@ -333,6 +334,29 @@ def get_resource_article(start_time,end_time,site_id):
     conn.commit()
     cursor.close()
     conn.close()
+
+def get_site_ctr(start_time,end_time,site_id):
+    conn = pymysql.connect(host='127.0.0.1',port=3306,user="jinyuanhao",db="infomation",passwd="Sjk0213%$")
+    cursor = conn.cursor()
+    expose_count = 0
+    click_count = 0
+    for article in get_resource_article(start_time,end_time,site_id):
+        query = "SELECT bhv_type,count(*) as bhv_count FROM aliyun_behavior_info WHERE item_id = '{}' GROUP BY bhv_type".format(article)
+        cursor.execute(query)
+        items = cursor.fetchall()
+        for item in items:
+            if item[0] == "expose":
+                expose_count += item[1]
+            elif item[0] == "click":
+                click_count += item[1]
+    conn.commit()
+    cursor.close()
+    conn.close()
+    if expose_count == 0:
+        return 0,0
+    else:
+        return (click_count / expose_count),expose_count
+    
     
 def data_flow_analysis(start_time,end_time):
     '''
@@ -347,8 +371,6 @@ def data_flow_analysis(start_time,end_time):
     1. 遍历几个新闻源，得到新闻源文章（研究刚刚过期的新闻）列表
     2. 得到所有这些文章的ctr，及总曝光数
     '''
-    conn = pymysql.connect(host='127.0.0.1',port=3306,user="jinyuanhao",db="infomation",passwd="Sjk0213%$")
-    cursor = conn.cursor()
 
     path = os.getcwd()
     with open(path+"/config/ctr_config.json","r") as r:
@@ -357,29 +379,11 @@ def data_flow_analysis(start_time,end_time):
     site_detail = {"ctr":0,"expose_count":0}
     site_result = {}
     for site in site_list:
-        site_result[str(site)] = site_detail
+        detail = copy.deepcopy(site_detail)
+        site_result[str(site)] = detail
 
     for site_id in site_list:
-        expose_count = 0
-        click_count = 0
-        for article in get_resource_article(start_time,end_time,site_id):
-            query = "SELECT bhv_type,count(*) as bhv_count FROM aliyun_behavior_info WHERE item_id = '{}' GROUP BY bhv_type".format(article)
-            cursor.execute(query)
-            items = cursor.fetchall()
-            for item in items:
-                if item[0] == "expose":
-                    expose_count += item[1]
-                elif item[0] == "click":
-                    click_count += item[1]
-        if expose_count == 0:
-            site_result[str(site_id)]["ctr"] = 0
-            site_result[str(site_id)]["expose_count"] = expose_count
-        else:
-            site_result[str(site_id)]["ctr"] = click_count / expose_count
-            site_result[str(site_id)]["expose_count"] = expose_count
-        del expose_count
-        del click_count
-        gc.collect()
+        site_result[str(site_id)]["ctr"],site_result[str(site_id)]["expose_count"] = get_site_ctr(start_time,end_time,site_id)
     print(site_result)
 
 def generate_available_articles():
