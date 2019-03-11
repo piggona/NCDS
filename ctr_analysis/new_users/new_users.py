@@ -368,7 +368,7 @@ def data_flow_analysis(start_time,end_time):
             for item in items:
                 if item[0] == "expose":
                     expose_count += item[1]
-                elif item[1] == "click":
+                elif item[0] == "click":
                     click_count += item[1]
         if expose_count == 0:
             site_result[str(site_id)]["ctr"] = 0
