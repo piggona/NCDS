@@ -8,18 +8,21 @@ import requests
 import pymongo
 import json
 import multiprocessing
+import datetime
 
-from baidu_article_spider.utils.get_request import *
-from baidu_article_spider.utils.get_proxy import *
+# from baidu_article_spider.utils.get_request import *
+# from baidu_article_spider.utils.get_proxy import *
 
 requestId = 100001
+
 
 def spider_op():
     global requestId
     while True:
         print(requestId)
         try:
-            response = requests.post(url = "http://api.ydtad.com/ydt-server/cu/list",json=get_request(requestId),verify=False,allow_redirects=False,proxies=get_proxy_val(),timeout=3)
+            response = requests.post(url="http://api.ydtad.com/ydt-server/cu/list", json=get_request(
+                requestId), verify=False, allow_redirects=False, proxies=get_proxy_val(), timeout=3)
             if response.status_code == 200:
                 handle_response(response.json())
                 print("200")
@@ -31,26 +34,137 @@ def spider_op():
         except:
             print("出错")
 
+def get_sql_dat(result):
+    sql_dat = {}
+    sql_dat["resource_id"] = result["doc_id"]
+    sql_dat["site_id"] = 5
+    sql_dat["article_type"] = 1
+    sql_dat["url"] = result["data"]["detailUrl"]
+    sql_dat["title"] = result["data"]["title"]
+    cate = result["data"]["catInfo"]["id"]
+    if (cate == 1001) or (cate == 1026):
+        sql_dat["category"] = 1001
+        sql_dat["scene_id"] = [1000,1001]
+    elif cate == 1002:
+        sql_dat["category"] = 1003
+        sql_dat["scene_id"] = [1000,1003]
+    elif cate == 1007:
+        sql_dat["category"] = 1004
+        sql_dat["scene_id"] = [1000,1004]
+    elif (cate == 1005) or (cate == 1013):
+        sql_dat["category"] = 1006
+        sql_dat["scene_id"] = [1000,1006] 
+    elif (cate == 1006):
+        sql_dat["category"] = 1007
+        sql_dat["scene_id"] = [1000,1007]
+    elif (cate == 1008):
+        sql_dat["category"] = 1015
+        sql_dat["scene_id"] = [1000,1015]
+    elif (cate == 1009):
+        sql_dat["category"] = 1018
+        sql_dat["scene_id"] = [1000,1018]
+    elif (cate == 1011) or (cate == 1020):
+        sql_dat["category"] = 1010
+        sql_dat["scene_id"] = [1000,1010]
+    elif (cate == 1012) or (cate == 1029):
+        sql_dat["category"] = 1009
+        sql_dat["scene_id"] = [1000,1009]
+    elif (cate == 1014):
+        sql_dat["category"] = 1002
+        sql_dat["scene_id"] = [1000,1002]
+    elif (cate == 1015):
+        sql_dat["category"] = 1020
+        sql_dat["scene_id"] = [1000,1020]
+    elif (cate == 1016):
+        sql_dat["category"] = 1009
+        sql_dat["scene_id"] = [1000,1009]
+    elif (cate == 1017):
+        sql_dat["category"] = 1012
+        sql_dat["scene_id"] = [1000,1012]
+    elif (cate == 1018):
+        sql_dat["category"] = 1023
+        sql_dat["scene_id"] = [1000,1023]
+    elif (cate == 1019):
+        sql_dat["category"] = 1021
+        sql_dat["scene_id"] = [1000,1021]
+    elif (cate == 1027):
+        sql_dat["category"] = 1014
+        sql_dat["scene_id"] = [1000,1014]
+    elif (cate == 1031):
+        sql_dat["category"] = 1016
+        sql_dat["scene_id"] = [1000,1016]
+    else:
+        sql_dat["category"] = 9999
+        sql_dat["scene_id"] = [1000,9999]
+    sql_dat["pub_time"] = int(time.time())
+    sql_dat["expire_time"] = int(time.time()) + 172800
+    sql_dat["last_modify_time"] = int(time.time())
+    tags = []
+    for tag in result["data"]["tags"]:
+        tags.append(tag[text])
+    sql_dat["tags"] = tags
+    sql_dat["weight"] = 2
+    sql_dat["aliyun_info"] = ""
+    sql_dat["status"] = 1
+    sql_dat["pub_date"] = "20"+datetime.date.today().strftime('%y%m%d')
+    sql_dat["contents"] = ""
+    extend = {"source":"","summary":"","media_pic":"","video_url":""}
+    extend["source"] = result["data"]["source"]
+    extend["summary"] = result["data"]["brief"]
+    extend["media_pic"] = result["data"]["bigPicUrl"]
+    extend["video_url"] = []
+    extend["image_urls"] = [result["data"]["bigPicUrl"]]
+    sql_dat["extend"] = extend
+    sql_dat["create_time"] = int(time.time())
+    tss1 = result["data"]["updateTime"]
+    timeArray = time.strptime(tss1, "%Y-%m-%d %H:%M:%S")
+    timeStamp = int(time.mktime(timeArray))
+    sql_dat["update_time"] = timeStamp
+    sql_dat["cas_token"] = 0
+    return sql_dat
+
+
 def handle_response(res):
-    client = pymongo.MongoClient(host="localhost",port=27017)
+    conn = pymysql.connect(host='rm-2zeg7277v9fkmj3bi.mysql.rds.aliyuncs.com',
+                           port=3306, user="information", db="infomation", passwd="Infor0110")
+    cursor = conn.cursor()
+
+    client = pymongo.MongoClient(host="localhost", port=27017)
     db = client.baiduContent
     collection = db["baidu_news"]
     items = res["items"]
     for item in items:
-        result = {"requestId":"","time":int(time.time()),"data":{},"doc_id":""}
+        result = {"requestId": "", "time": int(
+            time.time()), "data": {}, "doc_id": ""}
         result["requestId"] = res["requestId"]
         data_str = item["data"]
         data = json.loads(data_str)
         result["data"] = data
         result["doc_id"] = data["id"]
-        if collection.find({"doc_id":data["id"]}).count() == 0:
+        if collection.find({"doc_id": data["id"]}).count() == 0:
             collection.insert_one(result)
+            sql_dat = get_sql_dat(result)
+            query = "INSERT INTO article_resource (resource_id,site_id,article_type,url,title,category,pub_time,expire_time,last_modify_time,scene_id,tags,weight,aliyun_info,status,pub_date,contents,extend,create_time,update_time,cas_token) VALUES ({0},{1},{2},{3},{4},{5},{6},{7},{8},{9},{10},{11},{12},{13},{14},{15},{16},{17},{18},{19})".format(
+                sql_dat["resource_id"], sql_dat["site_id"], sql_dat["article_type"], sql_dat["url"], sql_dat["title"], sql_dat["category"], sql_dat["pub_time"], sql_dat["expire_time"], sql_dat["last_modify_time"], sql_dat[
+                    "scene_id"], sql_dat["tags"], sql_dat["weight"], sql_dat["aliyun_info"], sql_dat["status"], sql_dat["pub_date"], sql_dat["contents"], sql_dat["extend"], sql_dat["create_time"], sql_dat["update_time"], sql_dat["cas_token"]
+            )
+            cursor.execute(query)
+    conn.commit()
+    cursor.close()
+    conn.close()
+
 
 def spider_generator():
-    pool = multiprocessing.Pool(processes= 10)
-    for i in range(0,10):
+    pool = multiprocessing.Pool(processes=10)
+    for i in range(0, 10):
         pool.apply_async(spider_op)
         print("正在进行第{}个进程".format(i+1))
     pool.close()
     pool.join()
     print("进程结束")
+
+if __name__ == "__main__":
+    tss1 = '2019-02-25 17:41:44'
+    timeArray = time.strptime(tss1, "%Y-%m-%d %H:%M:%S")
+    timeStamp = int(time.mktime(timeArray))
+    print(timeStamp)
