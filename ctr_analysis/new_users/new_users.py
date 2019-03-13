@@ -102,8 +102,9 @@ def get_new_user_ctr(start_time,user_time_range):
 
     data_scan_amount = ctr_config["data_scan_amount"]
     r.close()
-    os.mkdir(csv_path+str(int(time.time())))
-    csv_path = csv_path+str(int(time.time()))+"/"
+    dir_name = str(int(time.time()))
+    os.mkdir(csv_path+dir_name)
+    csv_path = csv_path+dir_name+"/"
     csv_doc_name = "usr_ctr_raw.csv"
     csvfile = open(csv_path+csv_doc_name,"w",newline='')
     writer = csv.writer(csvfile,quoting=csv.QUOTE_ALL)
