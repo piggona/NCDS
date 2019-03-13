@@ -8,7 +8,11 @@ import time
 from ctr_analysis.new_users.new_users import *
 
 def Run():
+    print("分析时间点：")
     print(int(time.time()))
+    print("--------------------------------")
+    print("-----Welcome-----")
+    print("--------------------------------")
     start_time = int(time.time()) - 172800
     end_time = int(time.time())
     data_flow_analysis(start_time,end_time)

@@ -7,5 +7,6 @@
     "usr_csv_path": "/root/ctr_files/usr_csv/",
     "ctr_analysis_interval": 3,
     "ctr_analysis_top": 12,
-    "cite_id":[1,2,3,4]
+    "cite_id":[1,2,3,4],
+    "cite_name": ["一点资讯","唔哩头条","盖饭娱乐","东方头条"]
 }

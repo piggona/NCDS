@@ -3,7 +3,6 @@
 # auth：Haohao
 
 import os
-import gc
 import time
 import json
 import csv
@@ -27,8 +26,13 @@ def ctr_run():
     start_time = ctr_config["user_start_time"]
     if start_time == "now":
         start_time = int(time.time())
+    print("用户ctr指标分析：")
+    print("-----老用户&新用户指标-----")
     csv_path = get_new_user_ctr(start_time,user_time_range)
     get_old_user_ctr(start_time,user_time_range)
+    print(" ")
+    print(" ")
+    print(" ")
     ctr_analysis(csv_path)
     get_article_distribution()
 
@@ -177,22 +181,31 @@ def ctr_analysis(csv_path):
     ctr_analysis_top = ctr_config["ctr_analysis_top"]
 
     check_list = range(ctr_analysis_interval,ctr_analysis_top+1,ctr_analysis_interval)
-    describe_list = ["exposes_before_first_click","total_ctr"]
+    describe_list = ["user_id","exposes_before_first_click","total_ctr"]
     for check in check_list:
         describe_list.append("first"+str(check)+"expose_count")
+    print("输出新用户分析文件路径：")
     print(csv_path+"usr_ctr_raw.csv")
     df = pd.read_csv(csv_path+"usr_ctr_raw.csv")
+    print(" ")
+    print(" ")
     df.fillna(0)
     describe = df.describe()
-    print("describe:")
+    print("总体数据概览:")
     print(describe[describe_list])
-    print("group_by total_ctr:")
+    print(" ")
+    print("新用户total_ctr的分布数量累计:")
     total_ctr_mesh_df = df.apply(lambda x:0.01*(x//0.01))
     total_ctr_group = total_ctr_mesh_df.groupby('total_ctr').count()
     print(total_ctr_group[["user_id"]])
-    print("group_by exposes_before_first_click")
+    print(" ")
+    print("新用户首次点击需要的曝光数分布数量累计：")
     first_click_group = df.groupby('exposes_before_first_click').count()
     print(first_click_group[["user_id"]])
+    print(" ")
+    print(" ")
+    print(" ")
+    print("----------------------------------------------")
 
     for check in check_list:
         check_ctr = df.groupby("first"+str(check)+"expose_count").count()
@@ -336,6 +349,9 @@ def get_resource_article(start_time,end_time,site_id):
     conn.close()
 
 def get_site_ctr(start_time,end_time,site_id):
+    '''
+    获取指定新闻源在指定时间的ctr及曝光数
+    '''
     conn = pymysql.connect(host='127.0.0.1',port=3306,user="jinyuanhao",db="infomation",passwd="Sjk0213%$")
     cursor = conn.cursor()
     expose_count = 0
@@ -370,6 +386,8 @@ def data_flow_analysis(start_time,end_time):
     新闻源解决方案：
     1. 遍历几个新闻源，得到新闻源文章（研究刚刚过期的新闻）列表
     2. 得到所有这些文章的ctr，及总曝光数
+    得到各个channel的ctr
+    得到各个作者的ctr
     '''
 
     path = os.getcwd()
@@ -384,9 +402,14 @@ def data_flow_analysis(start_time,end_time):
 
     for site_id in site_list:
         site_result[str(site_id)]["ctr"],site_result[str(site_id)]["expose_count"] = get_site_ctr(start_time,end_time,site_id)
+    print("各个新闻源对应的ctr及曝光数量：")
     print(site_result)
+    print('--------------------------------------------------------------')
 
 def generate_available_articles():
+    '''
+    返回还没有过期的文章列表
+    '''
     conn = pymysql.connect(host='127.0.0.1',port=3306,user="jinyuanhao",db="infomation",passwd="Sjk0213%$")
     cursor = conn.cursor()
 
@@ -423,6 +446,7 @@ def get_expose_and_ctr(article_id):
     return ctr,expose_count
 
 def get_article_distribution():
+    print("新用户文章ctr分析：")
     article_count_group = {"less10":[],"10to50":[],"50to100":[],"upper100":[]}
     article_count_group_count = {"less10":0,"10to50":0,"50to100":0,"upper100":0}
     article_ctr_group = {"zero":[],"0to3":[],"3to6":[],"6to10":[],"upper10":[],"no_expose":[]}
@@ -463,8 +487,10 @@ def get_article_distribution():
             article_ctr_group_count["upper10"] += 1
     print("文章ctr 数量分布：")
     print(article_ctr_group_count)
+    print(" ")
     print("文章曝光数量 数量分布：")
     print(article_count_group_count)
+    print(" ")
 
     # 计算匹配数量
     print("匹配度：")
@@ -473,6 +499,9 @@ def get_article_distribution():
         for count_key,count_list in article_count_group.items():
             result_list = list(set(ctr_list).intersection(set(count_list)))
             print("ctr区间 {0} , 对应的expose区间 {1} 的文章匹配度是：{2}".format(ctr_key,count_key,len(result_list)/len(ctr_list)))
+            print(" ")
+        print(" ")
+        print(" ")
 
 if __name__ == "__main__":
     get_new_user_ctr(int(time.time()),259200)
