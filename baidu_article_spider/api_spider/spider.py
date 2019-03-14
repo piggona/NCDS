@@ -106,14 +106,15 @@ def get_sql_dat(result):
     sql_dat["weight"] = 2
     sql_dat["aliyun_info"] = ""
     sql_dat["status"] = 1
-    sql_dat["pub_date"] = "20"+datetime.date.today().strftime('%y%m%d')
     sql_dat["contents"] = ""
-    extend = {"source":"","summary":"","media_pic":"","video_url":""}
+    extend = {"source":"","summary":"","media_pic":"","video_url":[],"image_urls":[],"media_name":"","video_duration":0,"image_thumbs_urls":[]}
     extend["source"] = result["data"]["source"]
     extend["summary"] = result["data"]["brief"]
     extend["media_pic"] = result["data"]["bigPicUrl"]
     extend["video_url"] = []
-    extend["image_urls"] = [result["data"]["bigPicUrl"]]
+    for image in result["data"]["images"]:
+        extend["image_urls"].append(image)
+    extend["image_thumbs_urls"] = extend["image_urls"]
     sql_dat["extend"] = extend
     sql_dat["create_time"] = int(time.time())
     tss1 = result["data"]["updateTime"]
@@ -144,9 +145,10 @@ def handle_response(res):
         if collection.find({"doc_id": data["id"]}).count() == 0:
             collection.insert_one(result)
             sql_dat = get_sql_dat(result)
-            query = "INSERT INTO article_resource (resource_id,site_id,article_type,url,title,category,pub_time,expire_time,last_modify_time,scene_id,tags,weight,aliyun_info,status,pub_date,contents,extend,create_time,update_time,cas_token) VALUES ({0},{1},{2},{3},{4},{5},{6},{7},{8},{9},{10},{11},{12},{13},{14},{15},{16},{17},{18},{19})".format(
+            print(sql_dat)
+            query = "INSERT INTO article_resource (resource_id,site_id,article_type,url,title,category,pub_time,expire_time,last_modify_time,scene_id,tags,weight,aliyun_info,status,contents,extend,create_time,update_time,cas_token) VALUES ({0},{1},{2},{3},{4},{5},{6},{7},{8},{9},{10},{11},{12},{13},{14},{15},{16},{17},{18},{19})".format(
                 sql_dat["resource_id"], sql_dat["site_id"], sql_dat["article_type"], sql_dat["url"], sql_dat["title"], sql_dat["category"], sql_dat["pub_time"], sql_dat["expire_time"], sql_dat["last_modify_time"], sql_dat[
-                    "scene_id"], sql_dat["tags"], sql_dat["weight"], sql_dat["aliyun_info"], sql_dat["status"], sql_dat["pub_date"], sql_dat["contents"], sql_dat["extend"], sql_dat["create_time"], sql_dat["update_time"], sql_dat["cas_token"]
+                    "scene_id"], sql_dat["tags"], sql_dat["weight"], sql_dat["aliyun_info"], sql_dat["status"], sql_dat["contents"], sql_dat["extend"], sql_dat["create_time"], sql_dat["update_time"], sql_dat["cas_token"]
             )
             cursor.execute(query)
     conn.commit()
