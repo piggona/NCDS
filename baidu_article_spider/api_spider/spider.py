@@ -24,16 +24,17 @@ def spider_op():
         try:
             response = requests.post(url="http://api.ydtad.com/ydt-server/cu/list", json=get_request(
                 requestId), verify=False, allow_redirects=False, proxies=get_proxy_val(), timeout=3)
-            if response.status_code == 200:
-                handle_response(response.json())
-                print("200")
-            else:
-                print("出现错误")
-            requestId += 1
         except ConnectionError:
             print('Error occured')
         except:
             print("出错")
+        if response.status_code == 200:
+            handle_response(response.json())
+            print("200")
+        else:
+            print("出现错误")
+        requestId += 1
+        
 
 def get_sql_dat(result):
     sql_dat = {}
