@@ -9,9 +9,10 @@ import pymongo
 import json
 import multiprocessing
 import datetime
+import pymysql
 
-# from baidu_article_spider.utils.get_request import *
-# from baidu_article_spider.utils.get_proxy import *
+from baidu_article_spider.utils.get_request import *
+from baidu_article_spider.utils.get_proxy import *
 
 requestId = 100001
 
