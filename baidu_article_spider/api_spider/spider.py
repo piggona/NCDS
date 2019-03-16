@@ -42,74 +42,74 @@ def get_sql_dat(result):
     sql_dat["resource_id"] = result["doc_id"]
     sql_dat["site_id"] = 5
     sql_dat["article_type"] = 1
-    sql_dat["url"] = result["data"]["detailUrl"]
+    sql_dat["url"] = "'"+result["data"]["detailUrl"]+"'"
     sql_dat["title"] = result["data"]["title"]
     cate = result["data"]["catInfo"]["id"]
     if (cate == 1001) or (cate == 1026):
         sql_dat["category"] = 1001
-        sql_dat["scene_id"] = [1000, 1001]
+        sql_dat["scene_id"] = json.dumps([1000, 1001])
     elif cate == 1002:
         sql_dat["category"] = 1003
-        sql_dat["scene_id"] = [1000, 1003]
+        sql_dat["scene_id"] = json.dumps([1000, 1003])
     elif cate == 1007:
         sql_dat["category"] = 1004
-        sql_dat["scene_id"] = [1000, 1004]
+        sql_dat["scene_id"] = json.dumps([1000, 1004])
     elif (cate == 1005) or (cate == 1013):
         sql_dat["category"] = 1006
-        sql_dat["scene_id"] = [1000, 1006]
+        sql_dat["scene_id"] = json.dumps([1000, 1006])
     elif (cate == 1006):
         sql_dat["category"] = 1007
-        sql_dat["scene_id"] = [1000, 1007]
+        sql_dat["scene_id"] = json.dumps([1000, 1007])
     elif (cate == 1008):
         sql_dat["category"] = 1015
-        sql_dat["scene_id"] = [1000, 1015]
+        sql_dat["scene_id"] = json.dumps([1000, 1015])
     elif (cate == 1009):
         sql_dat["category"] = 1018
-        sql_dat["scene_id"] = [1000, 1018]
+        sql_dat["scene_id"] = json.dumps([1000, 1018])
     elif (cate == 1011) or (cate == 1020):
         sql_dat["category"] = 1010
-        sql_dat["scene_id"] = [1000, 1010]
+        sql_dat["scene_id"] = json.dumps([1000, 1010])
     elif (cate == 1012) or (cate == 1029):
         sql_dat["category"] = 1009
-        sql_dat["scene_id"] = [1000, 1009]
+        sql_dat["scene_id"] = json.dumps([1000, 1009])
     elif (cate == 1014):
         sql_dat["category"] = 1002
-        sql_dat["scene_id"] = [1000, 1002]
+        sql_dat["scene_id"] = json.dumps([1000, 1002])
     elif (cate == 1015):
         sql_dat["category"] = 1020
-        sql_dat["scene_id"] = [1000, 1020]
+        sql_dat["scene_id"] = json.dumps([1000, 1020])
     elif (cate == 1016):
         sql_dat["category"] = 1009
-        sql_dat["scene_id"] = [1000, 1009]
+        sql_dat["scene_id"] = json.dumps([1000, 1009])
     elif (cate == 1017):
         sql_dat["category"] = 1012
-        sql_dat["scene_id"] = [1000, 1012]
+        sql_dat["scene_id"] = json.dumps([1000, 1012])
     elif (cate == 1018):
         sql_dat["category"] = 1023
-        sql_dat["scene_id"] = [1000, 1023]
+        sql_dat["scene_id"] = json.dumps([1000, 1023])
     elif (cate == 1019):
         sql_dat["category"] = 1021
-        sql_dat["scene_id"] = [1000, 1021]
+        sql_dat["scene_id"] = json.dumps([1000, 1021])
     elif (cate == 1027):
         sql_dat["category"] = 1014
-        sql_dat["scene_id"] = [1000, 1014]
+        sql_dat["scene_id"] = json.dumps([1000, 1014])
     elif (cate == 1031):
         sql_dat["category"] = 1016
-        sql_dat["scene_id"] = [1000, 1016]
+        sql_dat["scene_id"] = json.dumps([1000, 1016])
     else:
         sql_dat["category"] = 9999
-        sql_dat["scene_id"] = [1000, 9999]
+        sql_dat["scene_id"] = json.dumps([1000, 9999])
     sql_dat["pub_time"] = int(time.time())
     sql_dat["expire_time"] = int(time.time()) + 172800
     sql_dat["last_modify_time"] = int(time.time())
     tags = []
     for tag in result["data"]["tags"]:
         tags.append(tag["text"])
-    sql_dat["tags"] = tags
+    sql_dat["tags"] = json.dumps(tags)
     sql_dat["weight"] = 2
-    sql_dat["aliyun_info"] = ""
+    sql_dat["aliyun_info"] = "''"
     sql_dat["status"] = 1
-    sql_dat["contents"] = ""
+    sql_dat["contents"] = "''"
     extend = {"source": "", "summary": "", "media_pic": "", "video_url": [
     ], "image_urls": [], "media_name": "", "video_duration": 0, "image_thumbs_urls": []}
     extend["source"] = result["data"]["source"]
@@ -119,7 +119,7 @@ def get_sql_dat(result):
     for image in result["data"]["images"]:
         extend["image_urls"].append(image)
     extend["image_thumbs_urls"] = extend["image_urls"]
-    sql_dat["extend"] = extend
+    sql_dat["extend"] = json.dumps(extend)
     sql_dat["create_time"] = int(time.time())
     tss1 = result["data"]["updateTime"]
     timeArray = time.strptime(tss1, "%Y-%m-%d %H:%M:%S")
