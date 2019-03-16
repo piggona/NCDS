@@ -107,7 +107,7 @@ def get_sql_dat(result):
         tags.append(tag["text"])
     sql_dat["tags"] = json.dumps(tags)
     sql_dat["weight"] = 2
-    sql_dat["aliyun_info"] = ""
+    sql_dat["aliyun_info"] = json.dumps({})
     sql_dat["status"] = 1
     sql_dat["contents"] = ""
     extend = {"source": "", "summary": "", "media_pic": "", "video_url": [
