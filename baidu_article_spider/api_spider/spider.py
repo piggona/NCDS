@@ -43,6 +43,8 @@ def get_sql_dat(result):
     sql_dat["article_type"] = 1
     sql_dat["url"] = result["data"]["detailUrl"]
     sql_dat["title"] = result["data"]["title"]
+    print("sql_dat_get")
+    print(sql_dat)
     cate = result["data"]["catInfo"]["id"]
     if (cate == 1001) or (cate == 1026):
         sql_dat["category"] = 1001
