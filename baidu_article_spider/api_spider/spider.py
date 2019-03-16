@@ -137,6 +137,7 @@ def handle_response(res):
     db = client.baiduContent
     collection = db["baidu_news"]
     items = res["items"]
+    print("items")
     for item in items:
         result = {"requestId": "", "time": int(
             time.time()), "data": {}, "doc_id": ""}
@@ -147,7 +148,7 @@ def handle_response(res):
         result["doc_id"] = data["id"]
         if collection.find({"doc_id": data["id"]}).count() == 0:
             collection.insert_one(result)
-
+            print("result")
             sql_dat = get_sql_dat(result)
             print(sql_dat)
             query = "INSERT INTO article_resource (resource_id,site_id,article_type,url,title,category,pub_time,expire_time,last_modify_time,scene_id,tags,weight,aliyun_info,status,contents,extend,create_time,update_time,cas_token) VALUES ({0},{1},{2},{3},{4},{5},{6},{7},{8},{9},{10},{11},{12},{13},{14},{15},{16},{17},{18},{19})".format(
