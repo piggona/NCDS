@@ -28,13 +28,14 @@ def spider_op():
             print('Error occured')
         except:
             print("出错")
-        if response.status_code == 200:
-            handle_response(response.json())
-            print("200")
         else:
-            print("出现错误")
+            if response.status_code == 200:
+                handle_response(response.json())
+                print("200")
+            else:
+                print("出现错误")
         requestId += 1
-        
+
 
 def get_sql_dat(result):
     sql_dat = {}
@@ -46,58 +47,58 @@ def get_sql_dat(result):
     cate = result["data"]["catInfo"]["id"]
     if (cate == 1001) or (cate == 1026):
         sql_dat["category"] = 1001
-        sql_dat["scene_id"] = [1000,1001]
+        sql_dat["scene_id"] = [1000, 1001]
     elif cate == 1002:
         sql_dat["category"] = 1003
-        sql_dat["scene_id"] = [1000,1003]
+        sql_dat["scene_id"] = [1000, 1003]
     elif cate == 1007:
         sql_dat["category"] = 1004
-        sql_dat["scene_id"] = [1000,1004]
+        sql_dat["scene_id"] = [1000, 1004]
     elif (cate == 1005) or (cate == 1013):
         sql_dat["category"] = 1006
-        sql_dat["scene_id"] = [1000,1006] 
+        sql_dat["scene_id"] = [1000, 1006]
     elif (cate == 1006):
         sql_dat["category"] = 1007
-        sql_dat["scene_id"] = [1000,1007]
+        sql_dat["scene_id"] = [1000, 1007]
     elif (cate == 1008):
         sql_dat["category"] = 1015
-        sql_dat["scene_id"] = [1000,1015]
+        sql_dat["scene_id"] = [1000, 1015]
     elif (cate == 1009):
         sql_dat["category"] = 1018
-        sql_dat["scene_id"] = [1000,1018]
+        sql_dat["scene_id"] = [1000, 1018]
     elif (cate == 1011) or (cate == 1020):
         sql_dat["category"] = 1010
-        sql_dat["scene_id"] = [1000,1010]
+        sql_dat["scene_id"] = [1000, 1010]
     elif (cate == 1012) or (cate == 1029):
         sql_dat["category"] = 1009
-        sql_dat["scene_id"] = [1000,1009]
+        sql_dat["scene_id"] = [1000, 1009]
     elif (cate == 1014):
         sql_dat["category"] = 1002
-        sql_dat["scene_id"] = [1000,1002]
+        sql_dat["scene_id"] = [1000, 1002]
     elif (cate == 1015):
         sql_dat["category"] = 1020
-        sql_dat["scene_id"] = [1000,1020]
+        sql_dat["scene_id"] = [1000, 1020]
     elif (cate == 1016):
         sql_dat["category"] = 1009
-        sql_dat["scene_id"] = [1000,1009]
+        sql_dat["scene_id"] = [1000, 1009]
     elif (cate == 1017):
         sql_dat["category"] = 1012
-        sql_dat["scene_id"] = [1000,1012]
+        sql_dat["scene_id"] = [1000, 1012]
     elif (cate == 1018):
         sql_dat["category"] = 1023
-        sql_dat["scene_id"] = [1000,1023]
+        sql_dat["scene_id"] = [1000, 1023]
     elif (cate == 1019):
         sql_dat["category"] = 1021
-        sql_dat["scene_id"] = [1000,1021]
+        sql_dat["scene_id"] = [1000, 1021]
     elif (cate == 1027):
         sql_dat["category"] = 1014
-        sql_dat["scene_id"] = [1000,1014]
+        sql_dat["scene_id"] = [1000, 1014]
     elif (cate == 1031):
         sql_dat["category"] = 1016
-        sql_dat["scene_id"] = [1000,1016]
+        sql_dat["scene_id"] = [1000, 1016]
     else:
         sql_dat["category"] = 9999
-        sql_dat["scene_id"] = [1000,9999]
+        sql_dat["scene_id"] = [1000, 9999]
     sql_dat["pub_time"] = int(time.time())
     sql_dat["expire_time"] = int(time.time()) + 172800
     sql_dat["last_modify_time"] = int(time.time())
@@ -109,7 +110,8 @@ def get_sql_dat(result):
     sql_dat["aliyun_info"] = ""
     sql_dat["status"] = 1
     sql_dat["contents"] = ""
-    extend = {"source":"","summary":"","media_pic":"","video_url":[],"image_urls":[],"media_name":"","video_duration":0,"image_thumbs_urls":[]}
+    extend = {"source": "", "summary": "", "media_pic": "", "video_url": [
+    ], "image_urls": [], "media_name": "", "video_duration": 0, "image_thumbs_urls": []}
     extend["source"] = result["data"]["source"]
     extend["summary"] = result["data"]["brief"]
     extend["media_pic"] = result["data"]["bigPicUrl"]
@@ -149,10 +151,8 @@ def handle_response(res):
             collection.insert_one(result)
             sql_dat = get_sql_dat(result)
             print(sql_dat)
-            query = "INSERT INTO article_resource (resource_id,site_id,article_type,url,title,category,pub_time,expire_time,last_modify_time,scene_id,tags,weight,aliyun_info,status,contents,extend,create_time,update_time,cas_token) VALUES ({0},{1},{2},{3},{4},{5},{6},{7},{8},{9},{10},{11},{12},{13},{14},{15},{16},{17},{18},{19})".format(
-                sql_dat["resource_id"], sql_dat["site_id"], sql_dat["article_type"], sql_dat["url"], sql_dat["title"], sql_dat["category"], sql_dat["pub_time"], sql_dat["expire_time"], sql_dat["last_modify_time"], sql_dat[
-                    "scene_id"], sql_dat["tags"], sql_dat["weight"], sql_dat["aliyun_info"], sql_dat["status"], sql_dat["contents"], sql_dat["extend"], sql_dat["create_time"], sql_dat["update_time"], sql_dat["cas_token"]
-            )
+            query = "INSERT INTO article_resource (resource_id,site_id,article_type,url,title,category,pub_time,expire_time,last_modify_time,scene_id,tags,weight,aliyun_info,status,contents,extend,create_time,update_time,cas_token) VALUES ({0},{1},{2},{3},{4},{5},{6},{7},{8},{9},{10},{11},{12},{13},{14},{15},{16},{17},{18})".format(
+                sql_dat["resource_id"], sql_dat["site_id"], sql_dat["article_type"], sql_dat["url"], sql_dat["title"], sql_dat["category"], sql_dat["pub_time"], sql_dat["expire_time"], sql_dat["last_modify_time"], sql_dat["scene_id"], sql_dat["tags"], sql_dat["weight"], sql_dat["aliyun_info"], sql_dat["status"], sql_dat["contents"], sql_dat["extend"], sql_dat["create_time"], sql_dat["update_time"], sql_dat["cas_token"])
             cursor.execute(query)
     conn.commit()
     cursor.close()
@@ -167,6 +167,7 @@ def spider_generator():
     pool.close()
     pool.join()
     print("进程结束")
+
 
 if __name__ == "__main__":
     tss1 = '2019-02-25 17:41:44'
