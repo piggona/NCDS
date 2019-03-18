@@ -36,7 +36,75 @@ def ctr_run():
     ctr_analysis(csv_path)
     get_article_distribution()
 
+def data_flow_analysis(start_time,end_time):
+    '''
+    各个新闻源文章的ctr与其曝光比率的分布
+    各个作者的ctr与其曝光比率的分布
+    分为对全体用户的ctr及其曝光比率的分布，及对新用户的分布
+    1. aliyun_article_info:先找到article_time_range时间段内所有的文章记录，统计各个新闻源的数量分布，按新闻源做文章分类
+    2. aliyun_behavior_info:各类新闻源article组中，循环文章id，将得到的expose与click累加
+    3. aliyun_behavior_info:得到各新闻源的ctr分布
+    4. aliyun_behavior_info:计算各新闻源的expose分布
+    新闻源解决方案：
+    1. 遍历几个新闻源，得到新闻源文章（研究刚刚过期的新闻）列表
+    2. 得到所有这些文章的ctr，及总曝光数
+    得到各个channel的ctr
+    得到各个作者的ctr
+    '''
+
+    path = os.getcwd()
+    with open(path+"/config/ctr_config.json","r") as r:
+        ctr_config = json.load(r)
+    site_list = ctr_config["cite_id"]
+    site_detail = {"ctr":0,"expose_count":0}
+    site_result = {}
+    for site in site_list:
+        detail = copy.deepcopy(site_detail)
+        site_result[str(site)] = detail
+
+    for site_id in site_list:
+        site_result[str(site_id)]["ctr"],site_result[str(site_id)]["expose_count"] = get_site_ctr(start_time,end_time,site_id)
+    print("各个新闻源对应的ctr及曝光数量：")
+    print(site_result)
+    print('--------------------------------------------------------------')
+
+def get_popular_articles(start_time,end_time):
+    '''
+    得到时间段内各个文章的ctr分布区间（ctr区间：文章list），得到各个ctr区间文章的频道分布及作者分布。
+    '''
+    # 得到时间区间内的article_id
+    ctr_range = {}
+    for article in get_resource_article(start_time,end_time):
+        ctr = str(round(get_article_ctr(article),3))
+        if ctr not in ctr_range:
+            ctr_range[ctr] = []
+        ctr_range[ctr].append(article)
+
+def get_article_ctr(article):
+    '''
+    得到指定文章的ctr
+    '''
+    conn = pymysql.connect(host='127.0.0.1',port=3306,user="jinyuanhao",db="infomation",passwd="Sjk0213%$")
+    cursor = conn.cursor()
+    query = "SELECT bhv_type,count(*) as bhv_count FROM aliyun_behavior_info WHERE item_id = '{}' GROUP BY bhv_type".format(article)
+    cursor.execute(query)
+    items = cursor.fetchall()
+    expose_count = 0
+    click_count = 0
+    for item in items:
+        if item[0] == "expose":
+            expose_count = item[1]
+        elif item[0] == "click":
+            click_count = item[1]
+    if expose_count == 0:
+        return -1
+    else:
+        return click_count/expose_count
+
 def fetch_new_user(start_time,user_time_range):
+    '''
+    得到时间段内的用户id
+    '''
     conn = pymysql.connect(host='127.0.0.1',port=3306,user="jinyuanhao",db="infomation",passwd="Sjk0213%$")
     cursor = conn.cursor()
     user_query = "SELECT user_id from aliyun_user_info Where register_time > "+str(start_time-user_time_range)
@@ -331,7 +399,23 @@ def article_ctr_analysis():
             print("ctr区间 {0} , 对应的expose区间 {1} 的文章匹配度是：{2}".format(ctr_key,count_key,len(result_list)/len(ctr_list)))
     conn.commit()
     cursor.close()
-    conn.close()        
+    conn.close()
+
+def get_resource_article(start_time,end_time):
+    '''
+    根据新闻源及时间，返回文章
+    '''
+    conn = pymysql.connect(host='127.0.0.1',port=3306,user="jinyuanhao",db="infomation",passwd="Sjk0213%$")
+    cursor = conn.cursor()
+
+    query = "SELECT id FROM article_resource WHERE (expire_time < '{0}' AND expire_time > '{1}')".format(end_time,start_time)
+    cursor.execute(query)
+    items = cursor.fetchall()
+    for article in items:
+        yield article[0]
+    conn.commit()
+    cursor.close()
+    conn.close()       
 
 def get_resource_article(start_time,end_time,site_id):
     '''
@@ -374,38 +458,6 @@ def get_site_ctr(start_time,end_time,site_id):
     else:
         return (click_count / expose_count),expose_count
     
-    
-def data_flow_analysis(start_time,end_time):
-    '''
-    各个新闻源文章的ctr与其曝光比率的分布
-    各个作者的ctr与其曝光比率的分布
-    分为对全体用户的ctr及其曝光比率的分布，及对新用户的分布
-    1. aliyun_article_info:先找到article_time_range时间段内所有的文章记录，统计各个新闻源的数量分布，按新闻源做文章分类
-    2. aliyun_behavior_info:各类新闻源article组中，循环文章id，将得到的expose与click累加
-    3. aliyun_behavior_info:得到各新闻源的ctr分布
-    4. aliyun_behavior_info:计算各新闻源的expose分布
-    新闻源解决方案：
-    1. 遍历几个新闻源，得到新闻源文章（研究刚刚过期的新闻）列表
-    2. 得到所有这些文章的ctr，及总曝光数
-    得到各个channel的ctr
-    得到各个作者的ctr
-    '''
-
-    path = os.getcwd()
-    with open(path+"/config/ctr_config.json","r") as r:
-        ctr_config = json.load(r)
-    site_list = ctr_config["cite_id"]
-    site_detail = {"ctr":0,"expose_count":0}
-    site_result = {}
-    for site in site_list:
-        detail = copy.deepcopy(site_detail)
-        site_result[str(site)] = detail
-
-    for site_id in site_list:
-        site_result[str(site_id)]["ctr"],site_result[str(site_id)]["expose_count"] = get_site_ctr(start_time,end_time,site_id)
-    print("各个新闻源对应的ctr及曝光数量：")
-    print(site_result)
-    print('--------------------------------------------------------------')
 
 def generate_available_articles():
     '''
