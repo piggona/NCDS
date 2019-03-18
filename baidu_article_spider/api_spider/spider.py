@@ -144,8 +144,8 @@ def get_simple_url(url):
     output = out[0:-1] + "?no_list=1&scene=2&forward=api&bside=1&api_version=2&c=24010555"
     old = "b8bb2dff"
     new = "b8a516a5"
-    output.replace(old,new)
-    return output
+    out = output.replace(old,new)
+    return out
 
 def handle_response(res):
     conn = pymysql.connect(host='rm-2zeg7277v9fkmj3bi.mysql.rds.aliyuncs.com',
@@ -193,5 +193,10 @@ if __name__ == "__main__":
     # timeArray = time.strptime(tss1, "%Y-%m-%d %H:%M:%S")
     # timeStamp = int(time.mktime(timeArray))
     # print(timeStamp)
-    string = '["\u5df4\u94c1", "fc-1\u6218\u6597\u673a", "\u5370\u5df4\u51b2\u7a81"]'
+    string = "https://cpu.baidu.com/api/1022/b8bb2dff/detail/27436438320630349/news?no_list=1&scene=2&forward=api&bside=1&api_version=2&c=24010555"
+    old = "b8bb2dff"
+    new = "b8a516a5"
+    kk = string.replace(old,new)
+    print(string.replace(old,new))
     print(string)
+    print(kk)
