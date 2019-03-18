@@ -7,6 +7,8 @@ import time
 import requests
 import pymongo
 import json
+import re
+import datetime
 import multiprocessing
 import datetime
 import pymysql
@@ -36,13 +38,17 @@ def spider_op():
                 print("出现错误")
         requestId += 1
 
+def get_str_date():
+    today=datetime.date.today()
+    formatted_today="20" + today.strftime('%y%m%d')
+    return formatted_today
 
 def get_sql_dat(result):
     sql_dat = {}
     sql_dat["resource_id"] = result["doc_id"]
     sql_dat["site_id"] = 5
     sql_dat["article_type"] = 1
-    sql_dat["url"] = "'"+result["data"]["detailUrl"]+"'"
+    sql_dat["url"] = "'"+ get_simple_url(result["data"]["detailUrl"]) +"'"
     sql_dat["title"] = result["data"]["title"]
     cate = result["data"]["catInfo"]["id"]
     if (cate == 1001) or (cate == 1026):
@@ -103,10 +109,13 @@ def get_sql_dat(result):
     sql_dat["expire_time"] = int(time.time()) + 172800
     sql_dat["last_modify_time"] = int(time.time())
     tags = []
-    for tag in result["data"]["tags"]:
-        tags.append(tag["text"])
+    try:
+        for tag in result["data"]["tags"]:
+            tags.append(tag["text"])
+    except:
+        print("no tags")
     sql_dat["tags"] = json.dumps(tags)
-    sql_dat["weight"] = 2
+    sql_dat["weight"] = 1
     sql_dat["aliyun_info"] = json.dumps({})
     sql_dat["status"] = 1
     sql_dat["contents"] = ""
@@ -119,6 +128,7 @@ def get_sql_dat(result):
     for image in result["data"]["images"]:
         extend["image_urls"].append(image)
     extend["image_thumbs_urls"] = extend["image_urls"]
+    sql_dat["pub_date"] = get_str_date()
     sql_dat["extend"] = json.dumps(extend)
     sql_dat["create_time"] = int(time.time())
     tss1 = result["data"]["updateTime"]
@@ -128,6 +138,11 @@ def get_sql_dat(result):
     sql_dat["cas_token"] = 0
     return sql_dat
 
+def get_simple_url(url):
+    pattern = re.compile(".*?\?")
+    out = pattern.match(result["data"]["detailUrl"]).group(0)
+    output = out[0:-1]
+    return output
 
 def handle_response(res):
     conn = pymysql.connect(host='rm-2zeg7277v9fkmj3bi.mysql.rds.aliyuncs.com',
@@ -149,8 +164,9 @@ def handle_response(res):
         if collection.find({"doc_id": data["id"]}).count() == 0:
             collection.insert_one(result)
             sql_dat = get_sql_dat(result)
-            query = "INSERT INTO article_resource (resource_id,site_id,article_type,url,title,category,pub_time,expire_time,last_modify_time,scene_id,tags,weight,aliyun_info,status,contents,extend,create_time,update_time,cas_token) VALUES ({0},{1},{2},{3},'{4}',{5},{6},{7},{8},'{9}','{10}',{11},'{12}',{13},'{14}','{15}',{16},{17},{18})".format(
-                sql_dat["resource_id"], sql_dat["site_id"], sql_dat["article_type"], sql_dat["url"], sql_dat["title"], sql_dat["category"], sql_dat["pub_time"], sql_dat["expire_time"], sql_dat["last_modify_time"], sql_dat["scene_id"], sql_dat["tags"], sql_dat["weight"], sql_dat["aliyun_info"], sql_dat["status"], sql_dat["contents"], sql_dat["extend"], sql_dat["create_time"], sql_dat["update_time"], sql_dat["cas_token"])
+            print(sql_dat)
+            query = "INSERT INTO article_resource (resource_id,site_id,article_type,url,title,category,pub_time,expire_time,last_modify_time,scene_id,tags,weight,aliyun_info,status,pub_date,contents,extend,create_time,update_time,cas_token) VALUES ({0},{1},{2},{3},'{4}',{5},{6},{7},{8},'{9}','{10}',{11},'{12}',{13},'{14}','{15}',{16},{17},{18},{19})".format(
+                sql_dat["resource_id"], sql_dat["site_id"], sql_dat["article_type"], sql_dat["url"], sql_dat["title"], sql_dat["category"], sql_dat["pub_time"], sql_dat["expire_time"], sql_dat["last_modify_time"], sql_dat["scene_id"], sql_dat["tags"], sql_dat["weight"], sql_dat["aliyun_info"], sql_dat["status"], sql_dat["pub_date"],sql_dat["contents"], sql_dat["extend"], sql_dat["create_time"], sql_dat["update_time"], sql_dat["cas_token"])
             print(query)
             cursor.execute(query)
     conn.commit()
