@@ -165,7 +165,7 @@ def handle_response(res):
             collection.insert_one(result)
             sql_dat = get_sql_dat(result)
             print(sql_dat)
-            query = "INSERT INTO article_resource (resource_id,site_id,article_type,url,title,category,pub_time,expire_time,last_modify_time,scene_id,tags,weight,aliyun_info,status,pub_date,contents,extend,create_time,update_time,cas_token) VALUES ({0},{1},{2},{3},'{4}',{5},{6},{7},{8},'{9}','{10}',{11},'{12}',{13},'{14}','{15}',{16},{17},{18})".format(
+            query = "INSERT INTO article_resource (resource_id,site_id,article_type,url,title,category,pub_time,expire_time,last_modify_time,scene_id,tags,weight,aliyun_info,status,contents,extend,create_time,update_time,cas_token) VALUES ({0},{1},{2},{3},'{4}',{5},{6},{7},{8},'{9}','{10}',{11},'{12}',{13},'{14}','{15}',{16},{17},{18})".format(
                 sql_dat["resource_id"], sql_dat["site_id"], sql_dat["article_type"], sql_dat["url"], sql_dat["title"], sql_dat["category"], sql_dat["pub_time"], sql_dat["expire_time"], sql_dat["last_modify_time"], sql_dat["scene_id"], sql_dat["tags"], sql_dat["weight"], sql_dat["aliyun_info"], sql_dat["status"],sql_dat["contents"], sql_dat["extend"], sql_dat["create_time"], sql_dat["update_time"], sql_dat["cas_token"])
             print(query)
             cursor.execute(query)
