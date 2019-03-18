@@ -114,9 +114,9 @@ def get_sql_dat(result):
             tags.append(tag["text"])
     except:
         print("no tags")
-    sql_dat["tags"] = json.dumps(tags)
+    sql_dat["tags"] = json.dumps(tags,ensure_ascii=False)
     sql_dat["weight"] = 1
-    sql_dat["aliyun_info"] = json.dumps({})
+    sql_dat["aliyun_info"] = json.dumps({},ensure_ascii=False)
     sql_dat["status"] = 1
     sql_dat["contents"] = ""
     extend = {"source": "", "summary": "", "media_pic": "", "video_url": [
@@ -129,7 +129,7 @@ def get_sql_dat(result):
         extend["image_urls"].append(image)
     extend["image_thumbs_urls"] = extend["image_urls"]
     sql_dat["pub_date"] = get_str_date()
-    sql_dat["extend"] = json.dumps(extend)
+    sql_dat["extend"] = json.dumps(extend,ensure_ascii=False)
     sql_dat["create_time"] = int(time.time())
     tss1 = result["data"]["updateTime"]
     timeArray = time.strptime(tss1, "%Y-%m-%d %H:%M:%S")
@@ -185,7 +185,9 @@ def spider_generator():
 
 
 if __name__ == "__main__":
-    tss1 = '2019-02-25 17:41:44'
-    timeArray = time.strptime(tss1, "%Y-%m-%d %H:%M:%S")
-    timeStamp = int(time.mktime(timeArray))
-    print(timeStamp)
+    # tss1 = '2019-02-25 17:41:44'
+    # timeArray = time.strptime(tss1, "%Y-%m-%d %H:%M:%S")
+    # timeStamp = int(time.mktime(timeArray))
+    # print(timeStamp)
+    string = '["\u5df4\u94c1", "fc-1\u6218\u6597\u673a", "\u5370\u5df4\u51b2\u7a81"]'
+    print(string)
