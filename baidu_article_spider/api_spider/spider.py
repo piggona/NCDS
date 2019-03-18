@@ -140,7 +140,7 @@ def get_sql_dat(result):
 
 def get_simple_url(url):
     pattern = re.compile(".*?\?")
-    out = pattern.match(result["data"]["detailUrl"]).group(0)
+    out = pattern.match(url).group(0)
     output = out[0:-1]
     return output
 
