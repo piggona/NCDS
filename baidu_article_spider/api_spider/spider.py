@@ -141,7 +141,10 @@ def get_sql_dat(result):
 def get_simple_url(url):
     pattern = re.compile(".*?\?")
     out = pattern.match(url).group(0)
-    output = out[0:-1]
+    output = out[0:-1] + "?no_list=1&scene=2&forward=api&bside=1&api_version=2&c=24010555"
+    old = "b8bb2dff"
+    new = "b8a516a5"
+    output.replace(old,new)
     return output
 
 def handle_response(res):
