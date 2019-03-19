@@ -21,6 +21,9 @@ requestId = 100001
 
 def spider_op():
     global requestId
+    client = pymongo.MongoClient(host="localhost", port=27017)
+    db = client.baiduContent
+    collection = db["baidu_err"]
     while True:
         print(requestId)
         try:
@@ -32,7 +35,11 @@ def spider_op():
             print("出错")
         else:
             if response.status_code == 200:
-                handle_response(response.json())
+                try:
+                    handle_response(response.json())
+                except Exception as e:
+                    err = {"err":str(e),"time":int(time.time())}
+                    collection.insert_one(err)
                 print("200")
             else:
                 print("出现错误")
