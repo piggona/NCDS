@@ -15,8 +15,6 @@ def get_sql_generator():
     for user_item in user_items:
         data = {"article_id":user_item[0],"category":user_item[1],"create_time":user_item[2],"expire_time":user_item[3],"site_id":user_item[4],"source":user_item[5],"summary":user_item[6],"title":user_item[7],"url":user_item[8]}
         yield data
-        del data
-        gc.collect(data)
     conn.commit()
     cursor.close()
     conn.close()
