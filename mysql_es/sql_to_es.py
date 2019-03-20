@@ -23,8 +23,17 @@ def get_sql_generator():
 
 def to_elasticsearch():
     es = Elasticsearch([{'host':'localhost','port':5200}])
+    frame("获取es对象")
     for data in get_sql_generator():
+        frame("得到数据")
         es.index(index="mifeng_article",doc_type="mifeng",body=data)
+
+def frame(content):
+    print("-----------------")
+    print("|---{}---|".format(content))
+    print("-----------------")
+    print("  ")
+    print("  ")
 
 if __name__ == "__name__":
     to_elasticsearch()
