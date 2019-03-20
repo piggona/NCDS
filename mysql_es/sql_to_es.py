@@ -9,7 +9,7 @@ def get_sql_generator():
                            port=3306, user="information", db="infomation", passwd="Infor0110")
     cursor = conn.cursor()
 
-    first_query = "SELECT a.id as article_id, a.category as category, a.pub_time as create_time,a.expire_time as expire_time,a.site_id as site_id,JSON_EXTRACT(a.extend, '$.source') as source,JSON_EXTRACT(a.extend, '$.summary') as summary,a.title as title,a.url as url FROM article_resource as a WHERE a.expire_time > NOW() LIMIT 100"
+    first_query = "SELECT a.id as article_id, a.category as category, a.pub_time as create_time,a.expire_time as expire_time,a.site_id as site_id,JSON_EXTRACT(a.extend, '$.source') as source,JSON_EXTRACT(a.extend, '$.summary') as summary,a.title as title,a.url as url FROM article_resource as a WHERE a.expire_time > unix_timestamp(NOW()) LIMIT 100"
     cursor.execute(first_query)
     user_items = cursor.fetchall()
     for user_item in user_items:
