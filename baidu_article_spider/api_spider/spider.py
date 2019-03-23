@@ -54,7 +54,7 @@ def get_sql_dat(result):
     sql_dat = {}
     sql_dat["resource_id"] = result["doc_id"]
     sql_dat["site_id"] = 5
-    sql_dat["article_type"] = 1
+    sql_dat["article_type"] = 2
     sql_dat["url"] = "'"+ get_simple_url(result["data"]["detailUrl"]) +"'"
     sql_dat["title"] = result["data"]["title"]
     cate = result["data"]["catInfo"]["id"]
