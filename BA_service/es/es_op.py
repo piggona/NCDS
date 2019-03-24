@@ -2,12 +2,12 @@ import requests
 import json
 import elasticsearch
 
-res = requests.get('http://172.17.12.138:5200/mifeng_article/mifeng/_search')
+res = requests.get('http://localhost:5200/mifeng_article/mifeng/_search')
 print(res.content)
 
 
 def search_for_all(query_body):
-    es = elasticsearch.Elasticsearch([{"host": '172.17.12.138','port': 5200}])
+    es = elasticsearch.Elasticsearch([{"host": 'localhost','port': 5200}])
     try:
         res = es.search(index='mifeng_article',body = query_body)
         RES = json.dumps(res,indent=2)
