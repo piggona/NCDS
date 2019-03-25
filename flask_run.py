@@ -14,7 +14,8 @@ def get_search():
     print(query)
     search_item = es_search(BASIC_QUERY)
     search_item.build_search_query(query,0,10)
-    search_item.search_for_all()
+    result = search_item.search_for_all()
+    return result
     
  
 if __name__ == '__main__':

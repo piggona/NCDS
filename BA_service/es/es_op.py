@@ -36,5 +36,6 @@ class es_search:
             res = es.search(index='infomation',body = self.basic_query)
             RES = json.dumps(res,indent=2)
             print(RES)
+            return RES
         except elasticsearch.exceptions.NotFoundError:
-            print("not found %".format(self.basic_query))
+            return "not found %".format(self.basic_query)
