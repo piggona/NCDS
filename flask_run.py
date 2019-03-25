@@ -24,6 +24,7 @@ def get_search():
         from_page = request.form["from"]
         page_size = request.form["size"]
         print(query)
+        search_item = es_search(BASIC_QUERY)
         search_item.build_search_query(query,from_page,page_size)
         result = search_item.search_for_all()
         return result
@@ -34,6 +35,7 @@ def ajax_search():
     from_page = request.form.get('from')
     page_size = request.form.get('size')
     print(query)
+    search_item = es_search(BASIC_QUERY)
     search_item.build_search_query(query,from_page,page_size)
     result = search_item.search_for_all()
     return result
