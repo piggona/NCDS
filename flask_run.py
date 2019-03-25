@@ -28,6 +28,16 @@ def get_search():
         result = search_item.search_for_all()
         return result
 
+@app.route('/api/_search',methods=["POST"])
+def ajax_search():
+    query = request.form.get('query')
+    from_page = request.form.get('from')
+    page_size = request.form.get('size')
+    print(query)
+    search_item.build_search_query(query,from_page,page_size)
+    result = search_item.search_for_all()
+    return result
+
 
     
  
