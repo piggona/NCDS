@@ -3,19 +3,29 @@ from urllib.parse import urlencode,quote,unquote
 from BA_service.es.es_op import es_search
 from BA_service.config.config import BASIC_QUERY
 app = Flask(__name__)
- 
+
 @app.route('/')
 def hello_world():
     return 'Hello World!'
 
-@app.route('/_search',methods=["get"])
+@app.route('/_search',methods=["get","post"])
 def get_search():
-    query = request.args.get('query')
-    print(query)
-    search_item = es_search(BASIC_QUERY)
-    search_item.build_search_query(query,0,10)
-    result = search_item.search_for_all()
-    return result
+    if request.method == 'GET':
+        query = request.args.get('query')
+        print(query)
+        search_item = es_search(BASIC_QUERY)
+        search_item.build_search_query(query,0,10)
+        result = search_item.search_for_all()
+        return result
+    elif request.method == 'POST':
+        query = request.form["query"]
+        from_page = request.form["from"]
+        page_size = request.form["size"]
+        search_item.build_search_query(query,from_page,page_size)
+        result = search_item.search_for_all()
+        return result
+
+
     
  
 if __name__ == '__main__':

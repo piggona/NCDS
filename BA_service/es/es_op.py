@@ -26,6 +26,7 @@ class es_search:
         self.basic_query["from"] = from_page
         self.basic_query["size"] = page_size
         self.basic_query["query"]["query_string"]["query"] = word
+        self.search_for_all()
     
     def next_query(self):
         self.basic_query["from"] += 1
