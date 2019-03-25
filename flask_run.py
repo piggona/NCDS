@@ -23,6 +23,7 @@ def get_search():
         query = request.form["query"]
         from_page = request.form["from"]
         page_size = request.form["size"]
+        print(query)
         search_item.build_search_query(query,from_page,page_size)
         result = search_item.search_for_all()
         return result
