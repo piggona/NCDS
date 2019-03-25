@@ -8,7 +8,7 @@ app = Flask(__name__)
 def hello_world():
     return 'Hello World!'
 
-@app.route('/_search',method=["get"])
+@app.route('/_search',methods=["get"])
 def get_search():
     query = request.args.get('query')
     print(query)
