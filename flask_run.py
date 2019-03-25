@@ -2,7 +2,9 @@ from flask import Flask,request,render_template
 from urllib.parse import urlencode,quote,unquote
 from BA_service.es.es_op import es_search
 from BA_service.config.config import BASIC_QUERY
+from flask_cors import *
 app = Flask(__name__)
+CORS(app, supports_credentials=True)
 
 @app.route('/')
 def hello_world():
