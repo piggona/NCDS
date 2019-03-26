@@ -9,9 +9,6 @@ import os
 
 from BA_service.config.config import BASIC_QUERY
 
-res = requests.get('http://localhost:5200/mifeng_article/mifeng/_search')
-print(res.content)
-
 class es_search:
     def __init__(self, basic_query):
         self.basic_query = basic_query
@@ -34,6 +31,7 @@ class es_search:
     def search_for_all(self):
         es = elasticsearch.Elasticsearch([{"host": 'localhost','port': 5200}])
         try:
+            print(self.basic_query)
             res = es.search(index='infomation',body = self.basic_query)
             RES = json.dumps(res,indent=2)
             return RES
