@@ -1,3 +1,6 @@
+
+import pymysql
+from datetime import datetime
 from flask import Flask,request,render_template
 from urllib.parse import urlencode,quote,unquote
 from BA_service.es.es_op import es_search
@@ -40,6 +43,24 @@ def ajax_search():
     result = search_item.search_for_all()
     return result
 
+@app.route('/api/_push',methods=["POST"])
+def push_data():
+    item_id = request.form.get('id')
+    title = request.form.get('title')
+    url = request.form.get('url')
+    push_time = datetime.now()
+    create_time = datetime.now()
+    update_time = datetime.now()
+    conn = pymysql.connect(host='rm-2zeg7277v9fkmj3bi.mysql.rds.aliyuncs.com',
+                           port=3306, user="information", db="infomation", passwd="Infor0110")
+    cursor = conn.cursor()
+    query = "INSERT INTO mine_umeng_push (item_id,title,url,type,push_time,status,create_at,update_at) VALUES ({0},{1},{2},{3},'{4}',{5},{6},{7})".format(
+                item_id,title,url,3,push_time,create_time,update_time)
+    try:
+        cursor.execute(query)
+    except Exception as e:
+        print(e)
+    return "OK"
 
     
  
