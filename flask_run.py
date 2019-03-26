@@ -1,5 +1,6 @@
 
 import pymysql
+import time
 from datetime import datetime
 from flask import Flask, request, render_template
 from urllib.parse import urlencode, quote, unquote
@@ -53,13 +54,14 @@ def push_data():
     title = request.form.get('title')
     url = request.form.get('url')
     push_time = datetime.now()
-    create_time = datetime.now()
-    update_time = datetime.now()
+    create_time = int(time.time())
+    update_time = int(time.time())
     conn = pymysql.connect(host='rm-2zeg7277v9fkmj3bi.mysql.rds.aliyuncs.com',
                            port=3306, user="information", db="infomation", passwd="Infor0110")
     cursor = conn.cursor()
-    query = "INSERT INTO mine_umeng_push (item_id,title,url,type,push_time,status,create_at,update_at) VALUES ({0},{1},{2},{3},{4},{5},{6},{7})".format(
+    query = "INSERT INTO mine_umeng_push (item_id,title,url,type,push_time,status,create_at,update_at) VALUES ({0},'{1}','{2}',{3},{4},{5},{6},{7})".format(
         item_id, title, url, 3, push_time,2, create_time, update_time)
+    print(query)
     try:
         cursor.execute(query)
     except Exception as e:
