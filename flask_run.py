@@ -67,6 +67,9 @@ def push_data():
     except Exception as e:
         print(e)
     return "OK"
+    conn.commit()
+    cursor.close()
+    conn.close()
 
 
 if __name__ == '__main__':
