@@ -66,10 +66,11 @@ def push_data():
         cursor.execute(query)
     except Exception as e:
         print(e)
-    return "OK"
     conn.commit()
     cursor.close()
     conn.close()
+    return "OK"
+    
 
 
 if __name__ == '__main__':
