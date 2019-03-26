@@ -23,7 +23,7 @@ class es_search:
         )
 
     def build_search_query(self, word, from_page, page_size):
-        self.basic_query["from"] = from_page
+        self.basic_query["from"] = from_page*10
         self.basic_query["size"] = page_size
         self.basic_query["query"]["query_string"]["query"] = word
         self.search_for_all()
