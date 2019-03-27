@@ -60,7 +60,7 @@ def push_data():
     conn = pymysql.connect(host='rm-2zeg7277v9fkmj3bi.mysql.rds.aliyuncs.com',
                            port=3306, user="information", db="infomation", passwd="Infor0110")
     cursor = conn.cursor()
-    query = "INSERT INTO mine_umeng_push (item_id,title,url,type,push_time,status,created_at,updated_at,text) VALUES ({0},'{1}','{2}',{3},'{4}',{5},{6},{7},{8})".format(
+    query = "INSERT INTO mine_umeng_push (item_id,title,url,type,push_time,status,created_at,updated_at,text) VALUES ({0},'{1}','{2}',{3},'{4}',{5},{6},{7},'{8}')".format(
         item_id, title, url, 3, push_time,2, 'NOW()', 'NOW()',text)
     print(query)
     try:
