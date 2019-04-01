@@ -54,7 +54,8 @@ def push_data():
     title = request.form.get('title')
     url = request.form.get('url')
     text = request.form.get('summary')
-    push_time = datetime.now()
+    get_time = request.form.get('time')
+    push_time = get_time.replace('T',' ') + ":00"
     create_time = int(time.time())
     update_time = int(time.time())
     conn = pymysql.connect(host='rm-2zeg7277v9fkmj3bi.mysql.rds.aliyuncs.com',

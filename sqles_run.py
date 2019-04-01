@@ -1,4 +1,4 @@
-from mysql_es.sql_to_es import *
+from tools.mysql_es.sql_to_es import *
 
 def frame(content):
     print("-----------------")
