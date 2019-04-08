@@ -52,7 +52,7 @@ def get_str_date():
 
 def get_sql_dat(result):
     sql_dat = {}
-    sql_dat["resource_id"] = result["doc_id"]
+    sql_dat["resource_id"] = 0
     sql_dat["site_id"] = 5
     sql_dat["article_type"] = 2
     sql_dat["url"] = "'"+ get_simple_url(result["data"]["detailUrl"]) +"'"
@@ -141,7 +141,7 @@ def get_sql_dat(result):
     tss1 = result["data"]["updateTime"]
     timeArray = time.strptime(tss1, "%Y-%m-%d %H:%M:%S")
     timeStamp = int(time.mktime(timeArray))
-    sql_dat["update_time"] = timeStamp
+    sql_dat["update_time"] = int(time.time())
     sql_dat["cas_token"] = 0
     return sql_dat
 

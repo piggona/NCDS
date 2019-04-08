@@ -10,12 +10,25 @@ import time
 
 from basic_bi.config.basic import *
 
+'''
+判断临时表是否完成.
+仍需制作AOP：
+1. 判断是否是生成报表的函数（前）自动解析其DataFrame生成csv保存并显示
+'''
+def table_is_exists(table_name_list):
+    def _table_is_exists(func):
+        def __table_is_exists(self,*args,**kwargs):
+            for table_name in table_name_list:
+                if not eval("self._is_"+table_name):
+                    eval("self.get_"+table_name+"()")
+            func(self,*args,**kwargs)
+        return __table_is_exists
+    return _table_is_exists 
 
+'''
+Extracts data from databases.
+'''
 class extract_data:
-    '''
-    渠道数据
-    '''
-
     def __init__(self, date=ANALYZE_DATE):
         self.analyze_date = str(date).replace('-', '')
         self.yesterday = str(date - 2*TIME_INTERVAL)
@@ -38,32 +51,54 @@ class extract_data:
             host=ONLINE_DB_HOST, port=ONLINE_DB_PORT, user=ONLINE_DB_USER, db=ONLINE_DB, passwd=ONLINE_DB_PSWD)
         self.cursor_online = conn_online.cursor()
 
-        self.is_get_tmp_tables = False
-        self.is_get_new_accu_user_action = False
-        self.is_get_date_user_info = False
-        self.is_tmp_accu_user_info = False
+        self._is_tmp_tables = False
+        self._is_new_accu_user_action = False
+        self._is_date_user_info = False
+        self._is_tmp_accu_user_info = False
 
+    '''
+    Makes data to dataFrame.
+    @param dat sql-data
+    '''
     def _toDataFrame(self, dat):
         return pd.DataFrame(list(dat))
 
+    '''
+    Collects connections&cursors of pymysql. 
+    '''
     def stop_conn(self):
         self.cur.close()
         self.conn.close()
         self.conn_online.close()
         self.cursor_online.close()
     
+    '''
+    Starts data extraction in a full-mode way.
+    '''
     def start_init(self):
-        '''
-        标准启动方法()
-        '''
         self.get_tmp_tables()
         self.get_new_accu_user_action()
         self.get_date_user_info()
+        self.get_tmp_accu_user_info
         self.display_accu_info()
         self.display_active_info()
         self.display_new_info()
         self.display_stay_info()
 
+    '''
+    Starts data extraction without creating new tmp_tables.(If scheduler has inited tmp table)
+    '''
+    def start_without_tmp(self):
+        self.display_accu_info()
+        self.display_active_info()
+        self.display_new_info()
+        self.display_stay_info()
+
+    '''
+    Sets up middle-table 'tmp_new_accu_user_action'.
+    <code>new</code> accumulated user action data
+    Supports @see get_new_accu_user_action,get_date_user_info
+    '''
     def get_tmp_tables(self):
         '''
         累积总激活用户数，总绑定微信用户数(从8号开始才有channel字段)
@@ -84,12 +119,14 @@ class extract_data:
         """ % (self.mine_user_action_statistic, self.mine_user_action_statistic)
 
         self.cur.execute(sql)
-        self.is_get_tmp_tables = True
-
-    @get_tmp_tables
+        self._is_get_tmp_tables = True
+    
+    '''
+    Sets up middle-table 'tmp_accu_user_action'.
+    Supports @see display_accu_info
+    '''
+    @table_is_exists(["tmp_tables"])
     def get_new_accu_user_action(self):
-        if not self.is_get_tmp_tables:
-            self.get_tmp_tables()
         sql = """drop table if exists new_accu_user_action;"""
         self.cur.execute(sql)
 
@@ -105,9 +142,13 @@ class extract_data:
         on a.uid = b.uid and a.created_at = b.created_at;
         """
         self.cur.execute(sql)
-        self.is_get_new_accu_user_action = True
-
-    @get_new_accu_user_action
+        self._is_get_new_accu_user_action = True
+    
+    '''
+    Sets up middle-tables 'today_user_info','yesterday_user_info'
+    Supports @see display_new_info,display_active_info
+    '''
+    @table_is_exists(["tmp_tables"])
     def get_date_user_info(self):
         if not self.is_get_tmp_tables:
             self.get_tmp_tables()
@@ -170,33 +211,13 @@ class extract_data:
         sql = """ALTER TABLE yesterday_user_info ADD INDEX index_uid (uid);"""
         self.cur.execute(sql)
 
-        self.is_get_date_user_info = True
+        self._is_get_date_user_info = True
 
-    def display_accu_info(self):
-        '''
-        统计累计信息
-        '''
-        sql = """
-        select b.channel, 
-           count(distinct b.device_id) device_id_num,  
-           count(distinct a.uid) uid_num, 
-           count(distinct case when length(a.wechat_id)>1 then b.device_id else null end)  wechat_device_num, 
-           count(distinct case when length(a.wechat_id)>1 then a.wechat_id else null end)  wechat_id_num ,   
-           count(distinct case when length(a.alipay_id)>1 then a.alipay_id else null end)  alipay_id_num    
-           from %s a 
-           inner join new_accu_user_action b 
-           on a.uid = b.uid 
-           where a.create_time BETWEEN UNIX_TIMESTAMP('2019-01-08') and UNIX_TIMESTAMP('%s') 
-           group by b.channel 
-           order by b.channel; 
-        """ % (self.mine_user, self.analyze_date)
-        self.cur.execute(sql)
-
-        res = self.cur.fetchall()  # 获取结果
-        self.accu_user_related = self._toDataFrame(res)
-        self.accu_user_related.columns = [
-            '渠道', '累计设备数', '累计uid数', '累计绑定微信设备数', '累计微信账号数', '累计支付宝账号数']
-
+    '''
+    Sets up middel-table 'tmp_accu_user_info'
+    '''
+    @table_is_exists(["new_accu_user_action"])
+    def get_tmp_accu_user_info(self):
         # 邀请数
         sql = "drop table if exists tmp_accu_user_info;"
         self.cur.execute(sql)
@@ -227,6 +248,40 @@ class extract_data:
             on b.uid = d.uid;
         """ % (self.begin_t, self.end_t)
         self.cur.execute(sql)
+        self._is_tmp_accu_user_info = True
+
+    '''
+    Creates accumulated users' statistical report.
+    '渠道','累计设备数','累计uid数','累计绑定微信设备数','累计微信账号数','累计支付宝账号数'
+    '渠道','渠道徒弟数_绑定微信设备','渠道徒弟数_设备数'
+    '渠道','渠道徒弟完成第一天邀请奖励_绑定微信设备数','渠道徒弟完成第一天邀请奖励_设备数'
+    '渠道','累计一元提现','累计总提现'
+    '''
+    @table_is_exists(["tmp_accu_user_info"])
+    def display_accu_info(self):
+        '''
+        统计累计信息
+        '''
+        sql = """
+        select b.channel, 
+           count(distinct b.device_id) device_id_num,  
+           count(distinct a.uid) uid_num, 
+           count(distinct case when length(a.wechat_id)>1 then b.device_id else null end)  wechat_device_num, 
+           count(distinct case when length(a.wechat_id)>1 then a.wechat_id else null end)  wechat_id_num ,   
+           count(distinct case when length(a.alipay_id)>1 then a.alipay_id else null end)  alipay_id_num    
+           from %s a 
+           inner join new_accu_user_action b 
+           on a.uid = b.uid 
+           where a.create_time BETWEEN UNIX_TIMESTAMP('2019-01-08') and UNIX_TIMESTAMP('%s') 
+           group by b.channel 
+           order by b.channel; 
+        """ % (self.mine_user, self.analyze_date)
+        self.cur.execute(sql)
+
+        res = self.cur.fetchall()  # 获取结果
+        self.accu_user_related = self._toDataFrame(res)
+        self.accu_user_related.columns = [
+            '渠道', '累计设备数', '累计uid数', '累计绑定微信设备数', '累计微信账号数', '累计支付宝账号数']
 
         sql = """
         select 
@@ -287,8 +342,13 @@ class extract_data:
         self.accu_user_related = pd.merge(
             result, accu_user_cash, on='渠道', how='outer')
 
-        self.is_tmp_accu_user_info = True
-
+    '''
+    Creates active users' statistical report.
+    '渠道','设备数','uid数','绑定微信设备数','微信账号数','支付宝账号数'
+    '渠道','刷新次数','点击次数'
+    '渠道','阅读文章数','阅读时长'
+    '''
+    @table_is_exists(["date_user_info"])
     def display_active_info(self):
         sql = """
         select channel,
@@ -476,6 +536,15 @@ class extract_data:
         self.acc_curr_related = pd.merge(
             self.accu_user_related, curr_user_related, on='渠道', how='outer')
 
+    '''
+    Creates new users' statistical report.
+    '渠道','设备数','uid数','绑定微信设备数','微信账号数','支付宝账号数'
+    '渠道','刷新次数','点击次数'
+    '渠道','阅读文章数','阅读时长'
+    '渠道','完成新手任务数','完成新手任务设备数','完成新手任务微信数','完成日常任务数','完成日常任务设备数','完成日常任务微信数'
+    '渠道','新增_渠道下级数（绑定微信设备数）','新增_渠道下级数（设备数）'
+    '''
+    @table_is_exists(["date_user_info","tmp_accu_user_info"])
     def display_new_info(self):
         sql = """
         select channel,
@@ -646,6 +715,13 @@ class extract_data:
             '平均完成日常任务数_微信 = 完成日常任务数 /微信账号数', inplace=True)
         self.today_New_user_related = today_New_user_related
 
+    '''
+    Creates app's user retention report.
+    '渠道', '昨日设备数', '昨日uid数', '昨日绑定微信设备数', '昨日微信账号数',
+    '设备数', 'uid数', '绑定微信设备数', '微信账号数'
+    '渠道', '昨日设备数', '昨日uid数', '昨日绑定微信设备数', '昨日微信账号数',
+    '设备数', 'uid数', '绑定微信设备数', '微信账号数'
+    '''
     def display_stay_info(self):
         chosen_date = begin_t.replace('-', '')
         sql = """
