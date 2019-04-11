@@ -155,13 +155,19 @@ class Article:
             SELECT bhv_type,count(*) as number FROM accu_article_info WHERE operate_date=date_format({0},'%y-%m-%d') AND bhv_time< UNIX_TIMESTAMP({1}) AND bhv_time> '{2}' GROUP BY bhv_type
             """.format(end_time,end_time,start_time)
             self.cursor.execute(sql)
-            total_ctr = self.cursor.fetchall()
+            items = self.cursor.fetchall()
         else:
             sql="""
             SELECT bhv_type,count(*) as number FROM accu_article_info WHERE bhv_time< UNIX_TIMESTAMP({0}) AND bhv_time> '{1}' GROUP BY bhv_type
             """.format(end_time,start_time)
             self.cursor.execute(sql)
-            total_ctr = self.cursor.fetchall()
+            items = self.cursor.fetchall()
+        for item in items:
+            if (item[0] == 'click'):
+                click_count = item[1]
+            elif (item[0] == 'expose'):
+                expose_count = item[1]
+        total_ctr = click_count / expose_count
         return total_ctr
     
 
