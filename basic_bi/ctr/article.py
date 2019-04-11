@@ -32,7 +32,7 @@ class Article:
             host=TMP_DB_HOST,
             port=TMP_DB_PORT, db=TMP_CTR_DB, user=TMP_DB_USER, password=TMP_DB_PSWD,
             charset='utf8')
-        self.cur = self.conn.cursor()  # 建立游标
+        self.cursor = self.conn.cursor()  # 建立游标
 
         self.conn_online = pymysql.connect(
             host=ONLINE_DB_HOST, port=ONLINE_DB_PORT, user=ONLINE_DB_USER, db=ONLINE_DB, passwd=ONLINE_DB_PSWD)
