@@ -7,6 +7,7 @@ import time
 import csv
 import copy
 
+from datetime import *
 import pymongo
 from odps import ODPS
 import pymysql
@@ -148,7 +149,7 @@ class Article:
         if time == "NOW()":
             start_time = int(time.time()) - time_range
         else:
-            start_time = int(time.mktime(string_toDatetime(end_time).timetuple())) - time_range
+            start_time = int(time.mktime(end_time)) - time_range
         if time_range <= 172800:
             sql="""
             SELECT bhv_type,count(*) as number FROM accu_article_info WHERE operate_date=date_format({0},'%y-%m-%d') AND bhv_time< UNIX_TIMESTAMP({1}) AND bhv_time> '{2}' GROUP BY bhv_type
@@ -178,3 +179,5 @@ class Article:
         self.cursor.execute(sql)
         items = self.cursor.fetchall()
 
+if __name__ == "__main__":
+    pass
