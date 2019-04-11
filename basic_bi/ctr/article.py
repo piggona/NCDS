@@ -146,7 +146,7 @@ class Article:
 
 
     def display_total_ctr(self,end_time=ARTICLE_START_TIME,time_range=DEFAULT_TIME_RANGE):
-        if time == "NOW()":
+        if end_time == "NOW()":
             start_time = int(time.time()) - time_range
         else:
             start_time = int(time.mktime(end_time)) - time_range
