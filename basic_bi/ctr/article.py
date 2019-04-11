@@ -167,7 +167,7 @@ class Article:
                 click_count = item[1]
             elif (item[0] == 'expose'):
                 expose_count = item[1]
-        total_ctr = click_count / expose_count
+        total_ctr = {"total_ctr:":click_count / expose_count,"click_count":click_count,"expose_count":expose_count}
         return total_ctr
     
 
