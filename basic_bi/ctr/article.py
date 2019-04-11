@@ -35,7 +35,7 @@ class Article:
 
         self.conn_online = pymysql.connect(
             host=ONLINE_DB_HOST, port=ONLINE_DB_PORT, user=ONLINE_DB_USER, db=ONLINE_DB, passwd=ONLINE_DB_PSWD)
-        self.cursor_online = conn_online.cursor()
+        self.cursor_online = self.conn_online.cursor()
     
     def stop_conn(self):
         self.cur.close()
