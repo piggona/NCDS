@@ -39,7 +39,7 @@ class Article:
         self.cursor_online = self.conn_online.cursor()
     
     def stop_conn(self):
-        self.cur.close()
+        self.cursor.close()
         self.conn.close()
         self.conn_online.close()
         self.cursor_online.close()
@@ -155,13 +155,13 @@ class Article:
             SELECT bhv_type,count(*) as number FROM accu_article_info WHERE operate_date=date_format({0},'%y-%m-%d') AND bhv_time< UNIX_TIMESTAMP({1}) AND bhv_time> '{2}' GROUP BY bhv_type
             """.format(end_time,end_time,start_time)
             self.cursor.execute(sql)
-            total_ctr = self.cursor.fetchall()[0]
+            total_ctr = self.cursor.fetchall()
         else:
             sql="""
             SELECT bhv_type,count(*) as number FROM accu_article_info WHERE bhv_time< UNIX_TIMESTAMP({0}) AND bhv_time> '{1}' GROUP BY bhv_type
             """.format(end_time,start_time)
             self.cursor.execute(sql)
-            total_ctr = self.cursor.fetchall()[0]
+            total_ctr = self.cursor.fetchall()
         return total_ctr
     
 
