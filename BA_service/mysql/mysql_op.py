@@ -31,7 +31,6 @@ class mysql_search:
 
     def search_for_all(self):
         res = {"hits":{"hits":[]}}
-
         self.cursor.execute(self.basic_query)
         results = self.cursor.fetchall()
         for result in results:
@@ -46,8 +45,9 @@ class mysql_search:
             inner["_source"]["tags"] = result[11]
             inner["_source"]["url"] = result[4]
             inner["_id"] = result[0]
-            print(inner)
+            # print(inner)
             res["hits"]["hits"].append(inner)
+        print(res)
         self.cursor.close()
         self.conn.close()
         return res
