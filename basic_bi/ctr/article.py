@@ -181,9 +181,12 @@ class Article:
     3. calculate article-ctr-distribution
     @params time selected-time mysql-datetime
     '''
-    def available_article_distribution(self,time=ARTICLE_START_TIME):
+    def available_article_distribution(self,end_time=ARTICLE_START_TIME,time_range=DEFAULT_TIME_RANGE):
         sql = """
-        SELECT count()
+        SELECT DISTINCT*FROM (
+        SELECT a.item_id as item_id,sum(CASE WHEN bhv_type='click' THEN a.number ELSE 0 END) AS click_num,sum(CASE WHEN bhv_type='expose' THEN a.number ELSE 0 END) AS expose_num,sum(CASE WHEN bhv_type='click' THEN a.number ELSE 0 END)/sum(CASE WHEN bhv_type='expose' THEN a.number ELSE 0 END) AS ctr FROM (
+        SELECT bhv_type,item_id,count(*) AS number FROM accu_article_info GROUP BY bhv_type,item_id) AS a GROUP BY a.item_id) AS ctr_info LEFT JOIN (
+        SELECT id,title,expire_time,category,tags,source,operate_date FROM accu_article_info) AS article_info ON ctr_info.item_id = article_info.id ORDER BY ctr DESC
         """.format(time,time)
         self.cursor.execute(sql)
         items = self.cursor.fetchall()
