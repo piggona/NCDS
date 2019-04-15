@@ -12,7 +12,7 @@ from BA_service.config.config import BASIC_QUERY
 class mysql_search:
     def __init__(self, basic_query):
         self.basic_query =basic_query
-        conn = pymysql.connect(
+        self.conn = pymysql.connect(
                 user="fuyu",
                 passwd="Sjfy0114!!",
                 host="127.0.0.1",  # 此处必须是 127.0.0.1
@@ -42,6 +42,8 @@ class mysql_search:
                 inner["_source"]["url"] = result[4]
                 inner["_id"] = result[0]
                 res["hits"]["hits"].append(inner)
+            self.cursor.close()
+            self.conn.close()
             return res
         except Exception as e:
             print(e)
