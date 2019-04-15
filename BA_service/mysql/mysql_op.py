@@ -34,6 +34,7 @@ class mysql_search:
         try:
             self.cursor.execute(self.basic_query)
             results = self.cursor.fetchall()
+            print(results)
             for result in results:
                 inner = {"_source":{},"_id":""}
                 inner["_source"]["title"] = result[5]

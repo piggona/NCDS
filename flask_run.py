@@ -76,6 +76,7 @@ def ajax_search():
     SELECT * FROM article_resource WHERE title like '%{}%' ORDER BY id DESC LIMIT 10 
     """.format(query)
     search_item = mysql_search(search_query)
+    print("object init")
     result = search_item.search_for_all()
     return result
 
