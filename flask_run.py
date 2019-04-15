@@ -51,7 +51,7 @@ def get_search():
         query = request.form["query"]
         print(query)
         search_query = """
-        SELECT * FROM article_resource WHERE title like '%{}}%' ORDER BY id DESC LIMIT 10 
+        SELECT * FROM article_resource WHERE title like '%{}%' ORDER BY id DESC LIMIT 10 
         """.format(query)
         search_item = mysql_search(search_query)
         result = search_item.search_for_all()
@@ -73,7 +73,7 @@ def ajax_search():
     query = request.form.get('query')
     print(query)
     search_query = """
-    SELECT * FROM article_resource WHERE title like '%{}}%' ORDER BY id DESC LIMIT 10 
+    SELECT * FROM article_resource WHERE title like '%{}%' ORDER BY id DESC LIMIT 10 
     """.format(query)
     search_item = mysql_search(search_query)
     result = search_item.search_for_all()
