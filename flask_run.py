@@ -1,6 +1,7 @@
 
 import pymysql
 import time
+import json
 from datetime import datetime
 from flask import Flask, request, render_template
 from urllib.parse import urlencode, quote, unquote
@@ -55,6 +56,7 @@ def get_search():
         """.format(query)
         search_item = mysql_search(search_query)
         result = search_item.search_for_all()
+        result = json.dumps(result)
         return result
 
 
@@ -78,6 +80,7 @@ def ajax_search():
     search_item = mysql_search(search_query)
     print("object init")
     result = search_item.search_for_all()
+    result = json.dumps(result)
     return result
 
 
