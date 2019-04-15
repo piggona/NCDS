@@ -41,12 +41,12 @@ class mysql_search:
             # print(result[16])
             # print(result[5])
             inner = {"_source":{"title":"","extend":"","tags":"","url":""},"_id":""}
-            print(inner)
             inner["_source"]["title"] = result[5]
             inner["_source"]["extend"] = result[16]
             inner["_source"]["tags"] = result[11]
             inner["_source"]["url"] = result[4]
             inner["_id"] = result[0]
+            print(inner)
             res["hits"]["hits"].append(inner)
         self.cursor.close()
         self.conn.close()
