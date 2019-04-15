@@ -35,12 +35,13 @@ class mysql_search:
         self.cursor.execute(self.basic_query)
         results = self.cursor.fetchall()
         for result in results:
-            print(result[0])
-            print(result[4])
-            print(result[11])
-            print(result[16])
-            print(result[5])
-            inner = {"_source":{},"_id":""}
+            # print(result[0])
+            # print(result[4])
+            # print(result[11])
+            # print(result[16])
+            # print(result[5])
+            inner = {"_source":{"title":"","extend":"","tags":"","url":""},"_id":""}
+            print(inner)
             inner["_source"]["title"] = result[5]
             inner["_source"]["extend"] = result[16]
             inner["_source"]["tags"] = result[11]
