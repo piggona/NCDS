@@ -31,20 +31,18 @@ class mysql_search:
 
     def search_for_all(self):
         res = {"hits":{"hits":[]}}
-        try:
-            self.cursor.execute(self.basic_query)
-            results = self.cursor.fetchall()
-            print(results)
-            for result in results:
-                inner = {"_source":{},"_id":""}
-                inner["_source"]["title"] = result[5]
-                inner["_source"]["extend"] = result[16]
-                inner["_source"]["tags"] = result[11]
-                inner["_source"]["url"] = result[4]
-                inner["_id"] = result[0]
-                res["hits"]["hits"].append(inner)
-            self.cursor.close()
-            self.conn.close()
-            return res
-        except Exception as e:
-            print(e)
+
+        self.cursor.execute(self.basic_query)
+        results = self.cursor.fetchall()
+        print(results)
+        for result in results:
+            inner = {"_source":{},"_id":""}
+            inner["_source"]["title"] = result[5]
+            inner["_source"]["extend"] = result[16]
+            inner["_source"]["tags"] = result[11]
+            inner["_source"]["url"] = result[4]
+            inner["_id"] = result[0]
+            res["hits"]["hits"].append(inner)
+        self.cursor.close()
+        self.conn.close()
+        return res
