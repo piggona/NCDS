@@ -100,7 +100,7 @@ def validUsefulProxy(proxy):
     user_agent = 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/70.0.3538.110 Safari/537.36'
     try:
         # 超过20秒的代理就不要了
-        r = requests.get('http://www.google.com.hk/', proxies=proxies, timeout=10, verify=False)
+        r = requests.get('http://www.google.com.hk/', proxies=proxies, timeout=20, verify=False)
         if r.status_code == 200:
             # logger.info('%s is ok' % proxy)
             return True
