@@ -61,7 +61,7 @@ class GetFreeProxy(object):
         """
         url_list = [
             'http://www.data5u.com/',
-            'http://www.data5u.com/free/gngn/index.shtml',
+            'http://www.data5u.com/free/gwgn/index.shtml',
             'http://www.data5u.com/free/gnpt/index.shtml'
         ]
         for url in url_list:
@@ -82,7 +82,7 @@ class GetFreeProxy(object):
         :return:
         """
         area = 33 if area > 33 else area
-        for area_index in range(1, area + 1):
+        for area_index in range(32, area + 1):
             for i in range(1, page + 1):
                 url = "http://www.66ip.cn/areaindex_{}/{}.html".format(area_index, i)
                 html_tree = getHtmlTree(url)
