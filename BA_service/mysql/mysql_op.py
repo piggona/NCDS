@@ -47,7 +47,7 @@ class mysql_search:
             inner["_id"] = result[0]
             # print(inner)
             res["hits"]["hits"].append(inner)
-        print(res)
+        # print(res)
         self.cursor.close()
         self.conn.close()
         return res
