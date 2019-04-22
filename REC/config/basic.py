@@ -3,6 +3,7 @@ import datetime
 
 oneday = datetime.timedelta(days=1)
 DEFAULT_TIME_RANGE = 172800
+CONNECTION_MODE = "ssh"
 
 TMP_DB = "dp_bi"
 TMP_CTR_DB = "database_ctr"
@@ -18,3 +19,8 @@ ONLINE_DB_HOST = 'rm-2zeg7277v9fkmj3bi.mysql.rds.aliyuncs.com'
 ONLINE_DB_PORT = 3306
 ONLINE_DB_USER = 'information'
 ONLINE_DB_PSWD = 'Infor0110'
+
+SSH_USER_NAME = 'root'
+SSH_PEM_PATH = '/Users/haohao/.ssh/ceshi.pem'
+SSH_IP = '123.56.223.206'
+SSH_PORT = 22
