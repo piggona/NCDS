@@ -11,8 +11,6 @@ import numpy as np
 from REC.utils.frame import *
 from REC.logs.logger import *
 
-logger = get_logger()
-
 '''
 @param source dataFrame from data_market
 @param sep_point seperate rank Series
