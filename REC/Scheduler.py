@@ -11,7 +11,7 @@ import pandas as pd
 from sklearn.datasets.base import Bunch
 
 from REC.config.basic import *
-from REC.data_market.SimpleData import *
+from REC.data_market.SimpleData import fetch_data
 from REC.data_handling.AdditionalVector import handle_source, handle_bias_format, handle_channel_source_bias, handle_channel_bias
 from REC.utils.frame import *
 from REC.logs.logger import *
@@ -80,6 +80,7 @@ class Scheduler:
     def get_page(self):
         info_log("Source_Channel Starts...")
         info_log("Format Data...")
+        print(self.SimpleData.fetch_bias_data())
         source = self.SimpleData.fetch_bias_data()
         print("format: ".format(source))
         pre = handle_bias_format(source)
