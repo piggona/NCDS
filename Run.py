@@ -77,12 +77,12 @@ def rec_generator():
 
     pool = multiprocessing.Pool(processes=1)
     
-    # pool.apply_async(Sc.get_special_vec)
+    pool.apply_async(Sc.get_special_vec)
     pool.apply_async(Sc.online_output)
     pool.close()
     pool.join()
     print("进程结束")
     
 if __name__ == "__main__":
-    # rec_run()
-    rec_generator()
+    rec_run()
+    # rec_generator()

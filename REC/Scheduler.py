@@ -57,6 +57,7 @@ class Scheduler:
     
     def online_output(self):
         while True:
+            print("启动筛选器...")
             try:
                 info_log("online_output...")
                 self.OnlineOutput.connect_sql(CONNECTION_MODE)
@@ -65,6 +66,7 @@ class Scheduler:
             except Exception as e:
                 print(e)
                 error_log(e)
+            print("等待30min...")
             time.sleep(1800)
 
     def get_source_vec(self):
@@ -79,7 +81,7 @@ class Scheduler:
         info_log("Source_Channel Starts...")
         info_log("Format Data...")
         source = self.SimpleData.fetch_bias_data()
-        print(source)
+        print("format: ".format(source))
         pre = handle_bias_format(source)
         self.page = pre
         info_log("get_page OK!")
