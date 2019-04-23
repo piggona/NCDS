@@ -82,7 +82,7 @@ class fetch_data:
         print("  ")
         print("  ")
   
-    @isConn
+    @isConn()
     def fetch_source_data(self):
         info_log("获取关于作者数据...(四天内）")
         self.conn.ping(reconnect=True)
@@ -93,7 +93,7 @@ class fetch_data:
         source_dataframe = pd.read_sql(sql,self.conn)
         return source_dataframe
 
-    @isConn
+    @isConn()
     def fetch_bias_data(self):
         info_log("获取article_ctr_all特殊向量的数据...（四天内）")
         self.conn.ping(reconnect=True)

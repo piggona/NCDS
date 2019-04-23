@@ -85,7 +85,7 @@ class Scheduler:
     def kill_conn(self):
         self.SimpleData.kill_conn()
 
-    @isPageGot
+    @isPageGot()
     def get_source_channel_vec(self):
         info_log("Gets Source_Channel Vec...")
         vec_result = handle_channel_source_bias(self.page)
@@ -93,7 +93,7 @@ class Scheduler:
         self.SpecialVec.source_channel_neg = vec_result["negative"]
         info_log("Gets Source_Channel Vec OK!")
     
-    @isPageGot
+    @isPageGot()
     def get_channel_vec(self):
         info_log("Gets Channel Vec...")
         vec_result = handle_channel_bias(self.page)

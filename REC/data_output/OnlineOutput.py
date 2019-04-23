@@ -86,7 +86,7 @@ class OnlineOutput:
     '''
     需要添加是否connect_sql
     '''
-    @isConn
+    @isConn()
     def put_work(self):
         info_log("put on online work...")
         self.get_bunch()
@@ -107,7 +107,7 @@ class OnlineOutput:
     '''
     取一个小时的新文章数据
     '''
-    @isConn
+    @isConn()
     def get_article(self):
         info_log("get_article")
         sql = """
@@ -133,7 +133,7 @@ class OnlineOutput:
         af.apply(lambda row: get_neg_channel(row['category'],row['id'],channel_neg),axis=1)
         info_log("vector_manager OK!")
     
-    @isConn
+    @isConn()
     def put_weight(self):
         info_log("put_weight")
         # print(result_neg)
