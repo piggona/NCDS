@@ -70,8 +70,8 @@ def rec_run():
     Sc.online_output()
     # Sc.kill_conn()
 
-def rec_generator(self):
-    print("rec信息源清洗工具启动")
+def rec_generator():
+    print("rec信息源清洗工具启动-多进程")
     Sc = Scheduler()
 
     pool = multiprocessing.Pool(processes=2)
@@ -83,4 +83,4 @@ def rec_generator(self):
     print("进程结束")
     
 if __name__ == "__main__":
-    rec_run()
+    rec_generator()

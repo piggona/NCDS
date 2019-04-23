@@ -135,7 +135,6 @@ class OnlineOutput:
             sql = """
             UPDATE infomation.article_resource SET weight = 100,update_time = '{0}' WHERE id = '{1}';
             """.format(now,item)
-            print(sql)
             self.cursor_online.execute(sql)
             self.conn_online.commit()
         for item in result_neg:
