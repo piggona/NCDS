@@ -84,5 +84,5 @@ def rec_generator():
     print("进程结束")
     
 if __name__ == "__main__":
-    rec_run()
-    # rec_generator()
+    # rec_run()
+    rec_generator()

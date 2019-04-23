@@ -81,7 +81,7 @@ class Scheduler:
         info_log("Source_Channel Starts...")
         info_log("Format Data...")
         page_source = self.SimpleData.fetch_bias_data()
-        print("format: {}".format(page_source))
+        # print("format: {}".format(page_source))
         pre = handle_bias_format(page_source)
         self.page = pre
         info_log("get_page OK!")
