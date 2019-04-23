@@ -80,10 +80,9 @@ class Scheduler:
     def get_page(self):
         info_log("Source_Channel Starts...")
         info_log("Format Data...")
-        print(self.SimpleData.fetch_bias_data())
-        source = self.SimpleData.fetch_bias_data()
-        print("format: ".format(source))
-        pre = handle_bias_format(source)
+        page_source = self.SimpleData.fetch_bias_data()
+        print("format: ".format(page_source))
+        pre = handle_bias_format(page_source)
         self.page = pre
         info_log("get_page OK!")
         self.isPageGot = True
