@@ -103,8 +103,9 @@ class fetch_data:
         """
         source_detail = pd.read_sql(sql,self.conn)
         print(source_detail)
+        print("fetch_bias_data OK!")
         info_log("fetch_bias_data OK!")
-        return source_detail
+        return "fetch_bias_data OK!"
 
     '''
     method为block则分块进行yield bunch
