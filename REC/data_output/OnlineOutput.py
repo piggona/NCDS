@@ -90,15 +90,15 @@ class OnlineOutput:
         self.vector_manager()
         self.put_weight()
         self.kill_conn()
-        info_log("OK!")
+        info_log("put_work OK!")
 
     def get_bunch(self):
         info_log("get_bunch")
         path = os.getcwd() + '/REC/static/specialVec.dat'
         self.SpecialVec = _read_bunch(path)
-        print(self.SpecialVec.channel_pos)
-        print(self.SpecialVec.channel_neg)
-        info_log("OK!")
+        info_log(self.SpecialVec.channel_pos)
+        info_log(self.SpecialVec.channel_neg)
+        info_log("get_bunch OK!")
     
     '''
     取一个小时的新文章数据
@@ -109,7 +109,7 @@ class OnlineOutput:
         SELECT id,site_id,title,category,tags,extend-> '$.source' AS source FROM infomation.article_resource WHERE create_time> (UNIX_TIMESTAMP(NOW())-1800)
         """
         self.article_frame = pd.read_sql(sql,self.conn_online)
-        info_log("OK!")
+        info_log("get_article OK!")
         
     def kill_conn(self):
         self.cursor.close()
@@ -124,23 +124,25 @@ class OnlineOutput:
         channel_neg = self.SpecialVec.channel_neg
         af.apply(lambda row: get_pos_channel(row['category'],row['id'],channel_pos),axis=1)
         af.apply(lambda row: get_neg_channel(row['category'],row['id'],channel_neg),axis=1)
-        info_log("OK!")
+        info_log("vector_manager OK!")
     
     def put_weight(self):
         info_log("put_weight")
-        print(result_neg)
-        print(result_pos)
-        for item in result_pos:
+        # print(result_neg)
+        # print(result_pos)
+        now = int(time.time())
+        for item in result_pos:  
             sql = """
-            UPDATE article_resource SET weight = 100,update_time = UNIX_TIMESTAMP(NOW()) WHERE id = '{}';
-            """.format(item)
+            UPDATE infomation.article_resource SET weight = 100,update_time = '{0}' WHERE id = '{1}';
+            """.format(now,item)
             self.cursor_online.execute(sql)
         for item in result_neg:
             sql = """
-            UPDATE article_resource SET weight = 1,update_time = UNIX_TIMESTAMP(NOW()) WHERE id = '{}';
-            """.format(item)
+            UPDATE infomation.article_resource SET weight = 1,update_time = '{0}' WHERE id = '{1}';
+            """.format(now,item)
             self.cursor_online.execute(sql)
-        info_log("OK!")
+        info_log("put time: "+str(now))
+        info_log("put_weight OK!")
     
 
         

@@ -22,7 +22,7 @@ structure: 清洗
 class fetch_data:
 
     def __init__(self):
-        print("fetch_data...")
+        pass
     
     def connect_sql(self,mode="local"):
         if mode == "local":

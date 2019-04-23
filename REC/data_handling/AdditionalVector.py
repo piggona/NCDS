@@ -36,6 +36,7 @@ def handle_source(source,sep_point=20):
         return result
     except Exception as e:
         print(e)
+        error_log(e)
 
 def handle_bias_format(source_detail):
     try:
@@ -50,6 +51,7 @@ def handle_bias_format(source_detail):
         return page
     except Exception as e:
         print(e)
+        error_log(e)
 
 def handle_channel_bias(page):
     try:
@@ -140,6 +142,7 @@ def handle_channel_bias(page):
         
     except Exception as e:
         print(e)
+        error_log(e)
 
 def calculate_ctr(page):
     ctr = page['点击数'].sum()/page['曝光数'].sum()
