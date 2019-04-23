@@ -40,6 +40,8 @@ class Scheduler:
     def get_special_vec(self):
         path = os.getcwd() + "/REC/static/specialVec.dat"
         while True:
+            print("启动模型...")
+            info_log("启动模型...")
             try:
                 info_log("get_special_vec...")
                 self.SimpleData.connect_sql(CONNECTION_MODE)
@@ -53,11 +55,14 @@ class Scheduler:
             except Exception as e:
                 print(e)
                 error_log(e)
+            print("等待1day...")
+            info_log("等待1day...")
             time.sleep(86400)
     
     def online_output(self):
         while True:
             print("启动筛选器...")
+            info_log("启动筛选器...")
             try:
                 info_log("online_output...")
                 self.OnlineOutput.connect_sql(CONNECTION_MODE)
@@ -67,6 +72,7 @@ class Scheduler:
                 print(e)
                 error_log(e)
             print("等待30min...")
+            info_log("等待30min...")
             time.sleep(1800)
 
     def get_source_vec(self):

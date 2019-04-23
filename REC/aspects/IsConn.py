@@ -12,3 +12,12 @@ def isConn():
             return func(self,*args,**kwargs)
         return __isConn
     return _isConn
+
+def isConn_no():
+    def _isConn_no(func):
+        def __isConn_no(self,*args,**kwargs):
+            if self.is_conn == False:
+                self.connect_sql(CONNECTION_MODE)
+            func(self,*args,**kwargs)
+        return __isConn_no
+    return _isConn_no
