@@ -46,7 +46,7 @@ class Scheduler:
                 self.get_channel_vec()
                 _writebunchobj(path,self.SpecialVec)
                 self.kill_conn()
-                info_log("OK!")
+                info_log("get_special_vec OK!")
             except Exception as e:
                 print(e)
                 error_log(e)
@@ -58,7 +58,7 @@ class Scheduler:
                 info_log("online_output...")
                 self.OnlineOutput.connect_sql(CONNECTION_MODE)
                 self.OnlineOutput.put_work()
-                info_log("OK!")
+                info_log("online_output OK!")
             except Exception as e:
                 print(e)
                 error_log(e)
@@ -70,7 +70,7 @@ class Scheduler:
         vec_result = handle_source(source)
         self.SpecialVec.source_pos = vec_result["positive"]
         self.SpecialVec.source_neg = vec_result["negative"]
-        info_log("OK!")
+        info_log("get_source_vec OK!")
 
     def get_page(self):
         info_log("Source_Channel Starts...")
@@ -78,7 +78,7 @@ class Scheduler:
         source = self.SimpleData.fetch_bias_data()
         pre = handle_bias_format(source)
         self.page = pre
-        info_log("OK!")
+        info_log("get_page OK!")
     
     def kill_conn(self):
         self.SimpleData.kill_conn()
@@ -89,11 +89,11 @@ class Scheduler:
         vec_result = handle_channel_source_bias(self.page)
         self.SpecialVec.source_channel_pos = vec_result["positive"]
         self.SpecialVec.source_channel_neg = vec_result["negative"]
-        info_log("OK!")
+        info_log("Gets Source_Channel Vec OK!")
     
     def get_channel_vec(self):
         info_log("Gets Channel Vec...")
         vec_result = handle_channel_bias(self.page)
         self.SpecialVec.channel_pos = vec_result["positive"]
         self.SpecialVec.channel_neg = vec_result["negative"]
-        info_log("OK!")
+        info_log("Gets Channel Vec OK!")
