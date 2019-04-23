@@ -91,6 +91,7 @@ class fetch_data:
         SELECT extend-> "$.source" AS source,count(*) as article_count,sum(CASE WHEN expose_num !='' THEN expose_num ELSE 0 END) AS expose_num,sum(CASE WHEN click_num !='' THEN click_num ELSE 0 END) AS click_num,sum(CASE WHEN click_num !='' THEN click_num ELSE 0 END)/sum(CASE WHEN expose_num !='' THEN expose_num ELSE 0 END) AS source_ctr FROM article_ctr_all WHERE date_sub(CURDATE(),INTERVAL 4 DAY) <= DATE(dat) GROUP BY source ORDER BY source_ctr DESC) AS a WHERE a.source_ctr>=0 and a.source_ctr<=1;
         """
         source_dataframe = pd.read_sql(sql,self.conn)
+        info_log("fetch_source_data OK!")
         return source_dataframe
 
     @isConn()
@@ -101,6 +102,8 @@ class fetch_data:
         SELECT pt,item_id,expose_num,click_num,ctr,title,tags,extend->"$.source" AS source,dat,url,category FROM article_ctr_all WHERE date_sub(CURDATE(),INTERVAL 4 DAY) <= DATE(dat);
         """
         source_detail = pd.read_sql(sql,self.conn)
+        print(source_detail)
+        info_log("fetch_bias_data OK!")
         return source_detail
 
     '''

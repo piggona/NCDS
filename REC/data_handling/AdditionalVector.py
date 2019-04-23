@@ -165,6 +165,7 @@ def handle_channel_source_bias(page):
         return result
     except Exception as e:
         print(e)
+        error_log(e)
 def every_channel_top(x,channel_writer_bias_all):
     q = '频道 == "'+ x + '"'
     # print(q)
