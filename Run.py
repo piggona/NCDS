@@ -67,7 +67,8 @@ def rec_run():
     # print(Sc_bunch.source_channel_neg)
     # print("频道")
     # print(Sc_bunch.channel_neg)
-    Sc.online_output()
+    Sc.get_special_vec()
+    # Sc.online_output()
     # Sc.kill_conn()
 
 def rec_generator():
@@ -83,4 +84,5 @@ def rec_generator():
     print("进程结束")
     
 if __name__ == "__main__":
+    rec_run()
     rec_generator()
