@@ -11,7 +11,7 @@ import pandas as pd
 from sklearn.datasets.base import Bunch
 
 from REC.config.basic import *
-from REC.data_market.SimpleData import fetch_data
+from REC.data_market.SimpleData import *
 from REC.data_handling.AdditionalVector import handle_source, handle_bias_format, handle_channel_source_bias, handle_channel_bias
 from REC.utils.frame import *
 from REC.logs.logger import *

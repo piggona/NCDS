@@ -21,7 +21,6 @@ structure: 清洗
 @output: dataFrame
 '''
 class fetch_data:
-
     def __init__(self):
         self.is_conn = False
     
