@@ -35,6 +35,7 @@ class Scheduler:
         self.SpecialVec = Bunch(source_pos=np.array([1, 2, 3]), source_neg=np.array(
             [1, 2, 3]), source_channel_pos=[], source_channel_neg=[], channel_pos=np.array([1, 2, 3]), channel_neg=np.array([1, 2, 3]))
         self.page = ""
+        self.isPageGot = False
     
     def get_special_vec(self):
         path = os.getcwd() + "/REC/static/specialVec.dat"
@@ -81,6 +82,7 @@ class Scheduler:
         pre = handle_bias_format(source)
         self.page = pre
         info_log("get_page OK!")
+        self.isPageGot = True
     
     def kill_conn(self):
         self.SimpleData.kill_conn()

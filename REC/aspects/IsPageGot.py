@@ -5,10 +5,10 @@
 from REC.config.basic import *
 
 def isPageGot():
-    def _isConn(func):
-        def __isConn(self,*args,**kwargs):
-            if self.is_conn == False:
-                self.connect_sql(CONNECTION_MODE)
+    def _isPageGot(func):
+        def __isPageGot(self,*args,**kwargs):
+            if self.isPageGot == False:
+                self.get_page()
             func(self,*args,**kwargs)
-        return __table_is_exists
-    return _table_is_exists 
+        return __isPageGot
+    return _isPageGot

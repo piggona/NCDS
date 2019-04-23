@@ -10,5 +10,5 @@ def isConn():
             if self.is_conn == False:
                 self.connect_sql(CONNECTION_MODE)
             func(self,*args,**kwargs)
-        return __table_is_exists
-    return _table_is_exists 
+        return __isConn
+    return _isConn
