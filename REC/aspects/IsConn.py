@@ -4,7 +4,7 @@
 
 from REC.config.basic import *
 
-def isPageGot():
+def isConn():
     def _isConn(func):
         def __isConn(self,*args,**kwargs):
             if self.is_conn == False:

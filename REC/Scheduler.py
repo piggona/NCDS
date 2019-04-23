@@ -16,6 +16,8 @@ from REC.data_handling.AdditionalVector import handle_source, handle_bias_format
 from REC.utils.frame import *
 from REC.logs.logger import *
 from REC.data_output.OnlineOutput import *
+from REC.aspects.IsConn import *
+from REC.aspects.IsPageGot import *
 
 def _writebunchobj(path, bunchobj):
     with open(path, "wb") as f:
@@ -83,7 +85,7 @@ class Scheduler:
     def kill_conn(self):
         self.SimpleData.kill_conn()
 
-    # @is_got_page
+    @isPageGot
     def get_source_channel_vec(self):
         info_log("Gets Source_Channel Vec...")
         vec_result = handle_channel_source_bias(self.page)
@@ -91,6 +93,7 @@ class Scheduler:
         self.SpecialVec.source_channel_neg = vec_result["negative"]
         info_log("Gets Source_Channel Vec OK!")
     
+    @isPageGot
     def get_channel_vec(self):
         info_log("Gets Channel Vec...")
         vec_result = handle_channel_bias(self.page)

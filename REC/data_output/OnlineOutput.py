@@ -14,6 +14,7 @@ from sklearn.datasets.base import Bunch
 
 from REC.config.basic import *
 from REC.logs.logger import *
+from REC.aspects.IsConn import *
 
 result_pos = []
 result_neg = []
@@ -37,6 +38,7 @@ class OnlineOutput:
         self.article_frame = ""
         self.SpecialVec = Bunch(source_pos=np.array([1, 2, 3]), source_neg=np.array(
             [1, 2, 3]), source_channel_pos=[], source_channel_neg=[], channel_pos=np.array([1, 2, 3]), channel_neg=np.array([1, 2, 3]))
+        self.is_conn = False
 
     def connect_sql(self,mode="local"):
         if mode == "local":
@@ -79,10 +81,12 @@ class OnlineOutput:
                     port=server.local_bind_port)
             self.cursor_online =self.conn_online.cursor()
         info_log("连接到mysql")
+        self.is_conn = True
 
     '''
     需要添加是否connect_sql
     '''
+    @isConn
     def put_work(self):
         info_log("put on online work...")
         self.get_bunch()
@@ -103,6 +107,7 @@ class OnlineOutput:
     '''
     取一个小时的新文章数据
     '''
+    @isConn
     def get_article(self):
         info_log("get_article")
         sql = """
@@ -116,6 +121,8 @@ class OnlineOutput:
         self.cursor_online.close()
         self.conn.close()
         self.conn_online.close()
+        print("数据库连接断开...")
+        self.is_conn = False
     
     def vector_manager(self):
         info_log("vector_manager")
@@ -126,6 +133,7 @@ class OnlineOutput:
         af.apply(lambda row: get_neg_channel(row['category'],row['id'],channel_neg),axis=1)
         info_log("vector_manager OK!")
     
+    @isConn
     def put_weight(self):
         info_log("put_weight")
         # print(result_neg)

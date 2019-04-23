@@ -10,6 +10,7 @@ import pandas as pd
 
 from REC.config.basic import *
 from REC.logs.logger import *
+from REC.aspects.IsConn import *
 
 
 '''
@@ -22,7 +23,7 @@ structure: 清洗
 class fetch_data:
 
     def __init__(self):
-        pass
+        self.is_conn = False
     
     def connect_sql(self,mode="local"):
         if mode == "local":
@@ -64,12 +65,14 @@ class fetch_data:
                     port=server.local_bind_port)
             self.cursor_online =self.conn_online.cursor()
         info_log("连接到mysql")
+        self.is_conn = True
 
     def kill_conn(self):
         self.cursor.close()
         self.cursor_online.close()
         self.conn.close()
         self.conn_online.close()
+        self.is_conn = False
         
 
     def frame(self,content):
@@ -79,6 +82,7 @@ class fetch_data:
         print("  ")
         print("  ")
   
+    @isConn
     def fetch_source_data(self):
         info_log("获取关于作者数据...(四天内）")
         self.conn.ping(reconnect=True)
@@ -89,6 +93,7 @@ class fetch_data:
         source_dataframe = pd.read_sql(sql,self.conn)
         return source_dataframe
 
+    @isConn
     def fetch_bias_data(self):
         info_log("获取article_ctr_all特殊向量的数据...（四天内）")
         self.conn.ping(reconnect=True)
