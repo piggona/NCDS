@@ -102,7 +102,6 @@ class fetch_data:
         SELECT pt,item_id,expose_num,click_num,ctr,title,tags,extend->"$.source" AS source,dat,url,category FROM article_ctr_all WHERE date_sub(CURDATE(),INTERVAL 4 DAY) <= DATE(dat);
         """
         source_detail = pd.read_sql(sql,self.conn)
-        print(source_detail)
         info_log("fetch_bias_data OK!")
         return source_detail
 
