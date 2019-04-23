@@ -67,7 +67,7 @@ def rec_run():
     # print(Sc_bunch.source_channel_neg)
     # print("频道")
     # print(Sc_bunch.channel_neg)
-    Sc.get_special_vec()
+    Sc.get_page()
     # Sc.online_output()
     # Sc.kill_conn()
 
