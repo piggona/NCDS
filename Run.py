@@ -68,8 +68,19 @@ def rec_run():
     # print("频道")
     # print(Sc_bunch.channel_neg)
     Sc.online_output()
-
     # Sc.kill_conn()
+
+def rec_generator(self):
+    print("rec信息源清洗工具启动")
+    Sc = Scheduler()
+
+    pool = multiprocessing.Pool(processes=10)
+    
+    pool.apply_async(Sc.get_special_vec)
+    pool.apply_async(Sc.online_output)
+    pool.close()
+    pool.join()
+    print("进程结束")
     
 if __name__ == "__main__":
     rec_run()

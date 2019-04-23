@@ -5,6 +5,7 @@
 import os
 import time
 import pickle
+import multiprocessing
 import numpy as np
 import pandas as pd
 from sklearn.datasets.base import Bunch
@@ -31,15 +32,31 @@ class Scheduler:
     
     def get_special_vec(self):
         path = os.getcwd() + "/REC/static/specialVec.dat"
-        self.get_page()
-        self.get_source_vec()
-        self.get_source_channel_vec()
-        self.get_channel_vec()
-        _writebunchobj(path,self.SpecialVec)
-        self.kill_conn()
+        while True:
+            try:
+                info_log("get_special_vec...")
+                self.get_page()
+                self.get_source_vec()
+                self.get_source_channel_vec()
+                self.get_channel_vec()
+                _writebunchobj(path,self.SpecialVec)
+                self.kill_conn()
+                info_log("OK!")
+            except Exception as e:
+                print(e)
+                error_log(e)
+            time.sleep(86400)
     
     def online_output(self):
-        self.OnlineOutput.put_work()
+        while True:
+            try:
+                info_log("online_output...")
+                self.OnlineOutput.put_work()
+                info_log("OK!")
+            except Exception as e:
+                print(e)
+                error_log(e)
+            time.sleep(1800)
 
     def get_source_vec(self):
         info_log("Source Starts...")

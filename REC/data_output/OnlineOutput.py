@@ -7,6 +7,7 @@ import pymysql
 from sshtunnel import SSHTunnelForwarder
 import time
 import pickle
+import multiprocessing
 import pandas as pd
 import numpy as np
 from sklearn.datasets.base import Bunch
@@ -57,16 +58,18 @@ class OnlineOutput:
                     db=TMP_DB,
                     port=server.local_bind_port)
             self.cursor =self.conn.cursor()
+            # self.conn_online = pymysql.connect(
+            #     host=ONLINE_DB_HOST, port=ONLINE_DB_PORT, user=ONLINE_DB_USER, db=ONLINE_DB, passwd=ONLINE_DB_PSWD)
             server_online = SSHTunnelForwarder(
                 ssh_address_or_host=(SSH_IP, SSH_PORT),  # 指定ssh登录的跳转机的address
                 ssh_username=SSH_USER_NAME,  # 跳转机的用户
                 ssh_pkey=SSH_PEM_PATH,  # 跳转机的密码
-                remote_bind_address=(ONLINE_DB_HOST, 3306))
+                remote_bind_address=('127.0.0.1', 3306))
             server.start()
             self.conn_online = pymysql.connect(
-                    user="fuyu",
-                    passwd="Sjfy0114!!",
-                    host="127.0.0.1",  # 此处必须是 127.0.0.1
+                    user=ONLINE_DB_USER,
+                    passwd=ONLINE_DB_PSWD,
+                    host=ONLINE_DB_HOST,  # 此处必须是 127.0.0.1
                     db=TMP_DB,
                     port=server.local_bind_port)
             self.cursor_online =self.conn_online.cursor()
@@ -133,5 +136,6 @@ class OnlineOutput:
             """.format(item)
             self.cursor_online.execute(sql)
         info_log("OK!")
+    
 
         
