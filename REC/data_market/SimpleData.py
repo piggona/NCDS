@@ -105,7 +105,8 @@ class fetch_data:
         # print(source_detail)
         print("fetch_bias_data OK!")
         info_log("fetch_bias_data OK!")
-        return "fetch_bias_data OK!"
+        word = "fetch_bias_data OK!"
+        return word
 
     '''
     method为block则分块进行yield bunch
