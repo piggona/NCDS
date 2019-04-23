@@ -9,6 +9,6 @@ def isPageGot():
         def __isPageGot(self,*args,**kwargs):
             if self.isPageGot == False:
                 self.get_page()
-            func(self,*args,**kwargs)
+            return func(self,*args,**kwargs)
         return __isPageGot
     return _isPageGot

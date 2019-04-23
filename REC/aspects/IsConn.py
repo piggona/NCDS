@@ -9,6 +9,6 @@ def isConn():
         def __isConn(self,*args,**kwargs):
             if self.is_conn == False:
                 self.connect_sql(CONNECTION_MODE)
-            func(self,*args,**kwargs)
+            return func(self,*args,**kwargs)
         return __isConn
     return _isConn

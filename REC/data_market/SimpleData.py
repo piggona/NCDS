@@ -94,7 +94,7 @@ class fetch_data:
         info_log("fetch_source_data OK!")
         return source_dataframe
 
-    # @isConn()
+    @isConn()
     def fetch_bias_data(self):
         info_log("获取article_ctr_all特殊向量的数据...（四天内）")
         self.conn.ping(reconnect=True)
@@ -105,8 +105,7 @@ class fetch_data:
         # print(source_detail)
         print("fetch_bias_data OK!")
         info_log("fetch_bias_data OK!")
-        word = "fetch_bias_data OK!"
-        return word
+        return source_detail
 
     '''
     method为block则分块进行yield bunch
