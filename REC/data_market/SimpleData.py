@@ -21,7 +21,10 @@ structure: 清洗
 '''
 class fetch_data:
 
-    def __init__(self,mode="local"):
+    def __init__(self):
+        print("fetch_data...")
+    
+    def connect_sql(self,mode="local"):
         if mode == "local":
             self.conn = pymysql.connect(
                 host=TMP_DB_HOST,
@@ -61,7 +64,7 @@ class fetch_data:
                     port=server.local_bind_port)
             self.cursor_online =self.conn_online.cursor()
         info_log("连接到mysql")
-    
+
     def kill_conn(self):
         self.cursor.close()
         self.cursor_online.close()

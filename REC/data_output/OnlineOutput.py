@@ -33,7 +33,12 @@ def get_neg_channel(a,b,channel_neg):
         result_neg.append(b)
 
 class OnlineOutput:
-    def __init__(self,mode="local"):
+    def __init__(self):
+        self.article_frame = ""
+        self.SpecialVec = Bunch(source_pos=np.array([1, 2, 3]), source_neg=np.array(
+            [1, 2, 3]), source_channel_pos=[], source_channel_neg=[], channel_pos=np.array([1, 2, 3]), channel_neg=np.array([1, 2, 3]))
+
+    def connect_sql(self,mode="local"):
         if mode == "local":
             self.conn = pymysql.connect(
                 host=TMP_DB_HOST,
@@ -74,10 +79,10 @@ class OnlineOutput:
                     port=server.local_bind_port)
             self.cursor_online =self.conn_online.cursor()
         info_log("连接到mysql")
-        self.article_frame = ""
-        self.SpecialVec = Bunch(source_pos=np.array([1, 2, 3]), source_neg=np.array(
-            [1, 2, 3]), source_channel_pos=[], source_channel_neg=[], channel_pos=np.array([1, 2, 3]), channel_neg=np.array([1, 2, 3]))
 
+    '''
+    需要添加是否connect_sql
+    '''
     def put_work(self):
         info_log("put on online work...")
         self.get_bunch()

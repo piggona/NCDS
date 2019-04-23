@@ -24,8 +24,12 @@ def _writebunchobj(path, bunchobj):
 class Scheduler:
     def __init__(self):
         frame("Welcome to REC")
-        self.SimpleData = fetch_data(CONNECTION_MODE)
-        self.OnlineOutput = OnlineOutput(CONNECTION_MODE)
+        print("开始初始化fetch_data...")
+        info_log("开始初始化fetch_data...")
+        self.SimpleData = fetch_data()
+        print("开始初始化OnlineOutput...")
+        info_log("开始初始化OnlineOutput...")
+        self.OnlineOutput = OnlineOutput()
         self.SpecialVec = Bunch(source_pos=np.array([1, 2, 3]), source_neg=np.array(
             [1, 2, 3]), source_channel_pos=[], source_channel_neg=[], channel_pos=np.array([1, 2, 3]), channel_neg=np.array([1, 2, 3]))
         self.page = ""
@@ -35,6 +39,7 @@ class Scheduler:
         while True:
             try:
                 info_log("get_special_vec...")
+                self.SimpleData.connect_sql(CONNECTION_MODE)
                 self.get_page()
                 self.get_source_vec()
                 self.get_source_channel_vec()
@@ -51,6 +56,7 @@ class Scheduler:
         while True:
             try:
                 info_log("online_output...")
+                self.OnlineOutput.connect_sql(CONNECTION_MODE)
                 self.OnlineOutput.put_work()
                 info_log("OK!")
             except Exception as e:
