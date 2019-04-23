@@ -75,14 +75,14 @@ def rec_generator():
     print("rec信息源清洗工具启动-多进程")
     Sc = Scheduler()
 
-    pool = multiprocessing.Pool(processes=2)
+    pool = multiprocessing.Pool(processes=1)
     
-    pool.apply_async(Sc.get_special_vec)
+    # pool.apply_async(Sc.get_special_vec)
     pool.apply_async(Sc.online_output)
     pool.close()
     pool.join()
     print("进程结束")
     
 if __name__ == "__main__":
-    rec_run()
-    # rec_generator()
+    # rec_run()
+    rec_generator()
