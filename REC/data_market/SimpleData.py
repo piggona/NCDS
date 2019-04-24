@@ -81,22 +81,25 @@ class fetch_data:
         print("-----------------")
         print("  ")
         print("  ")
-  
+
     @isConn()
     def fetch_source_data(self):
-        info_log("获取关于作者数据...(四天内）")
+        vec_info_log("获取关于作者数据...(四天内）")
         self.conn.ping(reconnect=True)
         sql = """
         SELECT*FROM (
         SELECT extend-> "$.source" AS source,count(*) as article_count,sum(CASE WHEN expose_num !='' THEN expose_num ELSE 0 END) AS expose_num,sum(CASE WHEN click_num !='' THEN click_num ELSE 0 END) AS click_num,sum(CASE WHEN click_num !='' THEN click_num ELSE 0 END)/sum(CASE WHEN expose_num !='' THEN expose_num ELSE 0 END) AS source_ctr FROM article_ctr_all WHERE date_sub(CURDATE(),INTERVAL 4 DAY) <= DATE(dat) GROUP BY source ORDER BY source_ctr DESC) AS a WHERE a.source_ctr>=0 and a.source_ctr<=1;
         """
         source_dataframe = pd.read_sql(sql,self.conn)
-        info_log("fetch_source_data OK!")
+        vec_info_log("fetch_source_data OK!")
         return source_dataframe
 
+    '''
+    获取source_detail.
+    '''
     @isConn()
     def fetch_bias_data(self):
-        info_log("获取article_ctr_all特殊向量的数据...（四天内）")
+        vec_info_log("获取article_ctr_all特殊向量的数据...（四天内）")
         self.conn.ping(reconnect=True)
         sql="""
         SELECT pt,item_id,expose_num,click_num,ctr,title,tags,extend->"$.source" AS source,dat,url,category FROM article_ctr_all WHERE date_sub(CURDATE(),INTERVAL 4 DAY) <= DATE(dat);
@@ -104,8 +107,14 @@ class fetch_data:
         source_detail = pd.read_sql(sql,self.conn)
         # print(source_detail)
         print("fetch_bias_data OK!")
-        info_log("fetch_bias_data OK!")
+        vec_info_log("fetch_bias_data OK!")
         return source_detail
+    
+    def fetch_text_data(self):
+        vec_info_log("获取article_ctr文章的数据...（四天内）")
+        self.conn.ping(reconnect=True)
+        sql = """
+        """
 
     '''
     method为block则分块进行yield bunch

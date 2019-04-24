@@ -15,23 +15,7 @@ from sklearn.datasets.base import Bunch
 from REC.config.basic import *
 from REC.logs.logger import *
 from REC.aspects.IsConn import *
-
-result_pos = []
-result_neg = []
-
-def _read_bunch(path):
-    with open(path, "rb") as f:
-        content = pickle.load(f)
-    f.close()
-    return content
-
-def get_pos_channel(a,b,channel_pos):
-    if str(a) in channel_pos:
-        result_pos.append(b)
-
-def get_neg_channel(a,b,channel_neg):
-    if str(a) in channel_neg:
-        result_neg.append(b)
+from REC.aspects.IsArticleGot import *
 
 class OnlineOutput:
     def __init__(self):
@@ -39,6 +23,7 @@ class OnlineOutput:
         self.SpecialVec = Bunch(source_pos=np.array([1, 2, 3]), source_neg=np.array(
             [1, 2, 3]), source_channel_pos=[], source_channel_neg=[], channel_pos=np.array([1, 2, 3]), channel_neg=np.array([1, 2, 3]))
         self.is_conn = False
+        self.is_article = False
 
     def connect_sql(self,mode="local"):
         if mode == "local":
@@ -87,22 +72,12 @@ class OnlineOutput:
     需要添加是否connect_sql
     '''
     @isConn_no()
-    def put_work(self):
+    def put_work(self,result_vec):
         info_log("put on online work...")
-        self.get_bunch()
-        self.get_article()
-        self.vector_manager()
+        self.vector_manager(result_vec)
         self.put_weight()
         self.kill_conn()
         info_log("put_work OK!")
-
-    def get_bunch(self):
-        info_log("get_bunch")
-        path = os.getcwd() + '/REC/static/specialVec.dat'
-        self.SpecialVec = _read_bunch(path)
-        info_log(self.SpecialVec.channel_pos)
-        info_log(self.SpecialVec.channel_neg)
-        info_log("get_bunch OK!")
     
     '''
     取一个小时的新文章数据
@@ -111,9 +86,11 @@ class OnlineOutput:
     def get_article(self):
         info_log("get_article")
         sql = """
-        SELECT id,site_id,title,category,tags,extend-> '$.source' AS source FROM infomation.article_resource WHERE create_time> (UNIX_TIMESTAMP(NOW())-1800)
+        SELECT id,site_id,title,category as channel,tags,extend-> '$.source' AS source FROM infomation.article_resource WHERE create_time> (UNIX_TIMESTAMP(NOW())-1800)
         """
-        self.article_frame = pd.read_sql(sql,self.conn_online)
+        article_frame = pd.read_sql(sql,self.conn_online)
+        self.is_article = True
+        return article_frame
         info_log("get_article OK!")
         
     def kill_conn(self):
@@ -124,13 +101,14 @@ class OnlineOutput:
         print("数据库连接断开...")
         self.is_conn = False
     
-    def vector_manager(self):
+    '''
+    !!!应当被放置到模型模块中，模型最终输出result_pos与result_neg
+    '''
+    @isArticleGot()
+    def vector_manager(self,result_vec):
         info_log("vector_manager")
-        af = self.article_frame
-        channel_pos = self.SpecialVec.channel_pos
-        channel_neg = self.SpecialVec.channel_neg
-        af.apply(lambda row: get_pos_channel(row['category'],row['id'],channel_pos),axis=1)
-        af.apply(lambda row: get_neg_channel(row['category'],row['id'],channel_neg),axis=1)
+        self.result_pos = result_vec['positive']
+        self.result_neg = result_vec['negative']
         info_log("vector_manager OK!")
     
     @isConn_no()
@@ -139,18 +117,20 @@ class OnlineOutput:
         # print(result_neg)
         # print(result_pos)
         now = int(time.time())
-        for item in result_pos:  
+        for item in self.result_pos:  
             sql = """
             UPDATE infomation.article_resource SET weight = 100,update_time = '{0}' WHERE id = '{1}';
             """.format(now,item)
             self.cursor_online.execute(sql)
             self.conn_online.commit()
-        for item in result_neg:
+        info_log("modified {} articles as positive.".format(len(self.result_pos)))
+        for item in self.result_neg:
             sql = """
             UPDATE infomation.article_resource SET weight = 1,update_time = '{0}' WHERE id = '{1}';
             """.format(now,item)
             self.cursor_online.execute(sql)
             self.conn_online.commit()
+        info_log("modified {} articles as negative.".format(len(self.result_neg)))
         info_log("put time: "+str(now))
         info_log("put_weight OK!")
     
