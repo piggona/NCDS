@@ -72,22 +72,22 @@ class Scheduler:
             time.sleep(TRAIN_SLEEP)
     
     def process_simple(self):
-        # while True:
-        print("启动筛选器...")
-        info_log("启动筛选器...")
-            # try:
-        info_log("online_output...")
-        refresh_data = self.OnlineOutput.get_article()
-        result_vec = self.Strategy.judge(refresh_data)
-        self.OnlineOutput.put_work(result_vec)
-        info_log("online_output OK!")
-            # except Exception as e:
-            #     print(e)
-            #     error_log("Scheduler-line86")
-            #     error_log(e)
-        print("等待30min...")
-        info_log("等待30min...")
-        time.sleep(PROCESS_SLEEP)
+        while True:
+            print("启动筛选器...")
+            info_log("启动筛选器...")
+            try:
+                info_log("online_output...")
+                refresh_data = self.OnlineOutput.get_article()
+                result_vec = self.Strategy.judge(refresh_data)
+                self.OnlineOutput.put_work(result_vec)
+                info_log("online_output OK!")
+            except Exception as e:
+                print(e)
+                error_log("Scheduler-line86")
+                error_log(e)
+            print("等待30min...")
+            info_log("等待30min...")
+            time.sleep(PROCESS_SLEEP)
 
     def kill_conn(self):
         self.SimpleData.kill_conn()
