@@ -126,7 +126,7 @@ def handle_channel_bias(page):
             channel_bias_sum['曝光数']
         channel_bias_all = channel_bias_sum.merge(channel_bias_count, on='频道')
         channel_bias_all = channel_bias_sum.merge(channel_bias_mean, on='频道')
-        channel_bias_all = channel_bias_all[~(channel_bias_all["频道"].str.contains("其它"))]
+        channel_bias_all = channel_bias_all[~(channel_bias_all["频道"].str.contains("9999"))]
         dec_all = channel_bias_all['real_ctr'].describe()
         upper_quantile = dec_all.values[4]
         lower_quantile = dec_all.values[6]
