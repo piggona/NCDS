@@ -117,7 +117,7 @@ class FusionVector:
         '''
         sp_vec = self.special_vec_generate(data)
         ar_vec = self.article_vec_generate(data)
-        pack_bunch = Bunch(sp_vec,ar_vec)
+        pack_bunch = Bunch(sp_vec=sp_vec,ar_vec=ar_vec)
         return pack_bunch
 
     def compose_vec(self):
