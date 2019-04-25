@@ -72,7 +72,7 @@ class FusionVector:
         path = os.getcwd()
         self.sp_vec_path = path + '/static/SpecialVec.dat'
         SpecialVec = getAdditionalVec(source, source_detail)
-        _writebunchobj(self.vec_path, SpecialVec)
+        _writebunchobj(self.sp_vec_path, SpecialVec)
         vec_info_log("vector training completed!")
 
     @isVecTrained()
