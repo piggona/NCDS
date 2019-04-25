@@ -10,6 +10,7 @@ import pickle
 from sklearn.datasets.base import Bunch
 import pandas as pd
 import numpy as np
+from datetime import *
 
 from REC.utils.frame import *
 from REC.logs.logger import *
@@ -26,6 +27,8 @@ def getAdditionalVec(source, source_detail):
         [1, 2, 3]), source_channel_pos=[], source_channel_neg=[], channel_pos=np.array([1, 2, 3]), channel_neg=np.array([1, 2, 3]))
     result_source = handle_source(source)
     page = handle_bias_format(source_detail)
+    vec_info_log("总体ctr:")
+    vec_info_log(calculate_ctr(page))
     channel_result = handle_channel_bias(page)
     channel_source_result = handle_channel_source_bias(page)
     SpecialVec.source_pos = result_source['positive']
@@ -44,6 +47,7 @@ def handle_source(source, sep_point=20):
     @param sep_point seperate rank Series
     '''
     try:
+        writer = pd.ExcelWriter(os.getcwd()+"/REC/static/files/"+str(date.today())+"-source.xlsx")
         source = source.query('expose_num > 100')
         source_head = source.query('source_ctr > 0.05')
         print("ctr统计量：")
@@ -63,6 +67,8 @@ def handle_source(source, sep_point=20):
         vec_info_log(source["expose_num"].describe())
         vec_info_log("click统计量：")
         vec_info_log("=========================")
+        source.to_excel(writer,'Sheet1')
+        writer.save()
 
         row_num = source_head.size / 5
         sep = int(row_num * (sep_point/100))
@@ -82,6 +88,7 @@ def handle_bias_format(source_detail):
     @return page Preprocessed data.
     '''
     try:
+        writer = pd.ExcelWriter(os.getcwd()+"/REC/static/files/"+str(date.today())+"-page.xlsx")
         vec_info_log("是否存在空值")
         print(source_detail.isnull().any())
         vec_info_log(source_detail.isnull().any())
@@ -92,6 +99,8 @@ def handle_bias_format(source_detail):
         page = source_detail.rename(columns={"pt": "日期", "item_id": "文章ID", "expose_num": "曝光数", "click_num": "点击数",
                                              "ctr": "CTR", "title": "文章标题", "tags": "标签", "source": "作者", "url": "URL", "dat": "文章创建日期", "category": "频道"})
         page = page.fillna(0)
+        page.to_excel(writer,'Sheet1')
+        writer.save()
         return page
     except Exception as e:
         print(e)
@@ -105,6 +114,7 @@ def handle_channel_bias(page):
     @return channel_result_vec
     '''
     try:
+        writer = pd.ExcelWriter(os.getcwd()+"/REC/static/files/"+str(date.today())+"-channel.xlsx")
         vec_info_log("整合数据")
         channel_bias_sum = page[['曝光数', '点击数', '频道']
                                 ].groupby(['频道'], as_index=False).sum()
@@ -116,6 +126,7 @@ def handle_channel_bias(page):
             channel_bias_sum['曝光数']
         channel_bias_all = channel_bias_sum.merge(channel_bias_count, on='频道')
         channel_bias_all = channel_bias_sum.merge(channel_bias_mean, on='频道')
+        channel_bias_all = channel_bias_all[~(channel_bias_all["频道"].str.contains("其它"))]
         dec_all = channel_bias_all['real_ctr'].describe()
         upper_quantile = dec_all.values[4]
         lower_quantile = dec_all.values[6]
@@ -128,6 +139,17 @@ def handle_channel_bias(page):
             by='real_ctr', ascending=False)
         group3 = channel_bias_all.query('曝光数 > 20000').sort_values(
             by='real_ctr', ascending=False)
+        
+        channel_bias_all.to_excel(writer,'Sheet1')
+        group1.to_excel(writer,'Sheet2')
+        group2.to_excel(writer,'Sheet3')
+        group3.to_excel(writer,'Sheet4')
+        dec_all.to_excel(writer,'Sheet5')
+        group1['real_ctr'].describe().to_excel(writer,'Sheet6')
+        group2['real_ctr'].describe().to_excel(writer,'Sheet7')
+        group3['real_ctr'].describe().to_excel(writer,'Sheet8')
+        writer.save()
+
 
         vec_info_log("得到判别向量")
         # group1: 75%(下四分位数) > 总75% 则取75%以上的类为positive
@@ -238,6 +260,7 @@ def handle_channel_source_bias(page):
     @return channel_source_vec
     '''
     try:
+        writer = pd.ExcelWriter(os.getcwd()+"/REC/static/files/"+str(date.today())+"-channel-source.xlsx")
         channel_writer_bias_sum = page[['作者', '曝光数', '点击数', '频道']].groupby(
             ['作者', '频道'], as_index=False).sum()
         channel_writer_bias_count = page[['作者', '频道', 'CTR']].groupby(
@@ -251,6 +274,8 @@ def handle_channel_source_bias(page):
         channel_writer_bias_all = channel_writer_bias_sum.merge(
             channel_writer_bias_mean, on=['频道', '作者'])
         channel_writer_bias_all = channel_writer_bias_all.fillna(0)
+        channel_writer_bias_all.to_excel(writer,'Sheet1')
+        writer.save()
         channel_distinct = channel_writer_bias_all[['频道', '曝光数']].groupby(
             ['频道'], as_index=False).sum().sort_values(by='曝光数', ascending=False)
         channel_distinct['频道'].apply(
