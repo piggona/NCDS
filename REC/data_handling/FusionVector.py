@@ -73,6 +73,10 @@ class FusionVector:
         self.sp_vec_path = path + '/REC/static/SpecialVec.dat'
         SpecialVec = getAdditionalVec(source, source_detail)
         _writebunchobj(self.sp_vec_path, SpecialVec)
+        vec_info_log("生成的channel判别-positive：")
+        vec_info_log(SpecialVec.channel_pos)
+        vec_info_log("生成的channel判别-negative：")
+        vec_info_log(SpecialVec.channel_neg)
         vec_info_log("vector training completed!")
 
     @isVecTrained()

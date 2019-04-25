@@ -89,7 +89,8 @@ class OnlineOutput:
         SELECT id,site_id,title,category as channel,tags,extend-> '$.source' AS source FROM infomation.article_resource WHERE create_time> (UNIX_TIMESTAMP(NOW())-1800)
         """
         article_frame = pd.read_sql(sql,self.conn_online)
-        info_log(article_frame.size)
+        info_log("得到新文章数量：")
+        info_log(article_frame.size/6)
         self.is_article = True
         return article_frame
         info_log("get_article OK!")
