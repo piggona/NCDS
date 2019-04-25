@@ -13,6 +13,7 @@ from sklearn.datasets.base import Bunch
 from REC.config.basic import *
 from REC.utils.frame import *
 from REC.logs.logger import *
+from REC.aspects.IsStrategy import *
 
 from REC.data_market.SimpleData import FetchData
 from REC.data_output.OnlineOutput import OnlineOutput
