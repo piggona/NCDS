@@ -40,15 +40,14 @@ class Scheduler:
         self.page = ""
         self.isPageGot = False
     
-    def init_strategy(self,mode="Simple"):
+    def init_strategy(self,mode="simple"):
         '''
         Fetchs a model strategy.
         @param mode String Mode name
         '''
-        if mode == "Simple":
+        if mode == "simple":
             self.Strategy = SimpleStrategy(SIMPLE_MODEL_PATH)
 
-    @isStrategy()
     def train_simple(self):
         '''
         Trains model with data from data_market.
@@ -71,7 +70,6 @@ class Scheduler:
             vec_info_log("等待1day...")
             time.sleep(TRAIN_SLEEP)
     
-    @isStrategy()
     def process_simple(self):
         while True:
             print("启动筛选器...")

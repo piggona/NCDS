@@ -76,6 +76,8 @@ def rec_generator():
     Sc = Scheduler()
 
     pool = multiprocessing.Pool(processes=2)
+
+    Sc.init_strategy(mode="simple")
     
     pool.apply_async(Sc.train_simple)
     pool.apply_async(Sc.process_simple)
