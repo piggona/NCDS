@@ -44,6 +44,8 @@ def handle_source(source, sep_point=20):
     @param sep_point seperate rank Series
     '''
     try:
+        source = source.query('expose_num > 100')
+        source_head = source.query('source_ctr > 0.05')
         print("ctr统计量：")
         print("=========================")
         print(source["source_ctr"].describe())
@@ -53,8 +55,15 @@ def handle_source(source, sep_point=20):
         print("click统计量：")
         print("=========================")
 
-        source = source.query('expose_num > 100')
-        source_head = source.query('source_ctr > 0.05')
+        vec_info_log("ctr统计量：")
+        vec_info_log("=========================")
+        vec_info_log(source["source_ctr"].describe())
+        vec_info_log("expose统计量：")
+        vec_info_log("=========================")
+        vec_info_log(source["expose_num"].describe())
+        vec_info_log("click统计量：")
+        vec_info_log("=========================")
+
         row_num = source_head.size / 5
         sep = int(row_num * (sep_point/100))
         positive = source_head.head(sep)['source'].values
@@ -74,6 +83,7 @@ def handle_bias_format(source_detail):
     try:
         vec_info_log("是否存在空值")
         print(source_detail.isnull().any())
+        vec_info_log(source_detail.isnull().any())
 
         vec_info_log("整理标题")
         source_detail["url"] = source_detail["url"].apply(__url_to_source)

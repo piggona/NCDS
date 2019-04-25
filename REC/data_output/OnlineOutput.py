@@ -89,6 +89,7 @@ class OnlineOutput:
         SELECT id,site_id,title,category as channel,tags,extend-> '$.source' AS source FROM infomation.article_resource WHERE create_time> (UNIX_TIMESTAMP(NOW())-1800)
         """
         article_frame = pd.read_sql(sql,self.conn_online)
+        info_log(article_frame.size)
         self.is_article = True
         return article_frame
         info_log("get_article OK!")
@@ -120,14 +121,14 @@ class OnlineOutput:
             """.format(now,item)
             self.cursor_online.execute(sql)
             self.conn_online.commit()
-        info_log("modified {} articles as positive.".format(len(self.result_pos)))
+        info_log("modified {} articles as positive.".format(str(len(self.result_pos))))
         for item in self.result_neg:
             sql = """
             UPDATE infomation.article_resource SET weight = 1,update_time = '{0}' WHERE id = '{1}';
             """.format(now,item)
             self.cursor_online.execute(sql)
             self.conn_online.commit()
-        info_log("modified {} articles as negative.".format(len(self.result_neg)))
+        info_log("modified {} articles as negative.".format(str(len(self.result_neg))))
         info_log("put time: "+str(now))
         info_log("put_weight OK!")
     
