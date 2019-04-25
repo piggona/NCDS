@@ -79,7 +79,7 @@ class OnlineOutput:
         self.kill_conn()
         info_log("put_work OK!")
     
-    @isConn_no()
+    @isConn()
     def get_article(self):
         '''
         取一个小时的新文章数据
@@ -92,8 +92,8 @@ class OnlineOutput:
         info_log("得到新文章数量：")
         info_log(article_frame.size/6)
         self.is_article = True
-        return article_frame
         info_log("get_article OK!")
+        return article_frame
         
     def kill_conn(self):
         self.cursor.close()
