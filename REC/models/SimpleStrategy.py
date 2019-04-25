@@ -44,6 +44,8 @@ class SimpleStrategy:
         sp_vec = vec_bunch.sp_vec
         sp_vec.apply(lambda row: get_pos(row['channel'],row['source'],row['channelSource'],row['item_id']),axis=1)
         sp_vec.apply(lambda row: get_neg(row['channel'],row['source'],row['channelSource'],row['item_id']),axis=1)
+        info_log(result_pos)
+        info_log(result_neg)
         result = {"positive":result_pos,"negative":result_neg}
         return result
 
