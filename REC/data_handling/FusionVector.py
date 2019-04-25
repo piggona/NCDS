@@ -70,7 +70,7 @@ class FusionVector:
     def train_vec(self, source, source_detail, article_ctr):
         vec_info_log("training vector...")
         path = os.getcwd()
-        self.sp_vec_path = path + '/static/SpecialVec.dat'
+        self.sp_vec_path = path + '/REC/static/SpecialVec.dat'
         SpecialVec = getAdditionalVec(source, source_detail)
         _writebunchobj(self.sp_vec_path, SpecialVec)
         vec_info_log("vector training completed!")
