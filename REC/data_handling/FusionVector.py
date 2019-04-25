@@ -111,8 +111,8 @@ class FusionVector:
         打包为bunch向量输出.
         @return bunch_path
         '''
-        sp_vec = special_vec_generate(data)
-        ar_vec = article_vec_generate(data)
+        sp_vec = self.special_vec_generate(data)
+        ar_vec = self.article_vec_generate(data)
         pack_bunch = Bunch(sp_vec,ar_vec)
         return pack_bunch
 
