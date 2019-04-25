@@ -72,6 +72,7 @@ def handle_source(source, sep_point=20):
         return result
     except Exception as e:
         print(e)
+        error_log("AdditionalVector-line75")
         error_log(e)
 
 def handle_bias_format(source_detail):
@@ -94,6 +95,7 @@ def handle_bias_format(source_detail):
         return page
     except Exception as e:
         print(e)
+        error_log("AdditionalVector-line98")
         error_log(e)
 
 def handle_channel_bias(page):
@@ -213,6 +215,7 @@ def handle_channel_bias(page):
 
     except Exception as e:
         print(e)
+        error_log("AdditionalVector-line218")
         error_log(e)
 
 def calculate_ctr(page):
@@ -257,6 +260,7 @@ def handle_channel_source_bias(page):
         return result
     except Exception as e:
         print(e)
+        error_log("AdditionalVector-line263")
         error_log(e)
 
 

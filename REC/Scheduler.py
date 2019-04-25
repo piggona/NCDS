@@ -65,6 +65,7 @@ class Scheduler:
                 vec_info_log("get_train_vec OK!")
             except Exception as e:
                 print(e)
+                error_log("Scheduler-line68")
                 vec_error_log(e)
             print("等待1day...")
             vec_info_log("等待1day...")
@@ -82,6 +83,7 @@ class Scheduler:
                 info_log("online_output OK!")
             except Exception as e:
                 print(e)
+                error_log("Scheduler-line86")
                 error_log(e)
             print("等待30min...")
             info_log("等待30min...")
