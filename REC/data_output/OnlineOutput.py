@@ -68,22 +68,22 @@ class OnlineOutput:
         info_log("连接到mysql")
         self.is_conn = True
 
-    '''
-    需要添加是否connect_sql
-    '''
     @isConn_no()
     def put_work(self,result_vec):
+        '''
+        需要添加是否connect_sql
+        '''
         info_log("put on online work...")
         self.vector_manager(result_vec)
         self.put_weight()
         self.kill_conn()
         info_log("put_work OK!")
     
-    '''
-    取一个小时的新文章数据
-    '''
     @isConn_no()
     def get_article(self):
+        '''
+        取一个小时的新文章数据
+        '''
         info_log("get_article")
         sql = """
         SELECT id,site_id,title,category as channel,tags,extend-> '$.source' AS source FROM infomation.article_resource WHERE create_time> (UNIX_TIMESTAMP(NOW())-1800)
@@ -101,9 +101,6 @@ class OnlineOutput:
         print("数据库连接断开...")
         self.is_conn = False
     
-    '''
-    !!!应当被放置到模型模块中，模型最终输出result_pos与result_neg
-    '''
     @isArticleGot()
     def vector_manager(self,result_vec):
         info_log("vector_manager")

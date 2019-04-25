@@ -14,13 +14,13 @@ import numpy as np
 from REC.utils.frame import *
 from REC.logs.logger import *
 
-'''
-得到判别文章重点向量的判别bunch.
-@param source DataFrame from data_market relevant to handle_source
-@param source DataFrame from data_market relevant to page
-@return vec_bunch pickle.bunch Bunch contains 
-'''
 def getAdditionalVec(source, source_detail):
+    '''
+    得到判别文章重点向量的判别bunch.
+    @param source DataFrame from data_market relevant to handle_source
+    @param source DataFrame from data_market relevant to page
+    @return vec_bunch pickle.bunch Bunch contains 
+    '''
     vec_info_log("getAdditionalVec...")
     SpecialVec = Bunch(source_pos=np.array([1, 2, 3]), source_neg=np.array(
         [1, 2, 3]), source_channel_pos=[], source_channel_neg=[], channel_pos=np.array([1, 2, 3]), channel_neg=np.array([1, 2, 3]))
@@ -37,12 +37,12 @@ def getAdditionalVec(source, source_detail):
     vec_info_log("gotAdditionalVec!")
     return SpecialVec
 
-'''
-判别与内容相关的信息，得到向量判别.
-@param source dataFrame from data_market
-@param sep_point seperate rank Series
-'''
 def handle_source(source, sep_point=20):
+    '''
+    判别与内容相关的信息，得到向量判别.
+    @param source dataFrame from data_market
+    @param sep_point seperate rank Series
+    '''
     try:
         print("ctr统计量：")
         print("=========================")
@@ -65,13 +65,12 @@ def handle_source(source, sep_point=20):
         print(e)
         error_log(e)
 
-
-'''
-预处理DataFrame，得到page.
-@param source_detail Raw data from data_market.
-@return page Preprocessed data.
-'''
 def handle_bias_format(source_detail):
+    '''
+    预处理DataFrame，得到page.
+    @param source_detail Raw data from data_market.
+    @return page Preprocessed data.
+    '''
     try:
         vec_info_log("是否存在空值")
         print(source_detail.isnull().any())
@@ -87,12 +86,12 @@ def handle_bias_format(source_detail):
         print(e)
         error_log(e)
 
-'''
-判别与频道相关的信息，得到正样本频道及负样本频道.
-@param page Preprocessed data from article_ctr_all.
-@return channel_result_vec
-'''
 def handle_channel_bias(page):
+    '''
+    判别与频道相关的信息，得到正样本频道及负样本频道.
+    @param page Preprocessed data from article_ctr_all.
+    @return channel_result_vec
+    '''
     try:
         vec_info_log("整合数据")
         channel_bias_sum = page[['曝光数', '点击数', '频道']
@@ -206,10 +205,10 @@ def handle_channel_bias(page):
         print(e)
         error_log(e)
 
-'''
-计算总共的ctr（4days）
-'''
 def calculate_ctr(page):
+    '''
+    计算总共的ctr（4days）
+    '''
     ctr = page['点击数'].sum()/page['曝光数'].sum()
     vec_info_log(str(ctr))
     vec_info_log("ctr：" + str(ctr))
@@ -219,12 +218,12 @@ def calculate_ctr(page):
 channel_source_positive = []
 channel_source_negative = []
 
-'''
-判别与频道-作者相关的信息，得到向量判别.(set)
-@param page Preprocessed data from article_ctr_all.
-@return channel_source_vec
-'''
 def handle_channel_source_bias(page):
+    '''
+    判别与频道-作者相关的信息，得到向量判别.(set)
+    @param page Preprocessed data from article_ctr_all.
+    @return channel_source_vec
+    '''
     try:
         channel_writer_bias_sum = page[['作者', '曝光数', '点击数', '频道']].groupby(
             ['作者', '频道'], as_index=False).sum()

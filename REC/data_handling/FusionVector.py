@@ -103,25 +103,22 @@ class FusionVector:
         
         return vec_df
 
-    def article_vec_generate(self):
+    def article_vec_generate(self,data):
         return pd.DataFrame(columns=['item_id'])
 
-    '''
-    打包为bunch向量输出.
-    @return bunch_path
-    '''
-
     def pack_vec(self,data):
+        '''
+        打包为bunch向量输出.
+        @return bunch_path
+        '''
         sp_vec = special_vec_generate(data)
         ar_vec = article_vec_generate(data)
         pack_bunch = Bunch(sp_vec,ar_vec)
         return pack_bunch
 
-
-    '''
-    合并为一个向量输出.
-    @return composed_vec
-    '''
-
     def compose_vec(self):
+        '''
+        合并为一个向量输出.
+        @return composed_vec
+        '''
         pass

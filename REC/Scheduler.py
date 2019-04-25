@@ -11,14 +11,12 @@ import pandas as pd
 from sklearn.datasets.base import Bunch
 
 from REC.config.basic import *
-from REC.data_market.SimpleData import fetch_data
-from REC.data_handling.AdditionalVector import handle_source, handle_bias_format, handle_channel_source_bias, handle_channel_bias
 from REC.utils.frame import *
 from REC.logs.logger import *
-from REC.data_output.OnlineOutput import *
-from REC.aspects.IsConn import *
-from REC.aspects.IsPageGot import *
-from REC.models.simple import *
+
+from REC.data_market.SimpleData import FetchData
+from REC.data_output.OnlineOutput import OnlineOutput
+from REC.models.SimpleStrategy import SimpleStrategy
 
 def _writebunchobj(path, bunchobj):
     with open(path, "wb") as f:
@@ -30,7 +28,7 @@ class Scheduler:
 
         print("开始初始化fetch_data...")
         info_log("开始初始化fetch_data...")
-        self.SimpleData = fetch_data()
+        self.SimpleData = FetchData()
 
         print("开始初始化OnlineOutput...")
         info_log("开始初始化OnlineOutput...")
@@ -42,11 +40,18 @@ class Scheduler:
         self.isPageGot = False
     
     def init_strategy(self,mode="Simple"):
+        '''
+        Fetchs a model strategy.
+        @param mode String Mode name
+        '''
         if mode == "Simple":
-            self.Strategy = SimpleData()
+            self.Strategy = SimpleStrategy(SIMPLE_MODEL_PATH)
 
     @isStrategy
     def train_simple(self):
+        '''
+        Trains model with data from data_market.
+        '''
         while True:
             print("启动模型...")
             vec_info_log("启动模型...")
@@ -63,7 +68,7 @@ class Scheduler:
                 vec_error_log(e)
             print("等待1day...")
             vec_info_log("等待1day...")
-            time.sleep(86400)
+            time.sleep(TRAIN_SLEEP)
     
     @isStrategy
     def process_simple(self):
@@ -81,7 +86,7 @@ class Scheduler:
                 error_log(e)
             print("等待30min...")
             info_log("等待30min...")
-            time.sleep(1800)
+            time.sleep(PROCESS_SLEEP)
 
     def kill_conn(self):
         self.SimpleData.kill_conn()

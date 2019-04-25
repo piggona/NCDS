@@ -20,7 +20,7 @@ structure: 清洗
 @param mode chooses a connecttion mode from local&ssh
 @output: dataFrame
 '''
-class fetch_data:
+class FetchData:
     def __init__(self):
         self.is_conn = False
     
