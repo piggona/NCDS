@@ -48,7 +48,7 @@ class Scheduler:
         if mode == "Simple":
             self.Strategy = SimpleStrategy(SIMPLE_MODEL_PATH)
 
-    @isStrategy
+    @isStrategy()
     def train_simple(self):
         '''
         Trains model with data from data_market.
@@ -71,7 +71,7 @@ class Scheduler:
             vec_info_log("等待1day...")
             time.sleep(TRAIN_SLEEP)
     
-    @isStrategy
+    @isStrategy()
     def process_simple(self):
         while True:
             print("启动筛选器...")
