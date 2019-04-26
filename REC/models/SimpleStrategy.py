@@ -23,12 +23,12 @@ result_neg = []
 def get_pos(a,b,c,d):
     point = a
     if point == 2:
-        result_pos.append(d)
+        result_pos.append(str(d))
 
 def get_neg(a,b,c,d):
     point = a
     if point == 0:
-        result_neg.append(d)
+        result_neg.append(str(d))
 
 class SimpleStrategy:
     def __init__(self,model_path=""):
