@@ -47,18 +47,17 @@ class SimpleStrategy:
         sp_vec = vec_bunch.sp_vec
         sp_vec.apply(lambda row: get_pos(row['channel'],row['source'],row['channelSource'],row['item_id']),axis=1)
         sp_vec.apply(lambda row: get_neg(row['channel'],row['source'],row['channelSource'],row['item_id']),axis=1)
-        result_pos_j = {}
-        result_neg_j = {}
+        result_j = {}
 
         info_log('vec dumping...')
         try:
             with open(os.getcwd()+'/REC/static/files/result_vec.json','r') as r:
-                result_pos_j = json.load(r)
+                result_j = json.load(r)
         except Exception as e:
             print(e)
-        result_pos_j[str(int(time.time()))] = {"result_pos":result_pos,"result_neg":result_neg}
+        result_j[str(int(time.time()))] = {"result_pos":result_pos,"result_neg":result_neg}
         with open(os.getcwd()+'/REC/static/files/result_vec.json','w') as w:
-                json.dump(result_pos_j,w)
+                json.dump(result_j,w)
         print('vec dump success!')
         info_log('vec dump success!')
 
