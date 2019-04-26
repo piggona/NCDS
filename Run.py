@@ -83,8 +83,8 @@ def rec_generator():
     # pool.apply_async(Sc.process_simple)
     # pool.close()
     # pool.join()
-    # Sc.init_strategy(mode="simple")
-    # Sc.process_simple()
+    Sc.init_strategy(mode="simple")
+    Sc.process_simple()
     print("进程结束")
     
 if __name__ == "__main__":
