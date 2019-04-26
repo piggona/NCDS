@@ -57,7 +57,7 @@ class SimpleStrategy:
             print(e)
         result_j[str(int(time.time()))] = {"result_pos":result_pos,"result_neg":result_neg}
         with open(os.getcwd()+'/REC/static/files/result_vec.json','w') as w:
-                json.dump(result_j,w)
+            json.dump(result_j,w)
         print('vec dump success!')
         info_log('vec dump success!')
 
