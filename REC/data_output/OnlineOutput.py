@@ -125,7 +125,7 @@ class OnlineOutput:
         info_log("modified {} articles as positive.".format(str(len(self.result_pos))))
         for item in self.result_neg:
             sql = """
-            UPDATE infomation.article_resource SET weight = 1,update_time = '{0}' WHERE id = '{1}';
+            UPDATE infomation.article_resource SET weight = 25,update_time = '{0}' WHERE id = '{1}';
             """.format(now,item)
             self.cursor_online.execute(sql)
             self.conn_online.commit()

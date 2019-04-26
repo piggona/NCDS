@@ -106,7 +106,7 @@ class FusionVector:
         channel_desc = vec_df[['channel','item_id']].groupby(['channel'],as_index=False).count()
         source_desc = vec_df[['source','item_id']].groupby(['source'],as_index=False).count()
 
-        writer = pd.ExcelWriter(os.getcwd()+"/REC/static/files/"+str(date.today())+"-vector_distribution.xlsx")
+        writer = pd.ExcelWriter(os.getcwd()+"/REC/static/files/"+str(int(time.time()))+"-vector_distribution.xlsx")
         channel_source_desc.to_excel(writer,sheet_name='channelSource')
         channel_desc.to_excel(writer,sheet_name='channel')
         source_desc.to_excel(writer,sheet_name='source')
