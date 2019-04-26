@@ -4,6 +4,7 @@
 
 import os
 import time
+import json
 import re
 import pickle
 
@@ -140,14 +141,14 @@ def handle_channel_bias(page):
         group3 = channel_bias_all.query('曝光数 > 20000').sort_values(
             by='real_ctr', ascending=False)
         
-        channel_bias_all.to_excel(writer,'Sheet1')
-        group1.to_excel(writer,'Sheet2')
-        group2.to_excel(writer,'Sheet3')
-        group3.to_excel(writer,'Sheet4')
-        dec_all.to_excel(writer,'Sheet5')
-        group1['real_ctr'].describe().to_excel(writer,'Sheet6')
-        group2['real_ctr'].describe().to_excel(writer,'Sheet7')
-        group3['real_ctr'].describe().to_excel(writer,'Sheet8')
+        channel_bias_all.to_excel(writer,sheet_name='channel')
+        group1.to_excel(writer,sheet_name='group1')
+        group2.to_excel(writer,sheet_name='group2')
+        group3.to_excel(writer,sheet_name='group3')
+        dec_all.to_excel(writer,sheet_name='desc')
+        group1['real_ctr'].describe().to_excel(writer,sheet_name='group1_desc')
+        group2['real_ctr'].describe().to_excel(writer,sheet_name='group2_desc')
+        group3['real_ctr'].describe().to_excel(writer,sheet_name='group3_desc')
         writer.save()
 
 
@@ -247,6 +248,11 @@ def calculate_ctr(page):
     ctr = page['点击数'].sum()/page['曝光数'].sum()
     vec_info_log(str(ctr))
     vec_info_log("ctr：" + str(ctr))
+    with open(os.getcwd()+'/REC/static/files/days_ctr.json','r') as f:
+        days_ctr = json.load(f)
+    days_ctr[str(date.today())] = ctr
+    with open(os.getcwd()+'/REC/static/files/days_ctr.json','w') as w:
+        json.dump(days_ctr,w)
     return ctr
 
 

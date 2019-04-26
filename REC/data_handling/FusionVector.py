@@ -6,6 +6,7 @@ import os
 import time
 import re
 import pickle
+from datetime import *
 
 from sklearn.datasets.base import Bunch
 import pandas as pd
@@ -100,9 +101,20 @@ class FusionVector:
         vec_df['channelSource'] = data[['channel', 'source']].apply(lambda row: judge_source_channel(
             row['source'], row['channel'], source_channel_pos, source_channel_neg), axis=1)
         
-        info_log(vec_df[['channelSource','item_id']].groupby(['channelSource'],as_index=False).count())
-        info_log(vec_df[['channel','item_id']].groupby(['channel'],as_index=False).count())
-        info_log(vec_df[['source','item_id']].groupby(['source'],as_index=False).count())   
+        # 计算统计量
+        channel_source_desc = vec_df[['channelSource','item_id']].groupby(['channelSource'],as_index=False).count()
+        channel_desc = vec_df[['channel','item_id']].groupby(['channel'],as_index=False).count()
+        source_desc = vec_df[['source','item_id']].groupby(['source'],as_index=False).count()
+
+        writer = pd.ExcelWriter(os.getcwd()+"/REC/static/files/"+str(date.today())+"-vector_distribution.xlsx")
+        channel_source_desc.to_excel(writer,sheet_name='channelSource')
+        channel_desc.to_excel(writer,sheet_name='channel')
+        source_desc.to_excel(writer,sheet_name='source')
+        writer.save()
+
+        info_log(channel_source_desc)
+        info_log(channel_desc)
+        info_log(source_desc)   
         info_log("special_vec_generated!")
         
         return vec_df
