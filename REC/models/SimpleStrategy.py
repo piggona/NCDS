@@ -10,6 +10,7 @@ import pickle
 from sklearn.datasets.base import Bunch
 import pandas as pd
 import numpy as np
+from datetime import *
 
 from REC.data_handling.FusionVector import FusionVector
 from REC.utils.frame import *
@@ -40,10 +41,24 @@ class SimpleStrategy:
         self.fusionVec.train_vec(source,source_detail,article_ctr)
     
     def judge(self,data):
+        result_pos.clear()
+        result_neg.clear()
         vec_bunch = self.fusionVec.pack_vec(data)
         sp_vec = vec_bunch.sp_vec
         sp_vec.apply(lambda row: get_pos(row['channel'],row['source'],row['channelSource'],row['item_id']),axis=1)
         sp_vec.apply(lambda row: get_neg(row['channel'],row['source'],row['channelSource'],row['item_id']),axis=1)
+        result_pos_j = {}
+        result_neg_j = {}
+
+        try:
+            with open(os.getcwd()+'/static/files/result_vec.json','r') as r:
+                result_pos_j = json.load(r)
+        except Exception as e:
+            print(e)
+        result_pos_j[str(int(time.time()))] = {"result_pos":result_pos,"result_neg":result_neg}
+        with open(os.getcwd()+'/static/files/result_vec.json','w') as w:
+                json.dump(result_pos_j,w)
+
         info_log(result_pos)
         info_log(result_neg)
         result = {"positive":result_pos,"negative":result_neg}

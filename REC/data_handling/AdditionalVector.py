@@ -248,8 +248,12 @@ def calculate_ctr(page):
     ctr = page['点击数'].sum()/page['曝光数'].sum()
     vec_info_log(str(ctr))
     vec_info_log("ctr：" + str(ctr))
-    with open(os.getcwd()+'/REC/static/files/days_ctr.json','r') as f:
-        days_ctr = json.load(f)
+    days_ctr = {}
+    try:
+        with open(os.getcwd()+'/REC/static/files/days_ctr.json','r') as f:
+            days_ctr = json.load(f)
+    except Exception as e:
+        print(e)
     days_ctr[str(date.today())] = ctr
     with open(os.getcwd()+'/REC/static/files/days_ctr.json','w') as w:
         json.dump(days_ctr,w)
