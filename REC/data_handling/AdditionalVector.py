@@ -249,6 +249,7 @@ def calculate_ctr(page):
     vec_info_log(str(ctr))
     vec_info_log("ctr：" + str(ctr))
     days_ctr = {}
+    info_log('ctr dumping...')
     try:
         with open(os.getcwd()+'/REC/static/files/days_ctr.json','r') as f:
             days_ctr = json.load(f)
@@ -257,6 +258,7 @@ def calculate_ctr(page):
     days_ctr[str(date.today())] = ctr
     with open(os.getcwd()+'/REC/static/files/days_ctr.json','w') as w:
         json.dump(days_ctr,w)
+    info_log('ctr dumped!')
     return ctr
 
 

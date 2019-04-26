@@ -50,14 +50,17 @@ class SimpleStrategy:
         result_pos_j = {}
         result_neg_j = {}
 
+        info_log('vec dumping...')
         try:
-            with open(os.getcwd()+'/static/files/result_vec.json','r') as r:
+            with open(os.getcwd()+'REC/static/files/result_vec.json','r') as r:
                 result_pos_j = json.load(r)
         except Exception as e:
             print(e)
         result_pos_j[str(int(time.time()))] = {"result_pos":result_pos,"result_neg":result_neg}
-        with open(os.getcwd()+'/static/files/result_vec.json','w') as w:
+        with open(os.getcwd()+'REC/static/files/result_vec.json','w') as w:
                 json.dump(result_pos_j,w)
+        print('vec dump success!')
+        info_log('vec dump success!')
 
         info_log(result_pos)
         info_log(result_neg)
