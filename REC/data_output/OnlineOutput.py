@@ -133,5 +133,23 @@ class OnlineOutput:
         info_log("put time: "+str(now))
         info_log("put_weight OK!")
     
+    def put_top_articles(self):
+        info_log("put top articles...")
+        now = int(time.time())
+        sql_top = """
+        SELECT item_id FROM dp_bi.article_ctr WHERE expose_num > 100 and ctr > 0.15 and date_sub(CURDATE(),INTERVAL 2 DAY) <= DATE(dat) order by ctr desc
+        """
+        self.cursor.execute(sql_top)
+        results = self.cursor.fetchall()
+        for result in results:
+            sql = """
+            UPDATE infomation.article_resource SET weight = 500,update_time = '{0}' WHERE id = '{1}';
+            """.format(now,result[0])
+            self.cursor_online.execute(sql)
+            self.conn_online.commit()
+        info_log("modified {} articles as top.".format(str(len(results))))
+        info_log("put time: "+str(now))
+        info_log("put top articles OK!")
+    
 
         

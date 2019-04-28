@@ -50,3 +50,4 @@ SIMPLE_MODEL_PATH = {"sp_vec":os.getcwd()+"/REC/static/specialVec.dat","ar_vec":
 '''
 TRAIN_SLEEP = 86400
 PROCESS_SLEEP = 1800
+TOP_PUSH_SLEEP = 7200

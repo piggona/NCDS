@@ -80,11 +80,11 @@ class Scheduler:
         while True:
             print("启动筛选器...")
             info_log("启动筛选器...")
-            info_log("online_output...")
-            refresh_data = self.OnlineOutput.get_article()
-            result_vec = self.Strategy.judge(refresh_data)
-            self.OnlineOutput.put_work(result_vec)
-            info_log("online_output OK!")
+            # info_log("online_output...")
+            # refresh_data = self.OnlineOutput.get_article()
+            # result_vec = self.Strategy.judge(refresh_data)
+            # self.OnlineOutput.put_work(result_vec)
+            # info_log("online_output OK!")
             try:
                 info_log("online_output...")
                 refresh_data = self.OnlineOutput.get_article()
@@ -98,6 +98,22 @@ class Scheduler:
             print("等待30min...")
             info_log("等待30min...")
             time.sleep(PROCESS_SLEEP)
+    
+    def push_top(self):
+        while True:
+            print("启动高ctr推送...")
+            info_log("启动高ctr推送...")
+            try:
+                info_log("online_output...")
+                refresh_data = self.OnlineOutput.put_top_articles()
+                info_log("online_output OK!")
+            except Exception as e:
+                print(e)
+                error_log("Scheduler-line112")
+                error_log(e)
+            print("等待2h...")
+            info_log("等待2h...")
+            time.sleep(TOP_PUSH_SLEEP)
 
     def kill_conn(self):
         self.SimpleData.kill_conn()
