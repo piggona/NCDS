@@ -133,6 +133,7 @@ class OnlineOutput:
         info_log("put time: "+str(now))
         info_log("put_weight OK!")
     
+    @isConn_no()
     def put_top_articles(self):
         info_log("put top articles...")
         now = int(time.time())
