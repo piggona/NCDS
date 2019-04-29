@@ -138,7 +138,7 @@ class OnlineOutput:
         info_log("put top articles...")
         now = int(time.time())
         sql_top = """
-        SELECT item_id FROM dp_bi.article_ctr WHERE expose_num > 100 and ctr > 0.15 and date_sub(CURDATE(),INTERVAL 2 DAY) <= DATE(dat) order by ctr desc
+        SELECT item_id FROM dp_bi.article_ctr WHERE expose_num > 250 and ctr > 0.15 and date_sub(CURDATE(),INTERVAL 2 DAY) <= DATE(dat) order by ctr desc
         """
         self.cursor.execute(sql_top)
         results = self.cursor.fetchall()
