@@ -47,31 +47,36 @@ class SimpleStrategy:
             self.fusionVec = FusionVector(sp_vec=model_path['sp_vec'], ar_vec=model_path['ar_vec'], cm_vec=model_path['cm_vec'])
     
     def train(self,source, source_detail, article_ctr=""):
+        '''
+        使用得到的数据训练模型
+        '''
+        vec_info_log("Is getting training vectors...")
+        # 生成并获取表示向量
         self.fusionVec.train_vec(source,source_detail,article_ctr)
         bunch = _read_bunch(os.getcwd() + "/REC/static/SpecialVec.dat")
         article_vec = bunch.ArticleVec
         tf_idf_vec = article_vec.tf_idf
         y_train = article_vec.y_train
+        vec_info_log("Training vec got!")
+        # 训练模型，将结果存储在对象中
+        vec_info_log("Is training models...")
         self.mlp = self.mlp_classifier(tf_idf_vec,y_train)
-
-    def mlp_classifier(tf_idf_vec,y_train):
-        model = MLPClassifier(solver='adam',random_state=1)   
-        param_grid = {'alpha': [1e-3, 1e-2, 1e-1, 1e-4, 1e-5]}    
-        grid_search = GridSearchCV(model, param_grid, n_jobs = 8, verbose=1)    
-        grid_search.fit(tf_idf_vec,y_train)    
-        best_parameters = grid_search.best_estimator_.get_params()
-        print(best_parameters)
-        mlp = MLPClassifier(solver='adam', alpha=best_parameters['alpha'],hidden_layer_sizes=(5, 5), random_state=1)
-        mlp.fit(tf_idf_vec,y_train)
-        return mlp
+        vec_info_log("Model trained!")
     
     def mlp_judge(self,data):
+        '''
+        使用多层感知器模型对Output的新数据进行分类输出.
+        '''
+        # 处理原始数据使其向量化
         tfidf_vec = self.fusionVec.article_vec_generate(data)
+        # 使用模型判别
         re_mlp = self.mlp.predict(tfidf_vec)
+        # 得到result list
         data['predict'] = re_mlp
         result_pos = data.query('predict == 2')['id'].tolist()
         result_neg = data.query('predict == 0')['id'].tolist()
         result = {"positive":result_pos,"negative":result_neg}
+        # return list结果
         return result
     
     def judge(self,data):
@@ -99,4 +104,16 @@ class SimpleStrategy:
         info_log(result_neg)
         result = {"positive":result_pos,"negative":result_neg}
         return result
+    
+    # mlp多层感知模型分类器
+    def mlp_classifier(tf_idf_vec,y_train):
+        model = MLPClassifier(solver='adam',random_state=1)   
+        param_grid = {'alpha': [1e-3, 1e-2, 1e-1, 1e-4, 1e-5]}    
+        grid_search = GridSearchCV(model, param_grid, n_jobs = 8, verbose=1)    
+        grid_search.fit(tf_idf_vec,y_train)    
+        best_parameters = grid_search.best_estimator_.get_params()
+        print(best_parameters)
+        mlp = MLPClassifier(solver='adam', alpha=best_parameters['alpha'],hidden_layer_sizes=(5, 5), random_state=1)
+        mlp.fit(tf_idf_vec,y_train)
+        return mlp
 

@@ -39,6 +39,7 @@ class Scheduler:
 
         self.page = ""
         self.isPageGot = False
+        self.isTrained = False
     
     def init_strategy(self,mode="simple"):
         '''
@@ -68,6 +69,7 @@ class Scheduler:
                 self.Strategy.train(source,source_detail,source_vec)
                 self.kill_data_conn()
                 vec_info_log("get_train_vec OK!")
+                self.isTrained = True
             except Exception as e:
                 print(e)
                 error_log("Scheduler-line68")
@@ -98,6 +100,10 @@ class Scheduler:
         print("启动筛选器...")
         info_log("启动筛选器...")
         try:
+            if not self.isTrained:
+                print("No trained vector yet. Wait for 10 minutes...")
+                info_log("No trained vector yet. Wait for 10 minutes...")
+                time.sleep(600)
             while True:
                 info_log("online_output...")
                 # 数据 Dataframe
@@ -113,7 +119,7 @@ class Scheduler:
                 time.sleep(PROCESS_SLEEP)
         except Exception as e:
             print(e)
-            error_log("Scheduler-line86")
+            error_log("Scheduler-line116")
             error_log(e)
    
     def push_top(self):

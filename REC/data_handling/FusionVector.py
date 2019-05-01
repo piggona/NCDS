@@ -65,11 +65,10 @@ class FusionVector:
         self.ar_vec_path = ar_vec
         self.cm_vec_path = cm_vec # 合并的向量
 
-    '''
-    协调计算训练数据的ArticleVector和AdditionalVector,并存储到文件中.
-    '''
-
     def train_vec(self, source, source_detail, article_ctr):
+        '''
+        协调计算训练数据的ArticleVector和AdditionalVector,并存储到文件中.
+        '''
         vec_info_log("training vector...")
         path = os.getcwd()
         self.sp_vec_path = path + '/REC/static/SpecialVec.dat'

@@ -38,6 +38,8 @@ def getAdditionalVec(source, source_detail):
     SpecialVec.source_channel_neg = channel_source_result['negative']
     SpecialVec.channel_pos = channel_result['positive']
     SpecialVec.channel_neg = channel_result['negative']
+    vec_info_log("positive channel: {}".format(channel_result['positive']))
+    vec_info_log("negative channel: {}".format(channel_result['negative']))
     vec_info_log("gotAdditionalVec!")
     return SpecialVec
 
