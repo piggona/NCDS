@@ -24,7 +24,7 @@ def getTrainArticleVec(source_detail):
     source_data = source_detail[['item_id','ctr','expose_num','title']].fillna(0)
     source_data['ctr'] = source_data[['ctr','expose_num']].apply(lambda row: _divide(row['ctr'],row['expose_num']),axis=1)
     source_data['title'] = source_data['title'].apply(_seperate_data)
-    num_vec = _vectorizer(source_data['title'])
+    num_vec = _vectorizer(source_data)
     tf_idf_vec = tf_idf_vectorizer(num_vec)
     train_vec = Bunch(tf_idf=tf_idf_vec,y_train=source_data['ctr'].values)
     return train_vec
