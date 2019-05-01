@@ -110,11 +110,21 @@ class FetchData:
         vec_info_log("fetch_bias_data OK!")
         return source_detail
     
-    def fetch_text_data(self):
-        vec_info_log("获取article_ctr文章的数据...（四天内）")
+    '''
+    获取训练数据
+    '''
+    @isConn()
+    def fetch_vec_data(self):
+        vec_info_log("获取article_ctr文章的数据...（九天内）")
         self.conn.ping(reconnect=True)
         sql = """
+        SELECT pt,item_id,expose_num,click_num,ctr,title,tags,extend->"$.source" AS source,dat,url,category FROM article_ctr WHERE date_sub(CURDATE(),INTERVAL 9 DAY) <= DATE(dat);
         """
+        source_vec = pd.read_sql(sql,self.conn)
+        print("fetch_vec_data OK!")
+        vec_info_log("fetch_vec_data OK!")
+        return source_vec
+
 
     '''
     method为block则分块进行yield bunch

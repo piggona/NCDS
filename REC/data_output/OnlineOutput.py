@@ -76,7 +76,6 @@ class OnlineOutput:
         info_log("put on online work...")
         self.vector_manager(result_vec)
         self.put_weight()
-        self.kill_conn()
         info_log("put_work OK!")
     
     @isConn()

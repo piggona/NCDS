@@ -57,11 +57,16 @@ class Scheduler:
             vec_info_log("启动模型...")
             try:
                 vec_info_log("get_train_vec...")
+                # 获取相应Strategy->train需要的DataFrame数据：
+                # 获取source
                 source = self.SimpleData.fetch_source_data()
+                # 获取source_detail
                 source_detail = self.SimpleData.fetch_bias_data()
-
-                self.Strategy.train(source,source_detail)
-                self.kill_conn()
+                # 获取source_vec
+                source_vec = self.SimpleData.fetch_vec_data()
+                # 训练可用模型，存储在Strategy对象中
+                self.Strategy.train(source,source_detail,source_vec)
+                self.kill_data_conn()
                 vec_info_log("get_train_vec OK!")
             except Exception as e:
                 print(e)
@@ -71,20 +76,10 @@ class Scheduler:
             vec_info_log("等待1day...")
             time.sleep(TRAIN_SLEEP)
     
-    def process_simple(self):
-        # info_log("online_output...")
-        # refresh_data = self.OnlineOutput.get_article()
-        # result_vec = self.Strategy.judge(refresh_data)
-        # self.OnlineOutput.put_work(result_vec)
-        # info_log("online_output OK!")
+    def process_sp(self):
         while True:
             print("启动筛选器...")
             info_log("启动筛选器...")
-            # info_log("online_output...")
-            # refresh_data = self.OnlineOutput.get_article()
-            # result_vec = self.Strategy.judge(refresh_data)
-            # self.OnlineOutput.put_work(result_vec)
-            # info_log("online_output OK!")
             try:
                 info_log("online_output...")
                 refresh_data = self.OnlineOutput.get_article()
@@ -99,7 +94,32 @@ class Scheduler:
             info_log("等待30min...")
             time.sleep(PROCESS_SLEEP)
     
+    def process_article(self):
+        print("启动筛选器...")
+        info_log("启动筛选器...")
+        try:
+            while True:
+                info_log("online_output...")
+                # 数据 Dataframe
+                refresh_data = self.OnlineOutput.get_article()
+                # 判别(judge) {"positive":result_pos,"negative":result_neg}
+                result_vec = self.Strategy.mlp_judge(refresh_data)
+                # 设置权值
+                self.OnlineOutput.put_work(result_vec)
+                self.kill_output_conn()
+                info_log("online_output OK!")
+                print("等待30min...")
+                info_log("等待30min...")
+                time.sleep(PROCESS_SLEEP)
+        except Exception as e:
+            print(e)
+            error_log("Scheduler-line86")
+            error_log(e)
+   
     def push_top(self):
+        '''
+        推送高ctr文章
+        '''
         while True:
             print("启动高ctr推送...")
             info_log("启动高ctr推送...")
@@ -115,5 +135,8 @@ class Scheduler:
             info_log("等待2h...")
             time.sleep(TOP_PUSH_SLEEP)
 
-    def kill_conn(self):
+    def kill_data_conn(self):
         self.SimpleData.kill_conn()
+    
+    def kill_output_conn(self):
+        self.OnlineOutput.kill_conn()

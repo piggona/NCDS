@@ -15,6 +15,7 @@ import numpy as np
 from REC.utils.frame import *
 from REC.logs.logger import *
 from REC.data_handling.AdditionalVector import *
+from REC.data_handling.ArticleVector import *
 from REC.aspects.IsVecTrained import *
 
 
@@ -73,7 +74,9 @@ class FusionVector:
         path = os.getcwd()
         self.sp_vec_path = path + '/REC/static/SpecialVec.dat'
         SpecialVec = getAdditionalVec(source, source_detail)
-        _writebunchobj(self.sp_vec_path, SpecialVec)
+        ArticleVec = getTrainArticleVec(article_ctr)
+        train_vec = Bunch(SpecialVec=SpecialVec,ArticleVec=ArticleVec)
+        _writebunchobj(self.sp_vec_path, train_vec)
         vec_info_log("生成的channel判别-positive：")
         vec_info_log(SpecialVec.channel_pos)
         vec_info_log("生成的channel判别-negative：")
@@ -85,6 +88,7 @@ class FusionVector:
         info_log("special_vec_generating...")
 
         sp_bunch = _read_bunch(self.sp_vec_path)
+        sp_bunch = sp_bunch.SpecialVec
         source_pos = sp_bunch.source_pos
         source_neg = sp_bunch.source_neg
         channel_pos = sp_bunch.channel_pos
@@ -120,7 +124,8 @@ class FusionVector:
         return vec_df
 
     def article_vec_generate(self,data):
-        return pd.DataFrame(columns=['item_id'])
+        article_vec = getArticleVec(data)
+        return article_vec
 
     def pack_vec(self,data):
         '''

@@ -43,7 +43,7 @@ SSH_PORT = 22
 SP_VEC = os.getcwd()+"/REC/static/specialVec.dat"
 AR_VEC = os.getcwd()+""
 CM_VEC = os.getcwd()+""
-SIMPLE_MODEL_PATH = {"sp_vec":os.getcwd()+"/REC/static/specialVec.dat","ar_vec":"","cm_vec":""}
+SIMPLE_MODEL_PATH = {"sp_vec":os.getcwd()+"/REC/static/SpecialVec.dat","ar_vec":"","cm_vec":""}
 
 '''
 运行间隔配置
