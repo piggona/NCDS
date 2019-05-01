@@ -105,7 +105,7 @@ class Scheduler:
                 print(type(self.Strategy.mlp))
                 print("No trained vector yet. Wait for 10 minutes...")
                 info_log("No trained vector yet. Wait for 10 minutes...")
-                time.sleep(600)
+                time.sleep(300)
             while True:
                 print(type(self.Strategy.mlp))
                 info_log("online_output...")

@@ -27,6 +27,10 @@ def _read_bunch(path):
     f.close()
     return content
 
+def _writebunchobj(path, bunchobj):
+    with open(path, "wb") as f:
+        pickle.dump(bunchobj, f)
+
 result_pos = []
 result_neg = []
 def get_pos(a,b,c,d):
@@ -62,7 +66,8 @@ class SimpleStrategy:
         # 训练模型，将结果存储在对象中
         vec_info_log("Is training models...")
         self.mlp = self.mlp_classifier(tf_idf_vec,y_train)
-        print(type(self.mlp))
+        bunch = Bunch(mlp_vec=self.mlp)
+        _writebunchobj(os.getcwd()+'/REC/static/mlp.dat',bunch)
         print("Model trained!")
         vec_info_log("Model trained!")
     
@@ -70,10 +75,12 @@ class SimpleStrategy:
         '''
         使用多层感知器模型对Output的新数据进行分类输出.
         '''
+        mlp_bunch = _read_bunch(os.getcwd()+'/REC/static/mlp.dat')
+        mlp = mlp_bunch.mlp_vec
         # 处理原始数据使其向量化
         tfidf_vec = self.fusionVec.article_vec_generate(data)
         # 使用模型判别
-        re_mlp = self.mlp.predict(tfidf_vec)
+        re_mlp = mlp.predict(tfidf_vec)
         # 得到result list
         data['predict'] = re_mlp
         result_pos = data.query('predict == 2')['id'].tolist()
