@@ -24,7 +24,7 @@ def getTrainArticleVec(source_detail):
     source_data = source_detail[['item_id','ctr','expose_num','title']].fillna(0)
     source_data['ctr'] = source_data[['ctr','expose_num']].apply(lambda row: _divide(row['ctr'],row['expose_num']),axis=1)
     source_data['title'] = source_data['title'].apply(_seperate_data)
-    num_vec = _vectorizer(source_data)
+    num_vec = _train_vectorizer(source_data)
     tf_idf_vec = tf_idf_vectorizer(num_vec)
     train_vec = Bunch(tf_idf=tf_idf_vec,y_train=source_data['ctr'].values)
     return train_vec
@@ -41,8 +41,29 @@ def tf_idf_vectorizer(vec_count_title):
     tf_idf_vec = tf_idf_transformer.fit_transform(vec_count_title)
     return tf_idf_vec
 
-def _vectorizer(list_data):
+def _read_bunch(path):
+    with open(path, "rb") as f:
+        content = pickle.load(f)
+    f.close()
+    return content
+
+
+def _writebunchobj(path, bunchobj):
+    with open(path, "wb") as f:
+        pickle.dump(bunchobj, f)
+
+def _train_vectorizer(list_data):
     vectorizer = CountVectorizer(stop_words=[" "],max_df=0.99, min_df=0.001)
+    vec_count_title = vectorizer.fit_transform(list_data['title'])
+    vec_feature = vectorizer.get_feature_names()
+    bunch = Bunch(vec_feature=vec_feature)
+    _writebunchobj(os.getcwd()+'/REC/static/vec_feature.dat',bunch)
+    return vec_count_title
+
+def _vectorizer(list_data):
+    bunch = _read_bunch(os.getcwd()+'/REC/static/vec_feature.dat')
+    vec_feature = bunch.vec_feature
+    vectorizer = CountVectorizer(stop_words=[" "],max_df=0.99, min_df=0.001,vocabulary=vec_feature)
     vec_count_title = vectorizer.fit_transform(list_data['title'])
     return vec_count_title
 
