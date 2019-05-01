@@ -62,6 +62,7 @@ class SimpleStrategy:
         # 训练模型，将结果存储在对象中
         vec_info_log("Is training models...")
         self.mlp = self.mlp_classifier(tf_idf_vec,y_train)
+        print(type(self.mlp))
         print("Model trained!")
         vec_info_log("Model trained!")
     
