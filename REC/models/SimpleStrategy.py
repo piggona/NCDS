@@ -45,6 +45,7 @@ class SimpleStrategy:
             self.fusionVec = FusionVector(sp_vec=os.getcwd() + "/REC/static/SpecialVec.dat", ar_vec="", cm_vec="")
         else:
             self.fusionVec = FusionVector(sp_vec=model_path['sp_vec'], ar_vec=model_path['ar_vec'], cm_vec=model_path['cm_vec'])
+        self.mlp = ""
     
     def train(self,source, source_detail, article_ctr=""):
         '''
@@ -114,7 +115,7 @@ class SimpleStrategy:
         # grid_search.fit(tf_idf_vec,y_train)    
         # best_parameters = grid_search.best_estimator_.get_params()
         # print(best_parameters)
-        mlp = MLPClassifier(solver='adam', alpha=0.1,hidden_layer_sizes=(5, 5), random_state=1)
+        mlp = MLPClassifier(solver='adam', alpha=0.1,hidden_layer_sizes=(5, 5), random_state=1,max_iter=10000)
         mlp.fit(tf_idf_vec,y_train)
         return mlp
 

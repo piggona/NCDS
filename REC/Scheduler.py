@@ -102,10 +102,12 @@ class Scheduler:
         info_log("online_output...")
         try:
             if not self.isTrained:
+                print(type(self.Strategy.mlp))
                 print("No trained vector yet. Wait for 10 minutes...")
                 info_log("No trained vector yet. Wait for 10 minutes...")
                 time.sleep(600)
             while True:
+                print(type(self.Strategy.mlp))
                 info_log("online_output...")
                 # 数据 Dataframe
                 refresh_data = self.OnlineOutput.get_article()
