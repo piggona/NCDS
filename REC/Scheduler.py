@@ -100,39 +100,28 @@ class Scheduler:
         print("启动筛选器...")
         info_log("启动筛选器...")
         info_log("online_output...")
-        # 数据 Dataframe
-        refresh_data = self.OnlineOutput.get_article()
-        # 判别(judge) {"positive":result_pos,"negative":result_neg}
-        result_vec = self.Strategy.mlp_judge(refresh_data)
-        # 设置权值
-        self.OnlineOutput.put_work(result_vec)
-        self.kill_output_conn()
-        info_log("online_output OK!")
-        print("等待30min...")
-        info_log("等待30min...")
-        time.sleep(PROCESS_SLEEP)
-        # try:
-        #     if not self.isTrained:
-        #         print("No trained vector yet. Wait for 10 minutes...")
-        #         info_log("No trained vector yet. Wait for 10 minutes...")
-        #         time.sleep(600)
-        #     while True:
-        #         info_log("online_output...")
-        #         # 数据 Dataframe
-        #         refresh_data = self.OnlineOutput.get_article()
-        #         # 判别(judge) {"positive":result_pos,"negative":result_neg}
-        #         result_vec = self.Strategy.mlp_judge(refresh_data)
-        #         # 设置权值
-        #         self.OnlineOutput.put_work(result_vec)
-        #         self.kill_output_conn()
-        #         info_log("online_output OK!")
-        #         print("等待30min...")
-        #         info_log("等待30min...")
-        #         time.sleep(PROCESS_SLEEP)
-        # except Exception as e:
-        #     print(e)
-        #     error_log("Scheduler-line116")
-        #     error_log(e)
+        try:
+            if not self.isTrained:
+                print("No trained vector yet. Wait for 10 minutes...")
+                info_log("No trained vector yet. Wait for 10 minutes...")
+                time.sleep(600)
+            while True:
+                info_log("online_output...")
+                # 数据 Dataframe
+                refresh_data = self.OnlineOutput.get_article()
+                # 判别(judge) {"positive":result_pos,"negative":result_neg}
+                result_vec = self.Strategy.mlp_judge(refresh_data)
+                # 设置权值
+                self.OnlineOutput.put_work(result_vec)
+                self.kill_output_conn()
+                info_log("online_output OK!")
+                print("等待30min...")
+                info_log("等待30min...")
+                time.sleep(PROCESS_SLEEP)
+        except Exception as e:
+            print(e)
+            error_log("Scheduler-line116")
+            error_log(e)
    
     def push_top(self):
         '''
