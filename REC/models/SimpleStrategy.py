@@ -106,7 +106,7 @@ class SimpleStrategy:
         return result
     
     # mlp多层感知模型分类器
-    def mlp_classifier(tf_idf_vec,y_train):
+    def mlp_classifier(self,tf_idf_vec,y_train):
         model = MLPClassifier(solver='adam',random_state=1)   
         param_grid = {'alpha': [1e-3, 1e-2, 1e-1, 1e-4, 1e-5]}    
         grid_search = GridSearchCV(model, param_grid, n_jobs = 8, verbose=1)    
