@@ -107,13 +107,13 @@ class SimpleStrategy:
     
     # mlp多层感知模型分类器
     def mlp_classifier(self,tf_idf_vec,y_train):
-        model = MLPClassifier(solver='adam',random_state=1)   
-        param_grid = {'alpha': [1e-3, 1e-2, 1e-1, 1e-4, 1e-5]}    
-        grid_search = GridSearchCV(model, param_grid, n_jobs = 8, verbose=1)    
-        grid_search.fit(tf_idf_vec,y_train)    
-        best_parameters = grid_search.best_estimator_.get_params()
-        print(best_parameters)
-        mlp = MLPClassifier(solver='adam', alpha=best_parameters['alpha'],hidden_layer_sizes=(5, 5), random_state=1)
+        # model = MLPClassifier(solver='adam',random_state=1)   
+        # param_grid = {'alpha': [1e-3, 1e-2, 1e-1, 1e-4, 1e-5]}    
+        # grid_search = GridSearchCV(model, param_grid, n_jobs = 8, verbose=1)    
+        # grid_search.fit(tf_idf_vec,y_train)    
+        # best_parameters = grid_search.best_estimator_.get_params()
+        # print(best_parameters)
+        mlp = MLPClassifier(solver='adam', alpha=0.1,hidden_layer_sizes=(5, 5), random_state=1)
         mlp.fit(tf_idf_vec,y_train)
         return mlp
 
