@@ -32,7 +32,7 @@ def getTrainArticleVec(source_detail):
 def getArticleVec(source_new):
     source_data = source_new[['id','title']].fillna(0)
     source_data['title'] = source_data['title'].apply(_seperate_data)
-    num_vec = _vectorizer(source_data['title'])
+    num_vec = _vectorizer(source_data)
     tf_idf_vec = tf_idf_vectorizer(num_vec)
     return tf_idf_vec
 
