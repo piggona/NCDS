@@ -112,11 +112,11 @@ class Scheduler:
         # info_log("等待30min...")
         # time.sleep(PROCESS_SLEEP)
         try:
-            if not self.isTrained:
-                print(type(self.Strategy.mlp))
-                print("No trained vector yet. Wait for 10 minutes...")
-                info_log("No trained vector yet. Wait for 10 minutes...")
-                time.sleep(100)
+            # if not self.isTrained:
+            #     print(type(self.Strategy.mlp))
+            #     print("No trained vector yet. Wait for 10 minutes...")
+            #     info_log("No trained vector yet. Wait for 10 minutes...")
+            #     time.sleep(100)
             while True:
                 info_log("online_output...")
                 # 数据 Dataframe

@@ -75,6 +75,7 @@ class SimpleStrategy:
         '''
         使用多层感知器模型对Output的新数据进行分类输出.
         '''
+        info_log("data size:".format(data.size))
         mlp_bunch = _read_bunch(os.getcwd()+'/REC/static/mlp.dat')
         mlp = mlp_bunch.mlp_vec
         # 处理原始数据使其向量化
@@ -83,6 +84,11 @@ class SimpleStrategy:
         re_mlp = mlp.predict(tfidf_vec)
         # 得到result list
         data['predict'] = re_mlp
+
+        writer = pd.ExcelWriter(os.getcwd()+"/REC/static/files/预测结果.xlsx")
+        data.to_excel(writer,'Sheet1')
+        writer.save()
+
         result_pos = data.query('predict == 2')['id'].tolist()
         result_neg = data.query('predict == 0')['id'].tolist()
         result = {"positive":result_pos,"negative":result_neg}
