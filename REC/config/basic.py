@@ -49,5 +49,5 @@ SIMPLE_MODEL_PATH = {"sp_vec":os.getcwd()+"/REC/static/SpecialVec.dat","ar_vec":
 运行间隔配置
 '''
 TRAIN_SLEEP = 86400
-PROCESS_SLEEP = 1800
+PROCESS_SLEEP = 43200
 TOP_PUSH_SLEEP = 7200

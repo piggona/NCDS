@@ -127,12 +127,12 @@ class Scheduler:
                 self.OnlineOutput.put_work(result_vec)
                 self.kill_output_conn()
                 info_log("online_output OK!")
-                print("等待30min...")
-                info_log("等待30min...")
+                print("等待12h...")
+                info_log("等待12h...")
                 time.sleep(PROCESS_SLEEP)
         except Exception as e:
             print(e)
-            error_log("Scheduler-line116")
+            error_log("Scheduler-line135")
             error_log(e)
    
     def push_top(self):

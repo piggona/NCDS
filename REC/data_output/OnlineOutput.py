@@ -81,11 +81,11 @@ class OnlineOutput:
     @isConn()
     def get_article(self):
         '''
-        取一个小时的新文章数据
+        取12小时的新文章数据
         '''
         info_log("get_article")
         sql = """
-        SELECT id,site_id,title,category as channel,tags,extend-> '$.source' AS source FROM infomation.article_resource WHERE create_time> (UNIX_TIMESTAMP(NOW())-1800)
+        SELECT id,site_id,title,category as channel,tags,extend-> '$.source' AS source FROM infomation.article_resource WHERE create_time> (UNIX_TIMESTAMP(NOW())-43200)
         """
         article_frame = pd.read_sql(sql,self.conn_online)
         info_log("得到新文章数量：")
