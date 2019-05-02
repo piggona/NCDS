@@ -143,7 +143,7 @@ class OnlineOutput:
         results = self.cursor.fetchall()
         for result in results:
             sql = """
-            UPDATE infomation.article_resource SET weight = 100,update_time = '{0}' WHERE id = '{1}';
+            UPDATE infomation.article_resource SET weight = 200,update_time = '{0}' WHERE id = '{1}';
             """.format(now,result[0])
             self.cursor_online.execute(sql)
             self.conn_online.commit()
