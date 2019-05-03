@@ -16,6 +16,8 @@ from sklearn.feature_extraction.text import CountVectorizer, TfidfTransformer
 import pandas as pd
 import numpy as np
 
+from REC.logs.logger import *
+
 
 
 def getTrainArticleVec(source_detail):
@@ -23,6 +25,8 @@ def getTrainArticleVec(source_detail):
     source_detail["category"] = source_detail["category"].apply(_catenum_to_cate)
     source_data = source_detail[['item_id','ctr','expose_num','title']].fillna(0)
     source_data['ctr'] = source_data[['ctr','expose_num']].apply(lambda row: _divide(row['ctr'],row['expose_num']),axis=1)
+    vec_info_log("训练集ctr分类分布：")
+    vec_info_log(source_data.groupby(['ctr']).count())
     source_data['title'] = source_data['title'].apply(_seperate_data)
     num_vec = _train_vectorizer(source_data)
     tf_idf_vec = tf_idf_vectorizer(num_vec)

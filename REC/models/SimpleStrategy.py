@@ -83,14 +83,24 @@ class SimpleStrategy:
         info_log("data size:".format(str(data.size)))
         mlp_bunch = _read_bunch(os.getcwd()+'/REC/static/mlp.dat')
         mlp = mlp_bunch.mlp_vec
+
+        # 临时调试输出>>
+        info_log("mlp判别器：")
+        info_log(mlp)
+
         # 处理原始数据使其向量化
         tfidf_vec = self.fusionVec.article_vec_generate(data)
 
         # 临时调试输出>>
-        print("被作用向量结果：{}".format(tfidf_vec))
-        
+        info_log("被作用向量化结果：{}".format(tfidf_vec))
+
         # 使用模型判别
         re_mlp = mlp.predict(tfidf_vec)
+
+        # 临时调试输出>>
+        info_log("mlp判别结果")
+        info_log(re_mlp)
+
         # 得到result list
         data['predict'] = re_mlp
 
