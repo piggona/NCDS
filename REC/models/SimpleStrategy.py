@@ -62,6 +62,11 @@ class SimpleStrategy:
         article_vec = bunch.ArticleVec
         tf_idf_vec = article_vec.tf_idf
         y_train = article_vec.y_train
+
+        # 临时调试输出>>
+        print("tf-idf向量：{}".format(tf_idf_vec))
+        print("训练向量集：{}".format(y_train))
+
         vec_info_log("Training vec got!")
         # 训练模型，将结果存储在对象中
         vec_info_log("Is training models...")
@@ -75,11 +80,15 @@ class SimpleStrategy:
         '''
         使用多层感知器模型对Output的新数据进行分类输出.
         '''
-        info_log("data size:".format(data.size))
+        info_log("data size:".format(str(data.size)))
         mlp_bunch = _read_bunch(os.getcwd()+'/REC/static/mlp.dat')
         mlp = mlp_bunch.mlp_vec
         # 处理原始数据使其向量化
         tfidf_vec = self.fusionVec.article_vec_generate(data)
+
+        # 临时调试输出>>
+        print("被作用向量结果：{}".format(tfidf_vec))
+        
         # 使用模型判别
         re_mlp = mlp.predict(tfidf_vec)
         # 得到result list

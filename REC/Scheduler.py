@@ -84,7 +84,7 @@ class Scheduler:
             info_log("启动筛选器...")
             try:
                 info_log("online_output...")
-                refresh_data = self.OnlineOutput.get_article()
+                refresh_data = self.OnlineOutput.get_article() # checked err20190503
                 result_vec = self.Strategy.judge(refresh_data)
                 self.OnlineOutput.put_work(result_vec)
                 info_log("online_output OK!")
@@ -120,7 +120,7 @@ class Scheduler:
             while True:
                 info_log("online_output...")
                 # 数据 Dataframe
-                refresh_data = self.OnlineOutput.get_article()
+                refresh_data = self.OnlineOutput.get_article() # data checked err20190503
                 # 判别(judge) {"positive":result_pos,"negative":result_neg}
                 result_vec = self.Strategy.mlp_judge(refresh_data)
                 # 设置权值
