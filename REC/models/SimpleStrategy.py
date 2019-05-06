@@ -92,7 +92,7 @@ class SimpleStrategy:
         tfidf_vec = self.fusionVec.article_vec_generate(data)
 
         # 临时调试输出>>
-        info_log("被作用向量化结果：{}".format(tfidf_vec))
+        # info_log("被作用向量化结果：{}".format(tfidf_vec))
 
         # 使用模型判别
         re_mlp = mlp.predict(tfidf_vec)
@@ -104,7 +104,7 @@ class SimpleStrategy:
         # 得到result list
         data['predict'] = re_mlp
 
-        writer = pd.ExcelWriter(os.getcwd()+"/REC/static/files/预测结果.xlsx")
+        writer = pd.ExcelWriter(os.getcwd()+"/REC/static/files/"+str(date.today())+"-预测结果.xlsx")
         data.to_excel(writer,'Sheet1')
         writer.save()
 
