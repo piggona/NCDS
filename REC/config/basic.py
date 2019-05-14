@@ -6,7 +6,7 @@ oneday = datetime.timedelta(days=1)
 DEFAULT_TIME_RANGE = 172800
 
 # 连接模式配置
-CONNECTION_MODE = "ssh"
+CONNECTION_MODE = "local"
 
 '''
 离线库配置
@@ -23,7 +23,7 @@ TMP_DB_PSWD = "Sjfy0114!!"
 '''
 在线库配置
 '''
-ONLINE_DB = 'dp_bi'
+ONLINE_DB = 'infomation'
 ONLINE_DB_HOST = 'rm-2zeg7277v9fkmj3bi.mysql.rds.aliyuncs.com'
 ONLINE_DB_PORT = 3306
 ONLINE_DB_USER = 'information'

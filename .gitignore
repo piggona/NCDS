@@ -1,5 +1,7 @@
 .idea/
 *.pyc
 *.log
+*.log.*?
 config/
 .*?/config/
+files/

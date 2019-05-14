@@ -17,6 +17,8 @@ from REC.logs.logger import *
 from REC.aspects.IsConn import *
 from REC.aspects.IsArticleGot import *
 
+from REC.evaluation.ab_test import *
+
 class OnlineOutput:
     def __init__(self):
         self.article_frame = ""
@@ -117,19 +119,33 @@ class OnlineOutput:
         now = int(time.time())
         for item in self.result_pos:  
             sql = """
-            UPDATE infomation.article_resource SET weight = 100,update_time = '{0}' WHERE id = '{1}';
+            UPDATE infomation.article_resource SET weight = 75,update_time = '{0}' WHERE id = '{1}';
             """.format(now,item)
             self.cursor_online.execute(sql)
             self.conn_online.commit()
         info_log("modified {} articles as positive.".format(str(len(self.result_pos))))
         for item in self.result_neg:
             sql = """
-            UPDATE infomation.article_resource SET weight = 25,update_time = '{0}' WHERE id = '{1}';
+            UPDATE infomation.article_resource SET weight = 51,update_time = '{0}' WHERE id = '{1}';
             """.format(now,item)
             self.cursor_online.execute(sql)
             self.conn_online.commit()
         info_log("modified {} articles as negative.".format(str(len(self.result_neg))))
         info_log("put time: "+str(now))
+        
+        # ab_test
+        # info_log("ab test configuring...")
+        # test_data = pd.read_excel(os.getcwd() + '/REC/static/files/预测结果.xlsx')
+        # result = ab_test(test_data)
+        # for item in result:
+        #     sql_test = """
+        #     UPDATE infomation.article_resource SET weight = 99,update_time = '{0}' WHERE id = '{1}';
+        #     """.format(now,item)
+        #     self.cursor_online.execute(sql)
+        #     self.conn_online.commit()
+        # info_log("ab test configured!")
+        # ab_test end
+
         info_log("put_weight OK!")
     
     @isConn_no()

@@ -99,18 +99,6 @@ class Scheduler:
     def process_article(self):
         print("启动筛选器...")
         info_log("启动筛选器...")
-        # info_log("online_output...")
-        # # 数据 Dataframe
-        # refresh_data = self.OnlineOutput.get_article()
-        # # 判别(judge) {"positive":result_pos,"negative":result_neg}
-        # result_vec = self.Strategy.mlp_judge(refresh_data)
-        # # 设置权值
-        # self.OnlineOutput.put_work(result_vec)
-        # self.kill_output_conn()
-        # info_log("online_output OK!")
-        # print("等待30min...")
-        # info_log("等待30min...")
-        # time.sleep(PROCESS_SLEEP)
         try:
             # if not self.isTrained:
             #     print(type(self.Strategy.mlp))

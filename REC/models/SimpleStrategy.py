@@ -103,8 +103,13 @@ class SimpleStrategy:
 
         # 得到result list
         data['predict'] = re_mlp
+        info_log("mlp_result stored in:")
+        info_log(os.getcwd()+"/REC/static/files/"+str(int(time.time()))+"-预测结果.xlsx")
+        writer = pd.ExcelWriter(os.getcwd()+"/REC/static/files/"+str(int(time.time()))+"-预测结果.xlsx")
+        data.to_excel(writer,'Sheet1')
+        writer.save()
 
-        writer = pd.ExcelWriter(os.getcwd()+"/REC/static/files/"+str(date.today())+"-预测结果.xlsx")
+        writer = pd.ExcelWriter(os.getcwd()+"/REC/static/files/预测结果.xlsx")
         data.to_excel(writer,'Sheet1')
         writer.save()
 
