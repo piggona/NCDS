@@ -1,0 +1,8 @@
+version: '2.1'
+
+services:
+  ncds:
+    image: ncds
+    build: .
+    ports:
+      - 8888:8888
