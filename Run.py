@@ -87,7 +87,23 @@ def rec_generator():
     # Sc.init_strategy(mode="simple")
     # Sc.process_article()
     print("进程结束")
+
+def rec_train():
+    Sc = Scheduler()
+    pool = multiprocessing.Pool(processes=3)
+    Sc.init_strategy(mode="simple")
+    Sc.train_simple
+def rec_process():
+    Sc = Scheduler()
+    pool = multiprocessing.Pool(processes=3)
+    Sc.init_strategy(mode="simple")
+    Sc.process_article
+def rec_top():
+    Sc = Scheduler()
+    pool = multiprocessing.Pool(processes=3)
+    Sc.init_strategy(mode="simple")
+    Sc.push_top
     
 if __name__ == "__main__":
     # rec_run()
-    rec_generator()
+    eval(sys.argv[1])
