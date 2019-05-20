@@ -71,7 +71,7 @@ class FetchData:
         self.cursor_online.close()
         self.conn.close()
         self.conn_online.close()
-        print("数据库连接断开...")
+        # print("数据库连接断开...")
         self.is_conn = False
         
 
@@ -106,7 +106,7 @@ class FetchData:
         """
         source_detail = pd.read_sql(sql,self.conn)
         # print(source_detail)
-        print("fetch_bias_data OK!")
+        # print("fetch_bias_data OK!")
         vec_info_log("fetch_bias_data OK!")
         return source_detail
     
@@ -121,7 +121,7 @@ class FetchData:
         SELECT pt,item_id,expose_num,click_num,ctr,title,tags,extend->"$.source" AS source,dat,url,category FROM article_ctr WHERE date_sub(CURDATE(),INTERVAL 9 DAY) <= DATE(dat);
         """
         source_vec = pd.read_sql(sql,self.conn)
-        print("fetch_vec_data OK!")
+        # print("fetch_vec_data OK!")
         vec_info_log("fetch_vec_data OK!")
         return source_vec
 

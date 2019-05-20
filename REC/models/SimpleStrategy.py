@@ -64,8 +64,8 @@ class SimpleStrategy:
         y_train = article_vec.y_train
 
         # 临时调试输出>>
-        print("tf-idf向量：{}".format(tf_idf_vec))
-        print("训练向量集：{}".format(y_train))
+        # print("tf-idf向量：{}".format(tf_idf_vec))
+        # print("训练向量集：{}".format(y_train))
 
         vec_info_log("Training vec got!")
         # 训练模型，将结果存储在对象中
@@ -73,7 +73,7 @@ class SimpleStrategy:
         self.mlp = self.mlp_classifier(tf_idf_vec,y_train)
         bunch = Bunch(mlp_vec=self.mlp)
         _writebunchobj(os.getcwd()+'/REC/static/mlp.dat',bunch)
-        print("Model trained!")
+        # print("Model trained!")
         vec_info_log("Model trained!")
     
     def mlp_judge(self,data):
@@ -137,7 +137,7 @@ class SimpleStrategy:
         result_j[str(int(time.time()))] = {"result_pos":result_pos,"result_neg":result_neg}
         with open(os.getcwd()+'/REC/static/files/result_vec.json','w') as w:
             json.dump(result_j,w)
-        print('vec dump success!')
+        # print('vec dump success!')
         info_log('vec dump success!')
 
         info_log(result_pos)

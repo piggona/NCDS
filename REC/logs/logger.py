@@ -5,13 +5,14 @@
 import logging
 import logging.handlers
 import os
+import sys
 
 def info_log(content):
     path = os.getcwd() + '/REC/logs/REC.log'
     logger = logging.getLogger('REC')
     if not logger.handlers:
         LOG_FILE = path
-        handler = logging.handlers.RotatingFileHandler(LOG_FILE, maxBytes=1024 * 1024, backupCount=5, encoding='utf-8')
+        handler = logging.StreamHandler(sys.stdout)
         fmt = '%(asctime)s - %(levelname)s - %(message)s'
         formatter = logging.Formatter(fmt)
         handler.setFormatter(formatter)
@@ -24,7 +25,7 @@ def error_log(content):
     logger = logging.getLogger('REC_ERROR')
     if not logger.handlers:
         LOG_FILE = path
-        handler = logging.handlers.RotatingFileHandler(LOG_FILE, maxBytes=1024 * 1024, backupCount=5, encoding='utf-8')
+        handler = logging.StreamHandler(sys.stdout)
         fmt = '%(asctime)s - %(levelname)s - %(message)s'
         formatter = logging.Formatter(fmt)
         handler.setFormatter(formatter)
@@ -37,7 +38,7 @@ def vec_info_log(content):
     logger = logging.getLogger('VEC')
     if not logger.handlers:
         LOG_FILE = path
-        handler = logging.handlers.RotatingFileHandler(LOG_FILE, maxBytes=1024 * 1024, backupCount=5, encoding='utf-8')
+        handler = logging.StreamHandler(sys.stdout)
         fmt = '%(asctime)s - %(levelname)s - %(message)s'
         formatter = logging.Formatter(fmt)
         handler.setFormatter(formatter)
@@ -50,7 +51,7 @@ def vec_error_log(content):
     logger = logging.getLogger('VEC_ERROR')
     if not logger.handlers:
         LOG_FILE = path
-        handler = logging.handlers.RotatingFileHandler(LOG_FILE, maxBytes=1024 * 1024, backupCount=5, encoding='utf-8')
+        handler = logging.StreamHandler(sys.stdout)
         fmt = '%(asctime)s - %(levelname)s - %(message)s'
         formatter = logging.Formatter(fmt)
         handler.setFormatter(formatter)

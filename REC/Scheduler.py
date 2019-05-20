@@ -27,11 +27,11 @@ class Scheduler:
     def __init__(self):
         frame("Welcome to REC")
 
-        print("开始初始化fetch_data...")
+        # print("开始初始化fetch_data...")
         info_log("开始初始化fetch_data...")
         self.SimpleData = FetchData()
 
-        print("开始初始化OnlineOutput...")
+        # print("开始初始化OnlineOutput...")
         info_log("开始初始化OnlineOutput...")
         self.OnlineOutput = OnlineOutput()
 
@@ -54,7 +54,7 @@ class Scheduler:
         Trains model with data from data_market.
         '''
         while True:
-            print("启动模型...")
+            # print("启动模型...")
             vec_info_log("启动模型...")
             try:
                 vec_info_log("get_train_vec...")
@@ -71,16 +71,16 @@ class Scheduler:
                 vec_info_log("get_train_vec OK!")
                 self.isTrained = True
             except Exception as e:
-                print(e)
+                # print(e)
                 error_log("Scheduler-line68")
                 vec_error_log(e)
-            print("等待1day...")
+            # print("等待1day...")
             vec_info_log("等待1day...")
             time.sleep(TRAIN_SLEEP)
     
     def process_sp(self):
         while True:
-            print("启动筛选器...")
+            # print("启动筛选器...")
             info_log("启动筛选器...")
             try:
                 info_log("online_output...")
@@ -89,15 +89,15 @@ class Scheduler:
                 self.OnlineOutput.put_work(result_vec)
                 info_log("online_output OK!")
             except Exception as e:
-                print(e)
+                # print(e)
                 error_log("Scheduler-line86")
                 error_log(e)
-            print("等待30min...")
+            # print("等待30min...")
             info_log("等待30min...")
             time.sleep(PROCESS_SLEEP)
     
     def process_article(self):
-        print("启动筛选器...")
+        # print("启动筛选器...")
         info_log("启动筛选器...")
         try:
             # if not self.isTrained:
@@ -115,11 +115,11 @@ class Scheduler:
                 self.OnlineOutput.put_work(result_vec)
                 self.kill_output_conn()
                 info_log("online_output OK!")
-                print("等待12h...")
+                # print("等待12h...")
                 info_log("等待12h...")
                 time.sleep(PROCESS_SLEEP)
         except Exception as e:
-            print(e)
+            # print(e)
             error_log("Scheduler-line135")
             error_log(e)
    
@@ -128,17 +128,17 @@ class Scheduler:
         推送高ctr文章
         '''
         while True:
-            print("启动高ctr推送...")
+            # print("启动高ctr推送...")
             info_log("启动高ctr推送...")
             try:
                 info_log("online_output...")
                 refresh_data = self.OnlineOutput.put_top_articles()
                 info_log("online_output OK!")
             except Exception as e:
-                print(e)
+                # print(e)
                 error_log("Scheduler-line112")
                 error_log(e)
-            print("等待2h...")
+            # print("等待2h...")
             info_log("等待2h...")
             time.sleep(TOP_PUSH_SLEEP)
 

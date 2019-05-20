@@ -53,14 +53,14 @@ def handle_source(source, sep_point=20):
         writer = pd.ExcelWriter(os.getcwd()+"/REC/static/files/"+str(date.today())+"-source.xlsx")
         source = source.query('expose_num > 100')
         source_head = source.query('source_ctr > 0.05')
-        print("ctr统计量：")
-        print("=========================")
-        print(source["source_ctr"].describe())
-        print("expose统计量：")
-        print("=========================")
-        print(source["expose_num"].describe())
-        print("click统计量：")
-        print("=========================")
+        # print("ctr统计量：")
+        # print("=========================")
+        # print(source["source_ctr"].describe())
+        # print("expose统计量：")
+        # print("=========================")
+        # print(source["expose_num"].describe())
+        # print("click统计量：")
+        # print("=========================")
 
         vec_info_log("ctr统计量：")
         vec_info_log("=========================")
@@ -80,7 +80,7 @@ def handle_source(source, sep_point=20):
         result = {"positive": positive, "negative": negative}
         return result
     except Exception as e:
-        print(e)
+        # print(e)
         error_log("AdditionalVector-line75")
         error_log(e)
 
@@ -93,7 +93,7 @@ def handle_bias_format(source_detail):
     try:
         writer = pd.ExcelWriter(os.getcwd()+"/REC/static/files/"+str(date.today())+"-page.xlsx")
         vec_info_log("是否存在空值")
-        print(source_detail.isnull().any())
+        # print(source_detail.isnull().any())
         vec_info_log(source_detail.isnull().any())
 
         vec_info_log("整理标题")
@@ -106,7 +106,7 @@ def handle_bias_format(source_detail):
         writer.save()
         return page
     except Exception as e:
-        print(e)
+        # print(e)
         error_log("AdditionalVector-line98")
         error_log(e)
 
@@ -239,7 +239,7 @@ def handle_channel_bias(page):
         return result
 
     except Exception as e:
-        print(e)
+        # print(e)
         error_log("AdditionalVector-line218")
         error_log(e)
 
@@ -298,7 +298,7 @@ def handle_channel_source_bias(page):
                   "negative": channel_source_negative}
         return result
     except Exception as e:
-        print(e)
+        # print(e)
         error_log("AdditionalVector-line263")
         error_log(e)
 

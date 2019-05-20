@@ -101,7 +101,7 @@ class OnlineOutput:
         self.cursor_online.close()
         self.conn.close()
         self.conn_online.close()
-        print("数据库连接断开...")
+        # print("数据库连接断开...")
         self.is_conn = False
     
     @isArticleGot()
