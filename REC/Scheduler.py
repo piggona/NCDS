@@ -99,13 +99,13 @@ class Scheduler:
     def process_article(self):
         # print("启动筛选器...")
         info_log("启动筛选器...")
-        try:
-            # if not self.isTrained:
-            #     print(type(self.Strategy.mlp))
-            #     print("No trained vector yet. Wait for 10 minutes...")
-            #     info_log("No trained vector yet. Wait for 10 minutes...")
-            #     time.sleep(100)
-            while True:
+        while True:
+            try:
+                # if not self.isTrained:
+                #     print(type(self.Strategy.mlp))
+                #     print("No trained vector yet. Wait for 10 minutes...")
+                #     info_log("No trained vector yet. Wait for 10 minutes...")
+                #     time.sleep(100)
                 info_log("online_output...")
                 # 数据 Dataframe
                 refresh_data = self.OnlineOutput.get_article() # data checked err20190503
@@ -118,10 +118,10 @@ class Scheduler:
                 # print("等待12h...")
                 info_log("等待12h...")
                 time.sleep(PROCESS_SLEEP)
-        except Exception as e:
-            # print(e)
-            error_log("Scheduler-line135")
-            error_log(e)
+            except Exception as e:
+                # print(e)
+                error_log("Scheduler-line135")
+                error_log(e)
    
     def push_top(self):
         '''
