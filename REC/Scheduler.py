@@ -122,6 +122,7 @@ class Scheduler:
                 # print(e)
                 error_log("Scheduler-line135")
                 error_log(e)
+                time.sleep(120)
    
     def push_top(self):
         '''
